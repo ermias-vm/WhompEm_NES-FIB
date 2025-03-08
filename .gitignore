@@ -12,6 +12,9 @@
 *.vcxproj.user
 *.vcxproj
 *.sln
+*.rc
+*.aps
+resource.h
 /bin/
 /obj/
 
