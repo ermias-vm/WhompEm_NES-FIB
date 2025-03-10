@@ -46,7 +46,7 @@ int main(void)
 	}
 
 	/* Set window initial position */
-	glfwSetWindowPos(window, 100, 100);
+	glfwSetWindowPos(window, 10, 40);
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 

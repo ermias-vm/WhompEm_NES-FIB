@@ -16,6 +16,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	zoomFactor = ZOOM_FACTOR; // Inicializar con el valor definido en Game.h
 }
 
 Scene::~Scene()
@@ -35,7 +36,12 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+
+	float zoomedWidth = SCREEN_WIDTH/2;
+	float zoomedHeight = SCREEN_HEIGHT/2;
+	projection = glm::ortho(0.f, zoomedWidth, zoomedHeight, 0.f);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // Viewport ajustado al tamaño de la ventana escalada
+	
 	currentTime = 0.0f;
 }
 

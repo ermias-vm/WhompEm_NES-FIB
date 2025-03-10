@@ -17,6 +17,7 @@
 resource.h
 /bin/
 /obj/
+/img_copy/
 
 # Archivos ejecutables
 *.exe
