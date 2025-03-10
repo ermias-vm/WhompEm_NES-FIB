@@ -8,16 +8,16 @@
 *.suo
 *.user
 *.sln.docstates
-*.vcxproj.filters
+#*.vcxproj.filters
+#*.vcxproj
 *.vcxproj.user
-*.vcxproj
 *.sln
 *.rc
 *.aps
 resource.h
 /bin/
 /obj/
-/img_copy/
+img_copy/
 
 # Archivos ejecutables
 *.exe

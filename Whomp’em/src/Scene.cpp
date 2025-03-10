@@ -37,10 +37,10 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	float zoomedWidth = SCREEN_WIDTH/2;
-	float zoomedHeight = SCREEN_HEIGHT/2;
+	float zoomedWidth = SCREEN_WIDTH/ZOOM_FACTOR;
+	float zoomedHeight = SCREEN_HEIGHT/ ZOOM_FACTOR;
 	projection = glm::ortho(0.f, zoomedWidth, zoomedHeight, 0.f);
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // Viewport ajustado al tamaño de la ventana escalada
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
 	currentTime = 0.0f;
 }
