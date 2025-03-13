@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include "Texture.h"
+#include <vector> // Add this to include std::vector
 #include "ShaderProgram.h"
 
 
@@ -39,6 +40,9 @@ private:
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
 
 private:
+	struct CollisionRect {
+		int x, y, width, height;
+	};
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
@@ -48,7 +52,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
-
+	std::vector<CollisionRect> collisionObjects; // Declare collisionObjects here
 };
 
 

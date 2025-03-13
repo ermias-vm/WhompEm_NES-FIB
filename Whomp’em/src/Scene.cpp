@@ -9,7 +9,8 @@
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_Y_TILES 0
+
 
 
 Scene::Scene()
@@ -31,14 +32,14 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/MAPA_FINAL.tmx", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	float zoomedWidth = SCREEN_WIDTH/2;
-	float zoomedHeight = SCREEN_HEIGHT/2;
+	float zoomedWidth = SCREEN_WIDTH/ZOOM_FACTOR;
+	float zoomedHeight = SCREEN_HEIGHT/ZOOM_FACTOR;
 	projection = glm::ortho(0.f, zoomedWidth, zoomedHeight, 0.f);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // Viewport ajustado al tamaño de la ventana escalada
 	
