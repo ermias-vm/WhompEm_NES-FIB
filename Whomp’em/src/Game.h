@@ -9,8 +9,8 @@
 #define ORIGINAL_WIDTH 640
 #define ORIGINAL_HEIGHT 480
 
-#define ZOOM_FACTOR 1.0f  // Cambia a 4.0f para x4
-// Tamaño de la ventana ajustado al zoom
+#define ZOOM_FACTOR 2.0f
+
 #define SCREEN_WIDTH (ORIGINAL_WIDTH * ZOOM_FACTOR)
 #define SCREEN_HEIGHT (ORIGINAL_HEIGHT * ZOOM_FACTOR)
 

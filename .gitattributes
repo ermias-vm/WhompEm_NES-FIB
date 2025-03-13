@@ -1,0 +1,39 @@
+# Normalización de finales de línea
+* text=auto
+
+# Archivos de Visual Studio 
+*.sln       merge=binary
+*.vcxproj   merge=binary
+*.vcxproj.filters merge=binary
+
+*.user      merge=binary
+*.suo       merge=binary
+
+# Imágenes y texturas 
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.bmp   binary
+*.gif   binary
+*.tga   binary
+
+# Archivos de audio 
+*.wav   binary
+*.mp3   binary
+*.ogg   binary
+
+# Archivos de modelos 
+*.obj   binary
+*.fbx   binary
+
+# Archivos de shaders 
+*.glsl  text
+*.vert  text
+*.frag  text
+*.geom  text
+
+# Archivos de código fuente 
+*.cpp   text
+*.h     text
+*.hpp   text
+*.c     text
