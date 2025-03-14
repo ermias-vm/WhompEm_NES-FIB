@@ -118,20 +118,21 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>libs\Simple OpenGL Image Library\src;libs\glfw-3.3.8\include;libs\glew-1.13.0\include;libs\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>libs\Simple OpenGL Image Library\src;libs\glfw-3.3.8\include;libs\glew-1.13.0\include;libs\glm;libs\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>libs\Simple OpenGL Image Library\projects\VC9\Debug;libs\glfw-3.3.8\lib-vc2022;libs\glew-1.13.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SOIL.lib;glew32.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>libs\Simple OpenGL Image Library\projects\VC9\Debug;libs\glfw-3.3.8\lib-vc2022;libs\glew-1.13.0\lib\Release\Win32;libs\x86-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SOIL.lib;glew32.lib;glfw3.lib;opengl32.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
         copy "$(ProjectDir)libs\glew-1.13.0\bin\Release\Win32\glew32.dll" "$(OutDir)"
         copy "$(ProjectDir)libs\glfw-3.3.8\lib-vc2022\glfw3.dll" "$(OutDir)"
+        copy "$(ProjectDir)libs\x86-windows\bin\tinyxml2.dll" "$(OutDir)"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

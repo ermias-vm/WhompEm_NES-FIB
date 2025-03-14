@@ -38,7 +38,7 @@ int main(void)
 		return -1;
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Whomp'em", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH*SCALE_FACTOR, SCREEN_HEIGHT*SCALE_FACTOR, "Whomp'em", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();

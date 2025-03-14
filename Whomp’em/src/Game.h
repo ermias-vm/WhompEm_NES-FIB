@@ -6,16 +6,12 @@
 #include "Scene.h"
 
 
-#define ORIGINAL_WIDTH 256 // 16 tiles * 16 píxeles/tile
-#define ORIGINAL_HEIGHT 240  // 15 tiles * 16 píxeles/tile
+#define SCREEN_WIDTH 256		// 16 tiles * 16 píxeles/tile
+#define SCREEN_HEIGHT 240	// 15 tiles * 16 píxeles/tile
+#define SCALE_FACTOR 4.0f
 
-#define ZOOM_FACTOR 3.0f
-
-#define SCREEN_WIDTH (ORIGINAL_WIDTH * ZOOM_FACTOR)
-#define SCREEN_HEIGHT (ORIGINAL_HEIGHT * ZOOM_FACTOR)
 
 // Game is a singleton (a class with a single instance) that represents our whole application
-
 
 class Game
 {

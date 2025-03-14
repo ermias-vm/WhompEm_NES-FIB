@@ -6,7 +6,7 @@
 
 
 #define SCREEN_X 16
-#define SCREEN_Y 15
+#define SCREEN_Y 50
 
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 0
@@ -17,7 +17,6 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
-	zoomFactor = ZOOM_FACTOR; // Inicializar con el valor definido en Game.h
 }
 
 Scene::~Scene()
@@ -32,17 +31,13 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/MAPA_FINAL.tmx", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/MAPA_FINAL.tmx", glm::vec2(0, 0), texProgram);
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	float zoomedWidth = SCREEN_WIDTH/ZOOM_FACTOR;
-	float zoomedHeight = SCREEN_HEIGHT/ ZOOM_FACTOR;
-	projection = glm::ortho(0.f, zoomedWidth, zoomedHeight, 0.f);
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
 }
 
