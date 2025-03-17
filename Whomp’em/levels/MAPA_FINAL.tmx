@@ -242,6 +242,5 @@
   <object id="134" x="3904" y="592" width="32" height="16"/>
   <object id="135" x="3712" y="608" width="32" height="32"/>
   <object id="149" name="StartWall" x="0.424242" y="-0.121212" width="2" height="192"/>
-  <object id="152" name="fakeTree" x="128.125" y="160.063" width="15.875" height="31.8125"/>
  </objectgroup>
 </map>

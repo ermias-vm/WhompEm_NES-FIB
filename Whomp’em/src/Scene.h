@@ -22,6 +22,11 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	bool isOffScreen(Player* player);
+	glm::vec2 getPlayerOffset(Player* player);
+	void setcameraPos(const glm::vec2& offset);
+	void updateCamera(glm::vec2& posjugador);
+
 
 private:
 	void initShaders();
@@ -32,7 +37,10 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
-	float zoomFactor; // Factor de zoom 
+	float zoomFactor; // Factor de zoom
+	glm::vec2 cameraPos; 
+	int cameraWidth = 16 * 16;
+	int cameraHeight = 16 * 15;
 };
 
 

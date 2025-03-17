@@ -34,6 +34,7 @@ public:
 	* @param posPlayer Posición del jugador.
 	*/
 	void setPosition(const glm::vec2 &pos);
+	glm::vec2 Player::getPosition();
 
 	void setAnimationBasedOnDirection(int standAnim, int moveAnim, int jumpAnim, int crouchAnim, int fallAnim);
 	
