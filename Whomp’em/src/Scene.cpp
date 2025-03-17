@@ -5,11 +5,11 @@
 #include "Game.h"
 
 
-#define SCREEN_X 16
-#define SCREEN_Y 50
+//#define SCREEN_X 16
+//#define SCREEN_Y 50
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 0
+#define INIT_PLAYER_Y_TILES 10		// MAPA DE 16x15 TILES
 
 
 
@@ -19,17 +19,14 @@ Scene::Scene()
 	player = NULL;
 }
 
-Scene::~Scene()
+Scene::~Scene() 
 {
-	if(map != NULL)
-		delete map;
-	if(player != NULL)
-		delete player;
+	if(map != NULL) delete map;
+	if(player != NULL) delete player;
 }
 
 
-void Scene::init()
-{
+void Scene::init() {
 	initShaders();
 	map = TileMap::createTileMap("levels/MAPA_FINAL.tmx", glm::vec2(0, 0), texProgram);
 	player = new Player();
