@@ -25,7 +25,7 @@ public:
 	bool isOffScreen(Player* player);
 	glm::vec2 getPlayerOffset(Player* player);
 	void setcameraPos(const glm::vec2& offset);
-	void updateCamera(glm::vec2& posjugador);
+	void updateCamera(glm::vec2& posjugador,int deltaTime);
 
 
 private:
@@ -41,6 +41,12 @@ private:
 	glm::vec2 cameraPos; 
 	int cameraWidth = 16 * 16;
 	int cameraHeight = 16 * 15;
+	float cameraVx = 0.0f;
+	float cameraVy = 0.0f;
+	bool horitzontal;
+	float fixedYHorizontal = 0; // y = 10 * tileSize (10 * 32 = 320, para el pasadizo superior)
+	float fixedXVertical = 2048;  // x = 2082 (inicio del pasadizo vertical)
+	float fixedYHorizontal2 = 1440; // y = 140 * tileSize (140 * 32 = 4480, para el pasadizo inferior)
 };
 
 

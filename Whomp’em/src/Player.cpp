@@ -112,7 +112,7 @@ void Player::update(int deltaTime)
             else if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(STAND_RIGHT);
         }
     }
-
+    
     // Gestión del salto
     if (bJumping) {
         jumpAngle += JUMP_ANGLE_STEP;
@@ -216,5 +216,26 @@ glm::vec2 Player::getPosition() {
 }
 
 
+glm::vec2 Player::getVelocity() {
+    glm::vec2 velocity(0.f, 0.f);
 
+    // Velocidad horizontal
+    if (Game::instance().getKey(GLFW_KEY_LEFT)) {
+        velocity.x = -2.f; // Velocidad fija hacia la izquierda
+    }
+    else if (Game::instance().getKey(GLFW_KEY_RIGHT)) {
+        velocity.x = 2.f; // Velocidad fija hacia la derecha
+    }
 
+    // Velocidad vertical
+    if (bJumping) {
+        // Aproximación de la velocidad vertical durante el salto
+        velocity.y = -JUMP_HEIGHT * cos(PI * jumpAngle / 180.f) * JUMP_ANGLE_STEP / 180.f * PI;
+    }
+    else {
+        // Si está cayendo
+        velocity.y = FALL_STEP;
+    }
+
+    return velocity;
+}

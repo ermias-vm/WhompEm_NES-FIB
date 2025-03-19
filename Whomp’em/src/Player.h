@@ -35,6 +35,7 @@ public:
 	*/
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 Player::getPosition();
+	glm::vec2 Player::getVelocity();
 
 	void setAnimationBasedOnDirection(int standAnim, int moveAnim, int jumpAnim, int crouchAnim, int fallAnim);
 	

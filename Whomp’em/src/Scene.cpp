@@ -34,7 +34,7 @@ void Scene::init() {
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
-
+	horitzontal = true;
 	cameraPos = glm::vec2(0.f, 0.f);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
@@ -44,26 +44,85 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	Scene::updateCamera(player->getPosition());
-	std::cout << player->getPosition().x << " " << this->cameraPos.x << std::endl;
+	// Determinar la sección actual
+	if (player->getPosition().x >= 2082 && player->getPosition().x <= 2280) {
+		if (horitzontal) { // Transición de horizontal a vertical
+			cameraPos.x = fixedXVertical; // Fijar X al entrar al pasadizo vertical
+		}
+		horitzontal = false;
+	}
+	else if (player->getPosition().x >= 2280) {
+		if (!horitzontal) { // Transición de vertical a horizontal
+		  cameraPos.y = fixedYHorizontal2; // Fijar Y al entrar al pasadizo inferior
+		}
+		horitzontal = true;
+	}
+	else {
+		if (!horitzontal) { // Transición de vertical a horizontal
+			cameraPos.y = fixedYHorizontal;
+		}
+		horitzontal = true;
+	}
+	Scene::updateCamera(player->getPosition(),deltaTime);
+	std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
+	std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
 	//auto offset = Scene::getPlayerOffset(player);
 	//Scene::setcameraPos(offset);
 }
 
 
-void Scene::updateCamera(glm::vec2 &posJugador) {
-	int jugadorX = posJugador.x;
-	int jugadorY = posJugador.y;
-	int cameraX = this->cameraPos.x;
-	int cameraY = this->cameraPos.y;
-	if ((jugadorX - cameraX) < (cameraWidth / 3))
-		cameraX = jugadorX - cameraWidth / 3;
-	if ((jugadorX - cameraX) > (2 * cameraWidth / 3))
-		cameraX = jugadorX -2 * cameraWidth / 3;
-		if ((jugadorY - cameraY) < (cameraHeight / 3))
-			cameraY = jugadorY - cameraHeight / 3;
-		if ((jugadorY - cameraY) > (2 * cameraHeight / 3))
-			cameraY = jugadorY - 2 * cameraHeight / 3;
+void Scene::updateCamera(glm::vec2 &posJugador,int deltaTime) {
+		float jugadorX = posJugador.x; // Cambiar a float
+		float jugadorY = posJugador.y; // Cambiar a float
+		float cameraX = this->cameraPos.x; // Usar float
+		float cameraY = this->cameraPos.y; // Usar float
+
+		// Obtener la velocidad del jugador
+		glm::vec2 jugadorVel = player->getVelocity();
+		float jugadorVx = jugadorVel.x;
+		float jugadorVy = jugadorVel.y;
+
+		// Constante de suavizado
+		const float FACTOR = 1.5f;
+
+		// Convertir deltaTime a segundos
+		float deltaTimeSec = deltaTime / 1000.f;
+
+		// Calcular la velocidad de la cámara basada en la posición del jugador
+		if (horitzontal) {
+			if ((jugadorX - cameraX) < (SCREEN_WIDTH / 3)) {
+				cameraVx = FACTOR * jugadorVx;
+			}
+			else if ((jugadorX - cameraX) > (2 * SCREEN_WIDTH / 3)) {
+				cameraVx = FACTOR * jugadorVx;
+			}
+			else {
+				cameraVx = 0;
+			}
+			cameraX += deltaTimeSec * cameraVx;
+			cameraX = std::max(cameraX, jugadorX - 2 * SCREEN_WIDTH / 3);
+			cameraX = std::min(cameraX, jugadorX - SCREEN_WIDTH / 3);
+			cameraX = std::max(0.0f, cameraX);
+
+		}
+		else {
+			if ((jugadorY - cameraY) < (SCREEN_HEIGHT / 3)) {
+				cameraVy = FACTOR * jugadorVy;
+			}
+			else if ((jugadorY - cameraY) > (2 * SCREEN_HEIGHT / 3)) {
+				cameraVy = FACTOR * jugadorVy;
+			}
+			else {
+				cameraVy = 0;
+			}
+			cameraY += deltaTimeSec * cameraVy;
+			cameraY = std::max(cameraY, jugadorY - 2 * SCREEN_HEIGHT / 3);
+			cameraY = std::min(cameraY,jugadorY - SCREEN_HEIGHT / 3);
+			cameraY = std::max(0.0f, cameraY);
+
+		}
+
+		// Actualizar la posición de la cámara
 		this->cameraPos = glm::vec2(cameraX, cameraY);
 }
 
