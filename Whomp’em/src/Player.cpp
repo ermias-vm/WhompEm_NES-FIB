@@ -72,7 +72,34 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
     sprite->setAnimationSpeed(FALL_LEFT, ANIMATION_SPEED);
     sprite->addKeyframe(FALL_LEFT, glm::vec2(0.1f, 0.15f));
-	
+
+    sprite->setAnimationSpeed(DAMAGED_RIGHT, ANIMATION_SPEED);
+    sprite->addKeyframe(DAMAGED_RIGHT, glm::vec2(0.0f, 0.20f));
+
+    sprite->setAnimationSpeed(DAMAGED_LEFT, ANIMATION_SPEED);
+    sprite->addKeyframe(DAMAGED_LEFT, glm::vec2(0.1f, 0.20f));
+
+    sprite->setAnimationSpeed(COVER_RIGHT, ANIMATION_SPEED);
+    sprite->addKeyframe(COVER_RIGHT, glm::vec2(0.0f, 0.25f));
+
+    sprite->setAnimationSpeed(COVER_LEFT, ANIMATION_SPEED);
+    sprite->addKeyframe(COVER_LEFT, glm::vec2(0.1f, 0.25f));
+
+    sprite->setAnimationSpeed(HOLD_SPEAR_R, ANIMATION_SPEED);
+    sprite->addKeyframe(HOLD_SPEAR_R, glm::vec2(0.0f, 0.30f));
+
+    sprite->setAnimationSpeed(HOLD_SPEAR_L, ANIMATION_SPEED);
+    sprite->addKeyframe(HOLD_SPEAR_L, glm::vec2(0.1f, 0.30f));
+   
+    sprite->setAnimationSpeed(CHARGE_RIGHT, ANIMATION_SPEED);
+    sprite->addKeyframe(CHARGE_RIGHT, glm::vec2(0.0, 0.35f));
+    sprite->addKeyframe(CHARGE_RIGHT, glm::vec2(0.1, 0.35f));
+    sprite->addKeyframe(CHARGE_RIGHT, glm::vec2(0.2, 0.35f));
+
+    sprite->setAnimationSpeed(CHARGE_LEFT, ANIMATION_SPEED);
+    sprite->addKeyframe(CHARGE_LEFT, glm::vec2(0.0, 0.40f));
+    sprite->addKeyframe(CHARGE_LEFT, glm::vec2(0.1, 0.40f));
+    sprite->addKeyframe(CHARGE_LEFT, glm::vec2(0.2, 0.40f));
 
 	////
 
@@ -153,7 +180,7 @@ void Player::update(int deltaTime)
         posPlayer.y += FALL_STEP;
         if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
             // El jugador está en el suelo
-            if (Game::instance().getKey(GLFW_KEY_UP)) {
+            if (Game::instance().getKey(GLFW_KEY_Z)) {
                 bJumping = true;
                 jumpAngle = 0;
                 startY = posPlayer.y;
