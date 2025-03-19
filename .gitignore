@@ -8,8 +8,8 @@
 *.suo
 *.user
 *.sln.docstates
-#*.vcxproj.filters
-#*.vcxproj
+*.vcxproj.filters
+*.vcxproj
 *.vcxproj.user
 *.sln
 *.rc
