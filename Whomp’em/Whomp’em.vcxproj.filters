@@ -105,13 +105,13 @@
     <None Include="shaders\texture.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="levels\Map.tsx">
-      <Filter>Levels</Filter>
-    </None>
-    <None Include="levels\MAPA_FINAL.tmx">
-      <Filter>Levels</Filter>
-    </None>
     <None Include="levels\Mapa_Woods.png">
+      <Filter>Levels</Filter>
+    </None>
+    <None Include="levels\FINAL_MAP.tmx">
+      <Filter>Levels</Filter>
+    </None>
+    <None Include="levels\Final-Tileset.tsx">
       <Filter>Levels</Filter>
     </None>
   </ItemGroup>

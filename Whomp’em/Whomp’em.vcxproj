@@ -36,14 +36,14 @@
     <None Include="images\bub.png" />
     <None Include="images\NES - Whomp Em Saiyuuki World 2 - Son Goku JPN.png" />
     <None Include="images\rocks.jpg" />
-    <None Include="images\tileset.png" />
+    <None Include="images\Tileset.png" />
     <None Include="images\varied.png" />
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple.frag" />
     <None Include="shaders\texture.frag" />
     <None Include="shaders\texture.vert" />
-    <None Include="levels\MAPA_FINAL.tmx" />
-    <None Include="levels\Map.tsx" />
+    <None Include="levels\FINAL_MAP.tmx" />
+    <None Include="levels\Final-Tileset.tsx" />
     <None Include="levels\Mapa_Woods.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

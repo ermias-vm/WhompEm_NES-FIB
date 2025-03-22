@@ -53,6 +53,12 @@ private:
 	glm::vec2 tileTexSize;
 	int *map;
 	std::vector<CollisionRect> collisionObjects; // Declare collisionObjects here
+	Texture imageLayerTexture; // Textura para la capa de imagen
+	bool hasImageLayer;        // Indicador de si hay una capa de imagen
+	glm::vec2 imageLayerPos;   // Posición de la capa de imagen
+	glm::vec2 imageLayerSize;  // Tamaño de la capa de imagen
+	GLuint imageVao, imageVbo; // VAO y VBO para renderizar la imagen
+	GLint imagePosLocation, imageTexCoordLocation; // Localizaciones de atributos para la imagen
 };
 
 

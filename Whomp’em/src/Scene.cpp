@@ -9,7 +9,7 @@
 //#define SCREEN_Y 50
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 10		// MAPA DE 16x15 TILES
+#define INIT_PLAYER_Y_TILES 0			// MAPA DE 16x15 TILES
 
 
 
@@ -28,7 +28,7 @@ Scene::~Scene()
 
 void Scene::init() {
 	initShaders();
-	map = TileMap::createTileMap("levels/MAPA_FINAL.tmx", glm::vec2(0, 0), texProgram);
+	map = TileMap::createTileMap("levels/FINAL_MAP.tmx", glm::vec2(0, 0), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -64,10 +64,9 @@ void Scene::update(int deltaTime)
 		horitzontal = true;
 	}
 	Scene::updateCamera(player->getPosition(),deltaTime);
-	std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
+	std::cout << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
 	std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
-	//auto offset = Scene::getPlayerOffset(player);
-	//Scene::setcameraPos(offset);
+	
 }
 
 
