@@ -4,23 +4,21 @@
 #include "Sprite.h"
 
 
-Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
-{
+Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program) {
 	Sprite *quad = new Sprite(quadSize, sizeInSpritesheet, spritesheet, program);
 
 	return quad;
 }
 
 
-Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
-{
+Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program) {
 	float vertices[24] = {
-0.f, 0.f, 0.f, 0.f, 
-quadSize.x, 0.f, sizeInSpritesheet.x, 0.f, 
-quadSize.x, quadSize.y, sizeInSpritesheet.x, sizeInSpritesheet.y, 
-0.f, 0.f, 0.f, 0.f, 
-quadSize.x, quadSize.y, sizeInSpritesheet.x, sizeInSpritesheet.y, 
-0.f, quadSize.y, 0.f, sizeInSpritesheet.y};
+		0.f, 0.f, 0.f, 0.f, 
+		quadSize.x, 0.f, sizeInSpritesheet.x, 0.f, 
+		quadSize.x, quadSize.y, sizeInSpritesheet.x, sizeInSpritesheet.y, 
+		0.f, 0.f, 0.f, 0.f, 
+		quadSize.x, quadSize.y, sizeInSpritesheet.x, sizeInSpritesheet.y, 
+		0.f, quadSize.y, 0.f, sizeInSpritesheet.y};
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -35,22 +33,31 @@ quadSize.x, quadSize.y, sizeInSpritesheet.x, sizeInSpritesheet.y,
 	position = glm::vec2(0.f);
 }
 
-void Sprite::update(int deltaTime)
-{
-	if(currentAnimation >= 0)
-	{
+
+void Sprite::update(int deltaTime) {
+	if (currentAnimation >= 0) {
 		timeAnimation += deltaTime;
-		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
-		{
-			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
-			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
+		if (acyclicAnims[currentAnimation]) {
+			// Si la animación es acíclica, avanzar hasta el último fotograma y detenerse.
+			while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe &&
+				currentKeyframe < int(animations[currentAnimation].keyframeDispl.size()) - 1) {
+				timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+				currentKeyframe++;
+			}
+		}
+		else {
+			// Animación cíclica: se repite indefinidamente
+			while (timeAnimation > animations[currentAnimation].millisecsPerKeyframe) {
+				timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+				currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
+			}
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
 	}
 }
 
-void Sprite::render() const
-{
+
+void Sprite::render() const {
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.f));
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
@@ -63,33 +70,28 @@ void Sprite::render() const
 	glDisable(GL_TEXTURE_2D);
 }
 
-void Sprite::free()
-{
+void Sprite::free() {
 	glDeleteBuffers(1, &vbo);
 }
 
-void Sprite::setNumberAnimations(int nAnimations)
-{
+void Sprite::setNumberAnimations(int nAnimations) {
 	animations.clear();
 	animations.resize(nAnimations);
+	acyclicAnims.clear();
+	acyclicAnims.resize(nAnimations, false);
 }
 
-void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
-{
-	if(animId < int(animations.size()))
-		animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
+void Sprite::setAnimationSpeed(int animId, int keyframesPerSec) {
+	if(animId < int(animations.size())) animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
 }
 
-void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
-{
+void Sprite::addKeyframe(int animId, const glm::vec2 &displacement) {
 	if(animId < int(animations.size()))
 		animations[animId].keyframeDispl.push_back(displacement);
 }
 
-void Sprite::changeAnimation(int animId)
-{
-	if(animId < int(animations.size()))
-	{
+void Sprite::changeAnimation(int animId) {
+	if(animId < int(animations.size())) {
 		currentAnimation = animId;
 		currentKeyframe = 0;
 		timeAnimation = 0.f;
@@ -97,15 +99,23 @@ void Sprite::changeAnimation(int animId)
 	}
 }
 
-int Sprite::animation() const
-{
+int Sprite::animation() const {
 	return currentAnimation;
 }
 
-void Sprite::setPosition(const glm::vec2 &pos)
-{
+void Sprite::setPosition(const glm::vec2 &pos) {
 	position = pos;
 }
 
+int Sprite::getCurrentKeyframe() const {
+	return currentKeyframe;
+}
 
 
+void Sprite::setAnimationAcyclic(int animId) {
+	if (animId >= 0 && animId < int(acyclicAnims.size())) acyclicAnims[animId] = true;
+}
+
+void Sprite::setAnimationCyclic(int animId) {
+	if (animId >= 0 && animId < int(acyclicAnims.size())) acyclicAnims[animId] = false;
+}

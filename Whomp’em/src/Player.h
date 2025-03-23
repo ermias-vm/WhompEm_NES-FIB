@@ -25,7 +25,6 @@ public:
 	void update(int deltaTime);
 
 	void render();
-	
 	void setTileMap(TileMap *tileMap);
 
 	/**
@@ -37,20 +36,21 @@ public:
 	glm::vec2 Player::getPosition();
 	glm::vec2 Player::getVelocity();
 
-	void setAnimationBasedOnDirection(int standAnim, int moveAnim, int jumpAnim, int crouchAnim, int fallAnim);
+	void changeAnimToRightLeft(Sprite &sprite, int animation);
+	void Player::righLeftKeyPressed(int isLeftAnim);
+	void Player::righLeftKeyReleased(int isLeftAnim);
+	void Player::printAnimName(Sprite* sprite, int animation);
 	
 private:
-	bool bJumping;
-	bool bCrouching;
-	bool lookingRight;
-	bool attacking;
-	bool damaged;
+	bool bJumping, bCrouching, bLookingRight, bAttacking, bDamaged, bFalling;
+	bool is_Z_pressed, is_Right_pressed, is_Left_pressed;
+	bool bRenderingSpear;
+	bool bAttackCharged;
+	int jumpAngle, startY, spearDist;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY;
-	Texture spritesheet;
-	Sprite *sprite;
+	Texture playerSpritesheet, spearSpritesheet;
+	Sprite *playerSprite, *spearSprite;
 	TileMap *map;
-
 };
 
 

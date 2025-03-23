@@ -64,8 +64,8 @@ void Scene::update(int deltaTime)
 		horitzontal = true;
 	}
 	Scene::updateCamera(player->getPosition(),deltaTime);
-	std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
-	std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
+	//std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
+	//std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
 	//auto offset = Scene::getPlayerOffset(player);
 	//Scene::setcameraPos(offset);
 }

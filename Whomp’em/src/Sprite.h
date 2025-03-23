@@ -35,6 +35,9 @@ public:
 	
 
 	void setPosition(const glm::vec2 &pos);
+	int getCurrentKeyframe() const;
+	void setAnimationAcyclic(int animId);
+	void setAnimationCyclic(int animId);
 
 private:
 	Texture *texture;
@@ -47,6 +50,7 @@ private:
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
+	std::vector<bool> acyclicAnims;
 
 };
 
