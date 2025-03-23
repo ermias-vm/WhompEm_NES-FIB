@@ -44,6 +44,9 @@ private:
 	float cameraVx = 0.0f;
 	float cameraVy = 0.0f;
 	bool horitzontal;
+	bool part1 = false;
+	bool part2 = false;
+	bool part3 = false;
 	float fixedYHorizontal = 0; // y = 10 * tileSize (10 * 32 = 320, para el pasadizo superior)
 	float fixedXVertical = 2048;  // x = 2082 (inicio del pasadizo vertical)
 	float fixedYHorizontal2 = 1440; // y = 140 * tileSize (140 * 32 = 4480, para el pasadizo inferior)

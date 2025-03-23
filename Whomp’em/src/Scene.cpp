@@ -31,7 +31,8 @@ void Scene::init() {
 	map = TileMap::createTileMap("levels/FINAL_MAP.tmx", glm::vec2(0, 0), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setPosition(glm::vec2(2030,64));
 	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
 	horitzontal = true;
@@ -45,7 +46,16 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	// Determinar la sección actual
-	if (player->getPosition().x >= 2082 && player->getPosition().x <= 2280) {
+	if (player->getPosition().x == 2036 && !part1) {
+		player->setPosition(glm::vec2(2054, 64));
+		part1 = true;
+	}
+	if (part1) {
+		if (player->getPosition().x <= 2042) player->setPosition(glm::vec2(2042, player->getPosition().y));
+	}
+	
+	
+	if (player->getPosition().x >= 2042 && player->getPosition().x <= 2280 && part1) {
 		if (horitzontal) { // Transición de horizontal a vertical
 			cameraPos.x = fixedXVertical; // Fijar X al entrar al pasadizo vertical
 		}
