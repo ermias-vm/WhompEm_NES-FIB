@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -17,6 +17,9 @@ TileMap* TileMap::createTileMap(const string& levelFile, const glm::vec2& minCoo
 TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program)
 {
     map = nullptr; // Inicializar map como nullptr
+    hasImageLayer = true; // Por defecto, no hay capa de imagen
+    imageLayerPos = glm::vec2(0.0f, 0.0f);
+    imageLayerSize = glm::vec2(0.0f, 0.0f);
     if (!loadLevel(levelFile)) {
         cout << "Fallo al cargar el nivel: " << levelFile << endl;
         return; // Salir del constructor si falla
@@ -24,15 +27,33 @@ TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProg
     prepareArrays(minCoords, program);
 }
 
+
+
 TileMap::~TileMap()
 {
     if (map != NULL)
         delete[] map; // Use delete[] for array deallocation
 }
 
+int TileMap::getTileId(int x, int y) const {
+    if (x >= 0 && x < mapSize.x && y >= 0 && y < mapSize.y) {
+        return map[y * mapSize.x + x];
+    }
+    return -1; // Valor inválido si está fuera del mapa
+}
+
 void TileMap::render() const
 {
     glEnable(GL_TEXTURE_2D);
+
+    // Renderizar la capa de imagen primero (fondo)
+    if (hasImageLayer) {
+        imageLayerTexture.use();
+        glBindVertexArray(imageVao);
+        glEnableVertexAttribArray(imagePosLocation);
+        glEnableVertexAttribArray(imageTexCoordLocation);
+        glDrawArrays(GL_TRIANGLES, 0, 6); // 6 v�rtices para un quad
+    }
     tilesheet.use();
     glBindVertexArray(vao);
     glEnableVertexAttribArray(posLocation);
@@ -44,10 +65,16 @@ void TileMap::render() const
 void TileMap::free()
 {
     glDeleteBuffers(1, &vbo);
+    if (hasImageLayer) {
+        glDeleteBuffers(1, &imageVbo);
+        glDeleteVertexArrays(1, &imageVao);
+    }
 }
 
 bool TileMap::loadLevel(const string& levelFile)
 {
+    cout << "Tilesheet size: " << tilesheetSize.x << "x" << tilesheetSize.y
+        << " = " << tilesheetSize.x * tilesheetSize.y << " tiles" << endl;
     XMLDocument doc;
     if (doc.LoadFile(levelFile.c_str()) != XML_SUCCESS) {
         cout << "Error loading TMX file: " << levelFile << endl;
@@ -80,14 +107,46 @@ bool TileMap::loadLevel(const string& levelFile)
         return false;
     }
 
-        // Construct path to .tsx file (assumes same directory as .tmx)
-        string tsxPath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + tsxFile;
-        XMLDocument tsxDoc;
-        if (tsxDoc.LoadFile(tsxPath.c_str()) != XML_SUCCESS) {
-            cout << "Error loading TSX file: " << tsxPath << endl;
-            return false;
-        }
+    // Construct path to .tsx file (assumes same directory as .tmx)
+    string tsxPath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + tsxFile;
+    XMLDocument tsxDoc;
+    if (tsxDoc.LoadFile(tsxPath.c_str()) != XML_SUCCESS) {
+        cout << "Error loading TSX file: " << tsxPath << endl;
+        return false;
+    }
 
+    // Cargar capa de imagen (imagelayer)
+    XMLElement* imageLayerElement = mapElement->FirstChildElement("imagelayer");
+    // Dentro de loadLevel, en la secci�n de la capa de imagen:
+    if (imageLayerElement) {
+        XMLElement* imageElement = imageLayerElement->FirstChildElement("image");
+        if (imageElement) {
+            string imageFile = imageElement->Attribute("source");
+            string imagePath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + imageFile;
+            if (!imageLayerTexture.loadFromFile(imagePath, TEXTURE_PIXEL_FORMAT_RGBA)) {
+                cout << "Error al cargar imagen de capa: " << imagePath << endl;
+                return false;
+            }
+            imageLayerTexture.setWrapS(GL_CLAMP_TO_EDGE);
+            imageLayerTexture.setWrapT(GL_CLAMP_TO_EDGE);
+            imageLayerTexture.setMinFilter(GL_NEAREST);
+            imageLayerTexture.setMagFilter(GL_NEAREST);
+
+            // Obtener posici�n y tama�o de la imagen
+            imageLayerElement->QueryFloatAttribute("offsetx", &imageLayerPos.x);
+            imageLayerElement->QueryFloatAttribute("offsety", &imageLayerPos.y);
+
+            // Usar variables temporales int para el ancho y alto
+            int width, height;
+            imageElement->QueryIntAttribute("width", &width);
+            imageElement->QueryIntAttribute("height", &height);
+            imageLayerSize.x = static_cast<float>(width);  // Convertir int a float
+            imageLayerSize.y = static_cast<float>(height); // Convertir int a float
+
+            hasImageLayer = true;
+            cout << "Capa de imagen cargada: " << imagePath << endl;
+        }
+    }
     XMLElement* tilesetRoot = tsxDoc.FirstChildElement("tileset");
     XMLElement* imageElement = tilesetRoot->FirstChildElement("image");
     if (!imageElement) {
@@ -190,7 +249,7 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
         for (int i = 0; i < mapSize.x; i++) {
             tile = map[j * mapSize.x + i];
             if (tile != 0) {
-                // Verificar que el tile est� dentro del rango del tileset
+                // Verificar que el tile est� dentro del rango del tileset
                 if (tile - 1 >= tilesheetSize.x * tilesheetSize.y) {
                     cout << "Warning: Tile value " << tile << " at (" << i << ", " << j << ") exceeds tilesheet size. Clamping to 1." << endl;
                     tile = 1; // O manejar de otra forma (por ejemplo, ignorar el tile)
@@ -228,6 +287,27 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
     glBufferData(GL_ARRAY_BUFFER, 24 * nTiles * sizeof(float), &vertices[0], GL_STATIC_DRAW);
     posLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
     texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+    // Preparar arrays para la capa de imagen
+    if (hasImageLayer) {
+        vector<float> imageVertices = {
+            // Posiciones           // Coordenadas de textura
+            minCoords.x + imageLayerPos.x, minCoords.y + imageLayerPos.y, 0.0f, 0.0f,
+            minCoords.x + imageLayerPos.x + imageLayerSize.x, minCoords.y + imageLayerPos.y, 1.0f, 0.0f,
+            minCoords.x + imageLayerPos.x + imageLayerSize.x, minCoords.y + imageLayerPos.y + imageLayerSize.y, 1.0f, 1.0f,
+            minCoords.x + imageLayerPos.x, minCoords.y + imageLayerPos.y, 0.0f, 0.0f,
+            minCoords.x + imageLayerPos.x + imageLayerSize.x, minCoords.y + imageLayerPos.y + imageLayerSize.y, 1.0f, 1.0f,
+            minCoords.x + imageLayerPos.x, minCoords.y + imageLayerPos.y + imageLayerSize.y, 0.0f, 1.0f
+        };
+
+        glGenVertexArrays(1, &imageVao);
+        glBindVertexArray(imageVao);
+        glGenBuffers(1, &imageVbo);
+        glBindBuffer(GL_ARRAY_BUFFER, imageVbo);
+        glBufferData(GL_ARRAY_BUFFER, imageVertices.size() * sizeof(float), &imageVertices[0], GL_STATIC_DRAW);
+        imagePosLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
+        imageTexCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
 }
 
 bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const

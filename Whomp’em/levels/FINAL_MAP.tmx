@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="256" height="105" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="168">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="256" height="105" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="169">
  <tileset firstgid="1" source="Final-Tileset.tsx"/>
- <imagelayer id="2" name="Imagen-Fondo" visible="0" opacity="0.7">
+ <imagelayer id="2" name="Imagen-Fondo" opacity="0.7">
   <image source="Mapa_Woods.png" width="4096" height="1680"/>
  </imagelayer>
  <layer id="4" name="ID's" width="256" height="105">

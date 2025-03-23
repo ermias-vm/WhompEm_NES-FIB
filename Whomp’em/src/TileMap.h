@@ -1,4 +1,4 @@
-#ifndef _TILE_MAP_INCLUDE
+﻿#ifndef _TILE_MAP_INCLUDE
 #define _TILE_MAP_INCLUDE
 
 
@@ -18,26 +18,26 @@ class TileMap
 {
 
 private:
-	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 
 public:
 	// Tile maps can only be created inside an OpenGL context
-	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	static TileMap* createTileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 
 	~TileMap();
 
 	void render() const;
 	void free();
-	
-	int getTileSize() const { return tileSize; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	
+	int getTileSize() const { return tileSize; }
+	int getTileId(int x, int y) const;
+	bool collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
+
 private:
-	bool loadLevel(const string &levelFile);
-	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	bool loadLevel(const string& levelFile);
+	void prepareArrays(const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
 	struct CollisionRect {
@@ -51,11 +51,16 @@ private:
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	int *map;
+	int* map;
 	std::vector<CollisionRect> collisionObjects; // Declare collisionObjects here
+	Texture imageLayerTexture; // Textura para la capa de imagen
+	bool hasImageLayer;        // Indicador de si hay una capa de imagen
+	glm::vec2 imageLayerPos;   // Posici�n de la capa de imagen
+	glm::vec2 imageLayerSize;  // Tama�o de la capa de imagen
+	GLuint imageVao, imageVbo; // VAO y VBO para renderizar la imagen
+	GLint imagePosLocation, imageTexCoordLocation; // Localizaciones de atributos para la imagen
 };
 
 
 #endif // _TILE_MAP_INCLUDE
-
 
