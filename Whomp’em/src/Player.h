@@ -44,9 +44,10 @@ public:
 private:
 	bool bJumping, bFalling, bLookingLeft, bCrouching;
 	bool bDamaged, b_X_Attacking;
-	bool is_Z_pressed, is_Right_pressed, is_Left_pressed, is_UP_pressed, is_DOWN_pressed;
+	bool is_Z_pressed, is_Right_pressed, is_Left_pressed, is_UP_pressed, is_DOWN_pressed, is_V_pressed;
 
 	int jumpAngle, startY, spearDist;
+	float playerSpeed;
 	glm::ivec2 tileMapDispl, posPlayer;
 	Texture playerSpritesheet, spearSpritesheet;
 	Sprite *playerSprite, *spearSprite;

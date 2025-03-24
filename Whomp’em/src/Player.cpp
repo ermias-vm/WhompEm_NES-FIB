@@ -11,6 +11,7 @@
 #define PI 3.14159265
 #define ANIMATION_SPEED 20
 #define SPEAR_ANIMATION_SPEED 30
+#define SIZE_X 25
 
 
 enum PlayerAnims
@@ -32,7 +33,8 @@ enum PlayerLargeAnims
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 
     bJumping = bFalling = b_X_Attacking = bDamaged = bFalling = bLookingLeft = bCrouching =  false;
-    is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = false;
+    is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = is_V_pressed =false;
+    playerSpeed = 2.f;
  
                     // ANIMACIONES PLAYER //
 
@@ -347,8 +349,8 @@ void Player::update(int deltaTime)
         is_Right_pressed = true;
         if (!Game::instance().getKey(GLFW_KEY_LEFT)) {
             bLookingLeft= false;
-            if (!bCrouching) posPlayer.x += 2;
-            if (map->collisionMoveRight(posPlayer, glm::ivec2(22, 32))) posPlayer.x -= 2;
+            if (!bCrouching) posPlayer.x += playerSpeed;
+            if (map->collisionMoveRight(posPlayer, glm::ivec2(25, 32))) posPlayer.x -= playerSpeed ;
             righLeftKeyPressed();
         }
     }
@@ -362,8 +364,8 @@ void Player::update(int deltaTime)
         is_Left_pressed = true;
         if (!Game::instance().getKey(GLFW_KEY_RIGHT)) {
             bLookingLeft= true;
-            if (!bCrouching) posPlayer.x -= 2;
-            if (map->collisionMoveLeft(posPlayer, glm::ivec2(22, 32))) posPlayer.x += 2;
+            if (!bCrouching) posPlayer.x -= playerSpeed;
+            if (map->collisionMoveLeft(posPlayer, glm::ivec2(25, 32))) posPlayer.x += playerSpeed;
             righLeftKeyPressed();
         }
     }
@@ -429,7 +431,7 @@ void Player::update(int deltaTime)
         if (jumpAngle == 180) {     // El salto ha terminado
             bJumping = false;
             posPlayer.y = startY;
-            if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
+            if (map->collisionMoveDown(posPlayer, glm::ivec2(25, 32), &posPlayer.y)) {
                 changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
             }
         }
@@ -437,7 +439,7 @@ void Player::update(int deltaTime)
             posPlayer.y = int(startY - JUMP_HEIGHT * sin(PI * jumpAngle / 180.f));
 
             if (jumpAngle > 90) {   // Bajando
-                if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
+                if (map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y)) {
                     bJumping = false;
                     changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
                 }
@@ -445,8 +447,8 @@ void Player::update(int deltaTime)
         }
     }
 
-    if (!bJumping) {
-        if (!map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
+    if (!bJumping) { 
+        if (!map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y)) {
             bFalling = true;
             posPlayer.y += FALL_STEP;
             int anim = playerSprite->animation();
@@ -463,11 +465,21 @@ void Player::update(int deltaTime)
             bFalling = false;
         }
     }
-
-
-    ///////////////////////////////////////////////////////////////////////
     playerSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
     spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
+
+
+                ///////////////////////////////////////////////////////////////////////
+               
+    if (Game::instance().getKey(GLFW_KEY_V)) {
+        if (!is_V_pressed) { 
+            playerSpeed = (playerSpeed == 2) ? 4 : 2;
+            is_V_pressed = true;
+        }
+    }
+    else {
+        is_V_pressed = false; 
+    }
 
     // Imprimir la posición del jugador cada 500ms
     static int timeSinceLastPrint = 0;
