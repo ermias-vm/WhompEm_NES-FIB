@@ -42,6 +42,7 @@ private:
 private:
 	struct CollisionRect {
 		int x, y, width, height;
+		bool platform;
 	};
 	int* foregroundMap; // Capa de primer plano
 	GLuint vao;

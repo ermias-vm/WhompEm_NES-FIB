@@ -217,12 +217,29 @@ bool TileMap::loadLevel(const string& levelFile)
     if (objectGroup && string(objectGroup->Attribute("name")) == "COLISIONS") {
         XMLElement* object = objectGroup->FirstChildElement("object");
         while (object) {
-            int x, y, width, height;
-            object->QueryIntAttribute("x", &x);
-            object->QueryIntAttribute("y", &y);
-            object->QueryIntAttribute("width", &width);
-            object->QueryIntAttribute("height", &height);
-            collisionObjects.push_back({ x, y, width, height });
+            CollisionRect collisionObj;
+            object->QueryIntAttribute("x", &collisionObj.x);
+            object->QueryIntAttribute("y", &collisionObj.y);
+            object->QueryIntAttribute("width", &collisionObj.width);
+            object->QueryIntAttribute("height", &collisionObj.height);
+
+            // Buscar la propiedad Platform dentro de <properties>
+            XMLElement* properties = object->FirstChildElement("properties");
+            if (properties) {
+                XMLElement* property = properties->FirstChildElement("property");
+                while (property) {
+                    const char* name = property->Attribute("name");
+                    if (name && string(name) == "Platform") {
+                        bool platformValue = false; // Temporal para leer el valor
+                        property->QueryBoolAttribute("value", &platformValue);
+                        collisionObj.platform = platformValue;
+                        break; // Ya encontramos la propiedad Platform, podemos salir del bucle
+                    }
+                    property = property->NextSiblingElement("property");
+                }
+            }
+
+            collisionObjects.push_back(collisionObj);
             object = object->NextSiblingElement("object");
         }
     }
@@ -356,7 +373,8 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
     for (const auto& rect : collisionObjects) {
         if (pos.x <= rect.x + rect.width && pos.x + size.x > rect.x &&
             pos.y + size.y > rect.y && pos.y < rect.y + rect.height) {
-            return true;
+            if (rect.platform) return false;
+            else return true;
         }
     }
     return false;
@@ -367,7 +385,8 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
     for (const auto& rect : collisionObjects) {
         if (pos.x + size.x >= rect.x && pos.x < rect.x + rect.width &&
             pos.y + size.y > rect.y && pos.y < rect.y + rect.height) {
-            return true;
+            if (rect.platform) return false;
+            else return true;
         }
     }
     return false;

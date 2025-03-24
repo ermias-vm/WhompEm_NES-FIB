@@ -36,6 +36,7 @@
         "Final-Tileset.tsx"
     ],
     "project": "Final_Map.tiled-project",
+    "property.type": "bool",
     "recentFiles": [
         "Final-Tileset.tsx",
         "FINAL_MAP.tmx",
