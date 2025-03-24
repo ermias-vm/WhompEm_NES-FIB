@@ -37,15 +37,15 @@ public:
 	glm::vec2 Player::getVelocity();
 
 	void changeAnimToRightLeft(Sprite &sprite, int animation);
-	void Player::righLeftKeyPressed(int isLeftAnim);
-	void Player::righLeftKeyReleased(int isLeftAnim);
+	void Player::righLeftKeyPressed();
+	void Player::righLeftKeyReleased();
 	void Player::printAnimName(Sprite* sprite, int animation);
 	
 private:
-	bool bJumping, bCrouching, bLookingRight, bAttacking, bDamaged, bFalling;
-	bool is_Z_pressed, is_Right_pressed, is_Left_pressed;
-	bool bRenderingSpear;
-	bool bAttackCharged;
+	bool bJumping, bFalling, bLookingLeft, bCrouching;
+	bool bDamaged, b_X_Attacking;
+	bool is_Z_pressed, is_Right_pressed, is_Left_pressed, is_UP_pressed, is_DOWN_pressed;
+
 	int jumpAngle, startY, spearDist;
 	glm::ivec2 tileMapDispl, posPlayer;
 	Texture playerSpritesheet, spearSpritesheet;

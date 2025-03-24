@@ -7,7 +7,7 @@
 
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 50
-#define FALL_STEP 4
+#define FALL_STEP 3.5
 #define PI 3.14159265
 #define ANIMATION_SPEED 20
 #define SPEAR_ANIMATION_SPEED 30
@@ -24,25 +24,22 @@ enum PlayerAnims
 enum PlayerLargeAnims
 {
     SPEAR_ATTACK_RIGHT, SPEAR_ATTACK_LEFT, SPEAR_ATTACK_CROUCH_R, SPEAR_ATTACK_CROUCH_L,
-    SPEAR_PASSIVE_R, SPEAR_PASSIVE_L, SPEAR_PASSIVE_LOW_R, SPEAR_PASSIVE_LOW_L, NONE, NONE2
+    SPEAR_PASSIVE_R, SPEAR_PASSIVE_L, SPEAR_PASSIVE_CROUCH_R, SPEAR_PASSIVE_CROUCH_L, NONE, NONE2
 };
 
 
 
-void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
-{
-    bLookingRight = bAttackCharged = true;
-    bJumping = bCrouching = bAttacking = bDamaged = bFalling = false;
-    is_Z_pressed = is_Right_pressed = is_Left_pressed = false;
-    spearDist = 32;
+void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 
-
-    // ANIMACIONES PLAYER
+    bJumping = bFalling = b_X_Attacking = bDamaged = bFalling = bLookingLeft = bCrouching =  false;
+    is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = false;
+ 
+                    // ANIMACIONES PLAYER //
 
     playerSpritesheet.loadFromFile("images/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     //(pixels frame, %espació ocupado(ancho,alto), playerSpritesheet, shaderProgram)
     playerSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.05), &playerSpritesheet, &shaderProgram);
-    playerSprite->setNumberAnimations(25);
+    playerSprite->setNumberAnimations(30);
 
     playerSprite->setAnimationSpeed(STAND_RIGHT, ANIMATION_SPEED);
     playerSprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
@@ -118,11 +115,12 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     playerSprite->setAnimationSpeed(ATTACK_UP_L, ANIMATION_SPEED);
     playerSprite->addKeyframe(ATTACK_UP_L, glm::vec2(0.25f, 0.55f));
 
-    // ANIMACIONES DE LA LANZA
+
+    // ANIMACIONES DE LA LANZA //
 
     spearSpritesheet.loadFromFile("images/spearFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spearSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.20f, 0.10f), &spearSpritesheet, &shaderProgram);  // Tamaño ajustado para ataque
-    spearSprite->setNumberAnimations(10);
+    spearSprite->setNumberAnimations(15);
 
     spearSprite->setAnimationSpeed(SPEAR_ATTACK_RIGHT, SPEAR_ANIMATION_SPEED);
     spearSprite->setAnimationAcyclic(SPEAR_ATTACK_RIGHT);
@@ -171,11 +169,11 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     spearSprite->setAnimationSpeed(SPEAR_PASSIVE_L, SPEAR_ANIMATION_SPEED);
     spearSprite->addKeyframe(SPEAR_PASSIVE_L, glm::vec2(0.0, 0.1f));
 
-    spearSprite->setAnimationSpeed(SPEAR_PASSIVE_LOW_R, SPEAR_ANIMATION_SPEED);
-    spearSprite->addKeyframe(SPEAR_PASSIVE_LOW_R, glm::vec2(0.0, 0.2f));
+    spearSprite->setAnimationSpeed(SPEAR_PASSIVE_CROUCH_R, SPEAR_ANIMATION_SPEED);
+    spearSprite->addKeyframe(SPEAR_PASSIVE_CROUCH_R, glm::vec2(0.0, 0.2f));
 
-    spearSprite->setAnimationSpeed(SPEAR_PASSIVE_LOW_L, SPEAR_ANIMATION_SPEED);
-    spearSprite->addKeyframe(SPEAR_PASSIVE_LOW_L, glm::vec2(0.0, 0.3f));
+    spearSprite->setAnimationSpeed(SPEAR_PASSIVE_CROUCH_L, SPEAR_ANIMATION_SPEED);
+    spearSprite->addKeyframe(SPEAR_PASSIVE_CROUCH_L, glm::vec2(0.0, 0.3f));
 
     spearSprite->setAnimationSpeed(NONE, SPEAR_ANIMATION_SPEED);  //TODO: MODIFICAR A NO RENDERIZAR
     spearSprite->addKeyframe(NONE, glm::vec2(0.8, 0.0f));
@@ -183,91 +181,69 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     spearSprite->setAnimationSpeed(NONE2, SPEAR_ANIMATION_SPEED);  //TODO: MODIFICAR A NO RENDERIZAR
     spearSprite->addKeyframe(NONE2, glm::vec2(0.8, 0.0f));
 
-    playerSprite->changeAnimation(STAND_RIGHT); 	// Animación inicial
-    spearSprite->changeAnimation(NONE);
-
-    tileMapDispl = tileMapPos;				// Desplazamiento del tile map (0,0)
+    changeAnimToRightLeft(*playerSprite, STAND_RIGHT);  // Animación inicial
+    tileMapDispl = tileMapPos;				            // Desplazamiento del tile map (0,0)
     playerSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
     spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
 }
 
 
 void Player::changeAnimToRightLeft(Sprite& sprite, int animation) {
-    if (bLookingRight) {
-        spearDist = 32;
-    }
-    else {
+    if (bLookingLeft) {
         animation++;
         spearDist = -32;
+    }
+    else {
+        spearDist = 32;
     }
     printAnimName(&sprite, animation);
     sprite.changeAnimation(animation);
 }
 
-void Player::righLeftKeyPressed(int isLeftAnim) {
+void Player::righLeftKeyPressed() {
+    if (b_X_Attacking) return;
     int playerAnim = playerSprite->animation();
-    int spearAnim = spearSprite->animation();
     if (!bFalling && !bJumping) {
-        if (bAttacking) {
-            if (playerAnim != (CHARGE_RIGHT + isLeftAnim)) changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
-            if (bAttackCharged) {
-                cout << "-----------------------------CHARGED-----------------" << endl;
-                if (spearAnim != (SPEAR_ATTACK_RIGHT + isLeftAnim)) changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
-            }
-            else {
-                cout << "-----------------------------DESCARREGAT-----------------" << endl;
-                if (spearAnim != (SPEAR_PASSIVE_R + isLeftAnim)) changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
+        if (bCrouching){
+            if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
             }
         }
         else {
-            if (playerAnim != (MOVE_RIGHT + isLeftAnim)) changeAnimToRightLeft(*playerSprite, MOVE_RIGHT);
-
+            if (playerAnim != (MOVE_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, MOVE_RIGHT);
+            }
         }
     }
     else {
-        if (bAttacking) {
-
-            if (playerAnim != (HOLD_SPEAR_CROUCH_R + isLeftAnim)) changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-            if (bAttackCharged) {
-                if (spearAnim != (SPEAR_ATTACK_CROUCH_R + isLeftAnim)) changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
-            }
-            else {
-                if (spearAnim != (SPEAR_PASSIVE_LOW_R + isLeftAnim)) changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_LOW_R);
+        if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
+            if (playerAnim != (ATTACK_UP_R + bLookingLeft) && playerAnim != (ATTACK_DOWN_R + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
             }
         }
-        else {
-            if (playerAnim != (CROUCH_RIGHT + isLeftAnim)) changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
-
-        }
-
     }
-
 }
 
-void Player::righLeftKeyReleased(int isLeftAnim) {
+void Player::righLeftKeyReleased() {
+    if (b_X_Attacking) return;
     int playerAnim = playerSprite->animation();
-    int spearAnim = spearSprite->animation();
     if (!bFalling && !bJumping) {
-        if (bAttacking) {
-            //if (!Game::instance().getKey(GLFW_KEY_X)) bAttackCharged = false;
-            /*
-            if (playerAnim != (HOLD_SPEAR_R + isLeftAnim)) changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
-            if (spearAnim != (SPEAR_PASSIVE_R + isLeftAnim)) changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
-            */
+        if (bCrouching) {
+            if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+            }
         }
         else {
-            if (playerAnim != (STAND_RIGHT + isLeftAnim)) changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+            if (playerAnim != (STAND_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+            }
         }
     }
     else {
-        if (bAttacking) {
-            if (playerAnim != (HOLD_SPEAR_CROUCH_R + isLeftAnim)) changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-            if (spearAnim != (SPEAR_PASSIVE_LOW_R + isLeftAnim)) changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_LOW_R);
-            //if (!Game::instance().getKey(GLFW_KEY_X)) bAttackCharged = false;
-
-        }
-        else {
-            if (playerAnim != (CROUCH_RIGHT + isLeftAnim)) changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+        if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
+            if (playerAnim != (ATTACK_UP_R + bLookingLeft) && playerAnim != (ATTACK_DOWN_R + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+            }
         }
     }
 }
@@ -279,40 +255,78 @@ void Player::update(int deltaTime)
     playerSprite->update(deltaTime);
 
     if (Game::instance().getKey(GLFW_KEY_X)) {
-        if (!bAttacking) {             // Iniciar el ataque al presionar 'X'
-            cout << "X" << endl;
-            if (is_Right_pressed || is_Left_pressed) bAttackCharged = true;
-            else bAttackCharged = false;
+        int playerAnim = playerSprite->animation();
+        int spearAnim = spearSprite->animation();
+        if (!b_X_Attacking) {             // Iniciar el ataque al presionar 'X' si no se estava ejecutando
+            cout << "--------------------  X  (Attacking)" << endl;
 
-            bAttacking = true;
+            b_X_Attacking = true;
             if (!bJumping && !bFalling) {
-                changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
-                changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
+                if (is_Right_pressed || is_Left_pressed) {
+                    changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
+                    changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
+                }
+                else if (is_DOWN_pressed) {
+                    if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
+                        changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
+                        changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
+                    }
+                }
+                else {
+                    changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
+                    changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
+                }
+
             }
             else {
                 changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
                 changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
+            }
+        }
+        else if (!bJumping && !bFalling)  { // ANIMACIONES cuando ya se ha atacado y player (EN TIERRA) pero se mantiene X presionada)
+            if (is_Right_pressed || is_Left_pressed) {
+                if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
+                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
+                }
+            }
+            else if (is_DOWN_pressed) {
+                if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
+                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
+                }
+            }
+            else {
+                if (playerAnim != (HOLD_SPEAR_R + bLookingLeft)) { 
+                    changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
+                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
+                }
 
             }
-
+        }
+        else {      // ANIMACIONES cuando ya se ha atacado y player (EN AIRE) pero se mantiene X presionada)
+            if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
+                changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
+            }
         }
 
     }
-    else if (bAttacking) {  // Si se suelta 'X, dejar de atacar
-        cout << "release X" << endl;
-        bAttacking = false;
-        bAttackCharged = true;
-        if (!bJumping && !bFalling) {
+    else if (b_X_Attacking) {  // Si se suelta 'X, dejar de atacar
+        cout << "--------------------  X  (RELEASE)" << endl;
+        b_X_Attacking = false;
+        if (!bJumping && !bFalling && !is_DOWN_pressed) {
             changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
         }
         else {
+
             changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
         }
     }
 
     if (Game::instance().getKey(GLFW_KEY_Z)) {
         if (!is_Z_pressed) {
-            cout << "Z" << endl;
+            cout << "-------------------- Z (Jumping)" << endl;
             is_Z_pressed = true;
             if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
                 bJumping = true;
@@ -324,7 +338,7 @@ void Player::update(int deltaTime)
         }
     }
     else if (is_Z_pressed) {
-        cout << "release Z" << endl;
+        cout << "-------------------- Z (RELEASE)" << endl;
         is_Z_pressed = !is_Z_pressed;
     }
 
@@ -332,43 +346,85 @@ void Player::update(int deltaTime)
     if (Game::instance().getKey(GLFW_KEY_RIGHT)) {
         is_Right_pressed = true;
         if (!Game::instance().getKey(GLFW_KEY_LEFT)) {
-            bLookingRight = true;
-            posPlayer.x += 2;
+            bLookingLeft= false;
+            if (!bCrouching) posPlayer.x += 2;
             if (map->collisionMoveRight(posPlayer, glm::ivec2(22, 32))) posPlayer.x -= 2;
-            righLeftKeyPressed(0);
+            righLeftKeyPressed();
         }
     }
     else if (is_Right_pressed) {
         is_Right_pressed = false;
-        righLeftKeyReleased(0);
+        righLeftKeyReleased();
 
     }
 
     if (Game::instance().getKey(GLFW_KEY_LEFT)) {
         is_Left_pressed = true;
         if (!Game::instance().getKey(GLFW_KEY_RIGHT)) {
-            bLookingRight = false;
-            posPlayer.x -= 2;
+            bLookingLeft= true;
+            if (!bCrouching) posPlayer.x -= 2;
             if (map->collisionMoveLeft(posPlayer, glm::ivec2(22, 32))) posPlayer.x += 2;
-            righLeftKeyPressed(1);
+            righLeftKeyPressed();
         }
     }
     else if (is_Left_pressed) {
         is_Left_pressed = false;
-        righLeftKeyReleased(1);
+        righLeftKeyReleased();
     }
 
 
+    if (bJumping || bFalling) {         // EN AIRE SIN ESTAR PRESIONANDO X
+        if (!b_X_Attacking){
+            if (Game::instance().getKey(GLFW_KEY_UP)) {
+                if (playerSprite->animation() != (ATTACK_UP_R + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, ATTACK_UP_R);
+                }
+            }
+            else if (Game::instance().getKey(GLFW_KEY_DOWN)) {
+                if (playerSprite->animation() != (ATTACK_DOWN_R + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, ATTACK_DOWN_R);
+                }
+            }
+            else {
+                if (playerSprite->animation() != (CROUCH_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+                }
+            }
+        }
+    }
+    else if (!b_X_Attacking) {                  // EN TIERRA
+        if (Game::instance().getKey(GLFW_KEY_UP)) {
+            if (!is_UP_pressed) {
+                is_UP_pressed = true;
+                if (playerSprite->animation() != (COVER_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, COVER_RIGHT);
+                }
+            }
+        }
+        else if (is_UP_pressed) {
+            is_UP_pressed = false;
+            if (playerSprite->animation() != (STAND_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+            }
+        }
 
-    if (Game::instance().getKey(GLFW_KEY_DOWN)) {
-
+        if (Game::instance().getKey(GLFW_KEY_DOWN)) {
+            if (!is_DOWN_pressed) {
+                is_DOWN_pressed = bCrouching = true;
+                if (playerSprite->animation() != (CROUCH_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+                }
+            }
+        }
+        else if (is_DOWN_pressed) {
+            is_DOWN_pressed = bCrouching = false ;
+            if (playerSprite->animation() != (STAND_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+            }
+        }
     }
 
-    if (Game::instance().getKey(GLFW_KEY_UP)) {
-
-    }
-
-    if (bJumping) {            // GESTION SALTO
+    if (bJumping) {            // GESTION DEL SALTO
         jumpAngle += JUMP_ANGLE_STEP;
         if (jumpAngle == 180) {     // El salto ha terminado
             bJumping = false;
@@ -393,14 +449,15 @@ void Player::update(int deltaTime)
         if (!map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
             bFalling = true;
             posPlayer.y += FALL_STEP;
-            if (!bAttacking) {
-                if (playerSprite->animation() != (CROUCH_RIGHT + !bLookingRight))
+            int anim = playerSprite->animation();
+            if (!b_X_Attacking && anim != (ATTACK_DOWN_R + bLookingLeft) && anim != (ATTACK_UP_R + bLookingLeft)) {
+                if (playerSprite->animation() != (CROUCH_RIGHT + bLookingLeft))
                     changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
             }
 
         }
         else {
-            if (bFalling && !bAttacking) {
+            if (bFalling && !b_X_Attacking) {
                 changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
             }
             bFalling = false;
@@ -476,47 +533,47 @@ void Player::printAnimName(Sprite* sprite, int animation) {
     if (sprite == playerSprite) {
         // Print the animation name for the player sprite:
         switch (animation) {
-        case STAND_RIGHT:      cout << "Stand Right" << endl; break;
-        case STAND_LEFT:       cout << "Stand Left" << endl; break;
-        case MOVE_RIGHT:       cout << "Move Right" << endl; break;
-        case MOVE_LEFT:        cout << "Move Left" << endl; break;
-        case JUMP_RIGHT:       cout << "Jump Right" << endl; break;
-        case JUMP_LEFT:        cout << "Jump Left" << endl; break;
-        case CROUCH_RIGHT:     cout << "Crouch Right" << endl; break;
-        case CROUCH_LEFT:      cout << "Crouch Left" << endl; break;
-        case DAMAGED_RIGHT:    cout << "Damaged Right" << endl; break;
-        case DAMAGED_LEFT:     cout << "Damaged Left" << endl; break;
-        case COVER_RIGHT:      cout << "Cover Right" << endl; break;
-        case COVER_LEFT:       cout << "Cover Left" << endl; break;
-        case HOLD_SPEAR_R:     cout << "Hold Spear Right" << endl; break;
-        case HOLD_SPEAR_L:     cout << "Hold Spear Left" << endl; break;
-        case CHARGE_RIGHT:     cout << "Charge Right" << endl; break;
-        case CHARGE_LEFT:      cout << "Charge Left" << endl; break;
-        case HOLD_SPEAR_CROUCH_R: cout << "Hold Spear Crouch Right" << endl; break;
-        case HOLD_SPEAR_CROUCH_L: cout << "Hold Spear Crouch Left" << endl; break;
-        case ATTACK_DOWN_R:    cout << "Attack Down Right" << endl; break;
-        case ATTACK_DOWN_L:    cout << "Attack Down Left" << endl; break;
-        case ATTACK_UP_R:      cout << "Attack Up Right" << endl; break;
-        case ATTACK_UP_L:      cout << "Attack Up Left" << endl; break;
-        case DIE_RIGHT:        cout << "Die Right" << endl; break;
-        case DIE_LEFT:         cout << "Die Left" << endl; break;
-        default:               cout << "Unknown Player Animation (" << animation << ")" << endl; break;
+        case STAND_RIGHT:           cout << "PLAYER: Stand Right" << endl; break;
+        case STAND_LEFT:            cout << "PLAYER: Stand Left" << endl; break;
+        case MOVE_RIGHT:            cout << "PLAYER: Move Right" << endl; break;
+        case MOVE_LEFT:             cout << "PLAYER: Move Left" << endl; break;
+        case JUMP_RIGHT:            cout << "PLAYER: Jump Right" << endl; break;
+        case JUMP_LEFT:             cout << "PLAYER: Jump Left" << endl; break;
+        case CROUCH_RIGHT:          cout << "PLAYER: Crouch Right" << endl; break;
+        case CROUCH_LEFT:           cout << "PLAYER: Crouch Left" << endl; break;
+        case DAMAGED_RIGHT:         cout << "PLAYER: Damaged Right" << endl; break;
+        case DAMAGED_LEFT:          cout << "PLAYER: Damaged Left" << endl; break;
+        case COVER_RIGHT:           cout << "PLAYER: Cover Right" << endl; break;
+        case COVER_LEFT:            cout << "PLAYER: Cover Left" << endl; break;
+        case HOLD_SPEAR_R:          cout << "PLAYER: Hold Spear Right" << endl; break;
+        case HOLD_SPEAR_L:          cout << "PLAYER: Hold Spear Left" << endl; break;
+        case CHARGE_RIGHT:          cout << "PLAYER: Charge Right" << endl; break;
+        case CHARGE_LEFT:           cout << "PLAYER: Charge Left" << endl; break;
+        case HOLD_SPEAR_CROUCH_R:   cout << "PLAYER: Hold Spear Crouch Right" << endl; break;
+        case HOLD_SPEAR_CROUCH_L:   cout << "PLAYER: Hold Spear Crouch Left" << endl; break;
+        case ATTACK_DOWN_R:         cout << "PLAYER: Attack Down Right" << endl; break;
+        case ATTACK_DOWN_L:         cout << "PLAYER: Attack Down Left" << endl; break;
+        case ATTACK_UP_R:           cout << "PLAYER: Attack Up Right" << endl; break;
+        case ATTACK_UP_L:           cout << "PLAYER: Attack Up Left" << endl; break;
+        case DIE_RIGHT:             cout << "PLAYER: Die Right" << endl; break;
+        case DIE_LEFT:              cout << "PLAYER: Die Left" << endl; break;
+        default:                    cout << "PLAYER: Unknown Player Animation (" << animation << ")" << endl; break;
         }
     }
     else if (sprite == spearSprite) {
         // Print the animation name for the spear sprite. These animations come from PlayerLargeAnims.
         switch (animation) {
-        case SPEAR_ATTACK_RIGHT:     cout << "Attack Right" << endl; break;
-        case SPEAR_ATTACK_LEFT:      cout << "Attack Left" << endl; break;
-        case SPEAR_ATTACK_CROUCH_R:  cout << "Attack Crouch Right" << endl; break;
-        case SPEAR_ATTACK_CROUCH_L:  cout << "Attack Crouch Left" << endl; break;
-        case SPEAR_PASSIVE_R:  cout << "Passive Spear Right" << endl; break;
-        case SPEAR_PASSIVE_L:  cout << "Passive Spear Left" << endl; break;
-        case SPEAR_PASSIVE_LOW_R: cout << "Low Passive Spear Right" << endl; break;
-        case SPEAR_PASSIVE_LOW_L: cout << "Low Passive Spear Left" << endl; break;
-        case NONE:             cout << "None" << endl; break;
-        case NONE2:            cout << "None2" << endl; break;
-        default:               cout << "Unknown Spear Animation (" << animation << ")" << endl; break;
+        case SPEAR_ATTACK_RIGHT:    cout << "SPEAR: Attack Right" << endl; break;
+        case SPEAR_ATTACK_LEFT:     cout << "SPEAR: Attack Left" << endl; break;
+        case SPEAR_ATTACK_CROUCH_R: cout << "SPEAR: Attack Crouch Right" << endl; break;
+        case SPEAR_ATTACK_CROUCH_L: cout << "SPEAR: Attack Crouch Left" << endl; break;
+        case SPEAR_PASSIVE_R:       cout << "SPEAR: Passive Right" << endl; break;
+        case SPEAR_PASSIVE_L:       cout << "SPEAR: Passive Left" << endl; break;
+        case SPEAR_PASSIVE_CROUCH_R:   cout << "SPEAR: Low Passive  Right" << endl; break;
+        case SPEAR_PASSIVE_CROUCH_L:   cout << "SPEAR: Low Passive  Left" << endl; break;
+        case NONE:                  cout << "None" << endl; break;
+        case NONE2:                 cout << "None2" << endl; break;
+        default:                    cout << "Unknown Spear Animation (" << animation << ")" << endl; break;
         }
     }
     else {
