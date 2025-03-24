@@ -32,11 +32,10 @@ void Scene::init() {
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setPosition(glm::vec2(3254,544));
+	player->setPosition(glm::vec2(16,0));
 	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
-	horitzontal = false;
-	part1, part2 = true;
+	horitzontal = true;
 	cameraPos = glm::vec2(0.f, 0.f);
 	cameraPos.x = fixedXVertical2;
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
