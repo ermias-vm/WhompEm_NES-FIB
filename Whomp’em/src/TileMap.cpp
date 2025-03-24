@@ -278,8 +278,7 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
             }
         }
     }
-    cout << "Number of tiles to render: " << nTiles << endl;
-
+    
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
     glGenBuffers(1, &vbo);
@@ -287,7 +286,49 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
     glBufferData(GL_ARRAY_BUFFER, 24 * nTiles * sizeof(float), &vertices[0], GL_STATIC_DRAW);
     posLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
     texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    /*
+    // Capa de primer plano
+    foregroundTiles = 0;
+    for (int j = 0; j < mapSize.y; j++) {
+        for (int i = 0; i < mapSize.x; i++) {
+            int tile = foregroundMap[j * mapSize.x + i];
+            if (tile != 0) {
+                if (tile - 1 >= tilesheetSize.x * tilesheetSize.y) {
+                    cout << "Warning: Tile value " << tile << " at (" << i << ", " << j << ") exceeds tilesheet size. Clamping to 1." << endl;
+                    tile = 1;
+                }
+                foregroundTiles++;
+                posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+                texCoordTile[0] = glm::vec2(float((tile - 1) % tilesheetSize.x) / tilesheetSize.x, float((tile - 1) / tilesheetSize.x) / tilesheetSize.y);
+                texCoordTile[1] = texCoordTile[0] + tileTexSize - halfTexel;
 
+                // Primer triángulo
+                foregroundVertices.push_back(posTile.x); foregroundVertices.push_back(posTile.y);
+                foregroundVertices.push_back(texCoordTile[0].x); foregroundVertices.push_back(texCoordTile[0].y);
+                foregroundVertices.push_back(posTile.x + blockSize); foregroundVertices.push_back(posTile.y);
+                foregroundVertices.push_back(texCoordTile[1].x); foregroundVertices.push_back(texCoordTile[0].y);
+                foregroundVertices.push_back(posTile.x + blockSize); foregroundVertices.push_back(posTile.y + blockSize);
+                foregroundVertices.push_back(texCoordTile[1].x); foregroundVertices.push_back(texCoordTile[1].y);
+
+                // Segundo triángulo
+                foregroundVertices.push_back(posTile.x); foregroundVertices.push_back(posTile.y);
+                foregroundVertices.push_back(texCoordTile[0].x); foregroundVertices.push_back(texCoordTile[0].y);
+                foregroundVertices.push_back(posTile.x + blockSize); foregroundVertices.push_back(posTile.y + blockSize);
+                foregroundVertices.push_back(texCoordTile[1].x); foregroundVertices.push_back(texCoordTile[1].y);
+                foregroundVertices.push_back(posTile.x); foregroundVertices.push_back(posTile.y + blockSize);
+                foregroundVertices.push_back(texCoordTile[0].x); foregroundVertices.push_back(texCoordTile[1].y);
+            }
+        }
+    }
+
+    glGenVertexArrays(1, &foregroundVao);
+    glBindVertexArray(foregroundVao);
+    glGenBuffers(1, &foregroundVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, foregroundVbo);
+    glBufferData(GL_ARRAY_BUFFER, 24 * foregroundTiles * sizeof(float), foregroundVertices.data(), GL_STATIC_DRAW);
+    foregroundPosLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
+    foregroundTexCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    */
     // Preparar arrays para la capa de imagen
     if (hasImageLayer) {
         vector<float> imageVertices = {

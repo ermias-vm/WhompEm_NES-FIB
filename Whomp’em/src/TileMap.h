@@ -43,6 +43,7 @@ private:
 	struct CollisionRect {
 		int x, y, width, height;
 	};
+	int* foregroundMap; // Capa de primer plano
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
@@ -52,6 +53,8 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int* map;
+	GLuint foregroundVao, foregroundVbo;
+	GLint foregroundPosLocation, foregroundTexCoordLocation;
 	std::vector<CollisionRect> collisionObjects; // Declare collisionObjects here
 	Texture imageLayerTexture; // Textura para la capa de imagen
 	bool hasImageLayer;        // Indicador de si hay una capa de imagen

@@ -9,10 +9,12 @@ Texture::Texture()
 {
 	wrapS = GL_REPEAT;
 	wrapT = GL_REPEAT;
-	minFilter = GL_LINEAR_MIPMAP_LINEAR;
-	magFilter = GL_LINEAR_MIPMAP_LINEAR;
-}
+	//minFilter = GL_LINEAR_MIPMAP_LINEAR;
+	//magFilter = GL_LINEAR_MIPMAP_LINEAR;
+	minFilter = GL_NEAREST;
+	magFilter = GL_NEAREST;
 
+}
 
 bool Texture::loadFromFile(const string &filename, PixelFormat format)
 {

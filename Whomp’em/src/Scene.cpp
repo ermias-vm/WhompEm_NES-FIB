@@ -32,17 +32,21 @@ void Scene::init() {
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setPosition(glm::vec2(2030,64));
+	player->setPosition(glm::vec2(3254,544));
 	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
-	horitzontal = true;
+	horitzontal = false;
+	part1, part2 = true;
 	cameraPos = glm::vec2(0.f, 0.f);
+	cameraPos.x = fixedXVertical2;
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
 }
 
 void Scene::update(int deltaTime)
 {
+
+	//std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	// Determinar la sección actual
@@ -50,26 +54,62 @@ void Scene::update(int deltaTime)
 		player->setPosition(glm::vec2(2054, 64));
 		part1 = true;
 	}
-	if (part1) {
+	else if (part1) {
 		if (player->getPosition().x <= 2042) player->setPosition(glm::vec2(2042, player->getPosition().y));
 	}
+
+	if (player->getPosition().x >= 2278 && player->getPosition().y < 1600 && !part2) player->setPosition(glm::vec2(2278, player->getPosition().y));
+
+	if (player->getPosition().x == 2288 && !part2) {
+		player->setPosition(glm::vec2(2330, 1600));
+		part2 = true;
+	}
+	else if (part2) {
+		if (player->getPosition().x <= 2304) player->setPosition(glm::vec2(2304, player->getPosition().y));
+	}
+
+	if (player->getPosition().x == 3008  && !part3) {
+		player->setPosition(glm::vec2(3056, 1600));
+		part3 = true;
+	}
+	else if (part3) {
+		if (player->getPosition().x <= 3056) {
+			player->setPosition(glm::vec2(3056, player->getPosition().y));
+		}
+	}
+	if (player->getPosition().x == 3296 && !part4) {
+		player->setPosition(glm::vec2(3328, 576));
+		part4 = true;
+	}
+	else if (part4) {
+		if (player->getPosition().x <= 3328) {
+			player->setPosition(glm::vec2(3328, player->getPosition().y));
+		}
+	}
 	
+
 	
-	if (player->getPosition().x >= 2042 && player->getPosition().x <= 2280 && part1) {
+	if (player->getPosition().x >= 2042 && player->getPosition().x <= 2288  && part1) {
 		if (horitzontal) { // Transición de horizontal a vertical
 			cameraPos.x = fixedXVertical; // Fijar X al entrar al pasadizo vertical
 		}
 		horitzontal = false;
 	}
-	else if (player->getPosition().x >= 2280) {
+	else if (player->getPosition().x >= 2288 && player->getPosition().x <= 3008  && part2) {
 		if (!horitzontal) { // Transición de vertical a horizontal
 		  cameraPos.y = fixedYHorizontal2; // Fijar Y al entrar al pasadizo inferior
 		}
 		horitzontal = true;
 	}
-	else {
+	else if(player->getPosition().x >= 3040 && (player->getPosition().x <= 3256)){
+		if (horitzontal) { // Transición de vertical a horizontal
+			cameraPos.x = fixedXVertical2;
+		}
+		horitzontal = false;
+	}
+	else if (player->getPosition().x >= 3296 && (player->getPosition().x <= 4096)) {
 		if (!horitzontal) { // Transición de vertical a horizontal
-			cameraPos.y = fixedYHorizontal;
+			cameraPos.y = fixedYHorizontal3;
 		}
 		horitzontal = true;
 	}
@@ -112,7 +152,10 @@ void Scene::updateCamera(glm::vec2 &posJugador,int deltaTime) {
 			cameraX += deltaTimeSec * cameraVx;
 			cameraX = std::max(cameraX, jugadorX - 2 * SCREEN_WIDTH / 3);
 			cameraX = std::min(cameraX, jugadorX - SCREEN_WIDTH / 3);
+			if(part2) cameraX = std::max(cameraX, 2304.0f);
 			cameraX = std::max(0.0f, cameraX);
+			if (part4) cameraX = std::max(cameraX, 3328.0f);
+			cameraX = std::min(cameraX, 3840.0f);
 
 		}
 		else {
@@ -129,7 +172,7 @@ void Scene::updateCamera(glm::vec2 &posJugador,int deltaTime) {
 			cameraY = std::max(cameraY, jugadorY - 2 * SCREEN_HEIGHT / 3);
 			cameraY = std::min(cameraY,jugadorY - SCREEN_HEIGHT / 3);
 			cameraY = std::max(0.0f, cameraY);
-
+			if (part2) cameraY = std::max(480.0f, cameraY); //posar a part3
 		}
 
 		// Actualizar la posición de la cámara

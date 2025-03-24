@@ -473,7 +473,7 @@ void Player::update(int deltaTime)
     static int timeSinceLastPrint = 0;
     timeSinceLastPrint += deltaTime;
     if (timeSinceLastPrint >= 500) {
-        //std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
+        std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
         timeSinceLastPrint = 0;
     }
 }
