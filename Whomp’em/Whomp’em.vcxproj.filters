@@ -47,6 +47,9 @@
     <ClCompile Include="src\TileMap.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="src\Menu.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h">
@@ -74,6 +77,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\TileMap.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Menu.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,6 +119,9 @@
     </None>
     <None Include="levels\Final-Tileset.tsx">
       <Filter>Levels</Filter>
+    </None>
+    <None Include="images\MenuFons.png">
+      <Filter>Images</Filter>
     </None>
   </ItemGroup>
 </Project>

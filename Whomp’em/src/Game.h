@@ -11,8 +11,8 @@
 #define SCALE_FACTOR 4.0f
 
 
-// Game is a singleton (a class with a single instance) that represents our whole application
 
+// Game is a singleton (a class with a single instance) that represents our whole application
 class Game
 {
 
@@ -26,6 +26,7 @@ public:
 	
 		return G;
 	}
+
 	
 	void init();
 	bool update(int deltaTime);

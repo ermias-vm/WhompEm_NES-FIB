@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="256" height="105" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="230">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="256" height="105" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="267">
  <tileset firstgid="1" source="Final-Tileset.tsx"/>
  <imagelayer id="2" name="Imagen-Fondo" opacity="0.7">
   <image source="Mapa_Woods.png" width="4096" height="1680"/>
@@ -11,8 +11,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,33,33,33,33,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,23,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,43,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,33,33,33,33,33,33,33,33,33,0,0,0,0,0,0,33,33,33,33,33,33,33,0,0,0,0,0,0,21,21,21,21,21,21,21,21,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,43,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,33,33,33,33,33,33,33,33,33,0,0,0,0,0,0,33,33,33,33,33,33,33,0,0,0,0,0,0,21,21,21,21,21,21,21,21,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63,21,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,42,0,0,0,0,0,0,63,0,0,0,6,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,43,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,33,33,33,33,33,33,0,0,0,0,0,0,0,33,33,33,33,0,0,0,0,0,0,0,0,0,0,0,0,21,21,21,21,62,0,0,0,0,0,0,63,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63,21,21,90,90,90,21,21,90,90,90,21,21,90,90,90,21,21,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,63,0,0,0,0,0,0,0,0,0,0,0,0,6,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -113,7 +113,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="3" name="COLISIONS">
+ <objectgroup id="3" name="COLISIONS" opacity="0.9">
   <object id="1" x="368" y="96" width="32" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
@@ -309,7 +309,7 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="52" x="2080" y="368" width="60" height="16">
+  <object id="52" x="2096" y="368" width="44" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
@@ -389,11 +389,6 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="70" x="2212" y="1264" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="71" x="2196" y="1216" width="24" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
@@ -419,12 +414,12 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="76" x="2212" y="752" width="28" height="16">
+  <object id="76" x="2212" y="752" width="12" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="78" x="2112" y="800" width="28" height="16">
+  <object id="78" x="2128" y="800" width="12" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
@@ -484,11 +479,6 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="90" x="2212" y="912" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="91" x="2132" y="960" width="40" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
@@ -514,27 +504,7 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="96" x="2212" y="1104" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="97" x="2164" y="1152" width="56" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="98" x="2112" y="1168" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="99" x="2080" y="1456" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="101" x="2080" y="1536" width="28" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
@@ -554,11 +524,6 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="106" x="2276" y="1408" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="111" x="2320" y="1424" width="752" height="16">
    <properties>
     <property name="Platform" type="bool" value="false"/>
@@ -569,11 +534,6 @@
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="113" x="3136" y="1536" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="114" x="3184" y="1568" width="16" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
@@ -581,7 +541,7 @@
   </object>
   <object id="115" x="3236" y="1600" width="28" height="16">
    <properties>
-    <property name="Platform" type="bool" value="true"/>
+    <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="116" x="3264" y="576" width="16" height="1056">
@@ -624,11 +584,6 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="124" x="3236" y="928" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="126" x="3168" y="960" width="16" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
@@ -649,22 +604,12 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="130" x="3236" y="1024" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="131" x="3232" y="1072" width="16" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="132" x="3204" y="1120" width="24" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="133" x="3136" y="1104" width="28" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
@@ -679,22 +624,7 @@
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="136" x="3236" y="1216" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="137" x="3220" y="1264" width="24" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="138" x="3136" y="1216" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="139" x="3136" y="1280" width="28" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
@@ -715,21 +645,6 @@
    </properties>
   </object>
   <object id="144" x="3168" y="1440" width="16" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="145" x="3136" y="1408" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="146" x="3236" y="1408" width="28" height="16">
-   <properties>
-    <property name="Platform" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="147" x="3236" y="1472" width="28" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
    </properties>
@@ -837,6 +752,191 @@
   <object id="227" x="2276" y="1568" width="24" height="16">
    <properties>
     <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="230" x="2080" y="368" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="231" x="2224" y="752" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="232" x="2212" y="912" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="233" x="2224" y="912" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="234" x="2212" y="1104" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="235" x="2224" y="1104" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="236" x="2212" y="1264" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="237" x="2224" y="1264" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="238" x="2276" y="1408" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="239" x="2288" y="1408" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="240" x="2112" y="800" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="241" x="2096" y="1456" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="242" x="2080" y="1456" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="243" x="2096" y="1536" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="244" x="2080" y="1536" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="245" x="2128" y="1168" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="246" x="2112" y="1168" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="247" x="3156" y="1536" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="248" x="3140" y="1536" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="249" x="3152" y="1408" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="250" x="3136" y="1408" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="251" x="3152" y="1280" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="252" x="3136" y="1280" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="253" x="3152" y="1216" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="254" x="3136" y="1216" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="255" x="3152" y="1104" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="256" x="3136" y="1104" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="257" x="3236" y="928" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="258" x="3248" y="928" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="259" x="3236" y="1024" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="260" x="3248" y="1024" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="261" x="3236" y="1216" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="262" x="3248" y="1216" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="263" x="3236" y="1408" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="264" x="3248" y="1408" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="265" x="3236" y="1472" width="12" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="266" x="3248" y="1472" width="16" height="16">
+   <properties>
+    <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>
