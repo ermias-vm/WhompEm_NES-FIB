@@ -50,6 +50,11 @@
     <None Include="levels\FINAL_MAP.tmx" />
     <None Include="levels\Final-Tileset.tsx" />
     <None Include="levels\Mapa_Woods.png" />
+    <None Include="images\play_button.png" />
+    <None Include="images\credits_button.png" />
+    <None Include="images\instructions_button.png" />
+
+
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}</ProjectGuid>

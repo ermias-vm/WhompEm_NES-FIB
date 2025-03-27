@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 #include "Game.h"
 #include "Menu.h"
-#include <glm/gtc/matrix_transform.hpp>
 
 #define TARGET_FRAMERATE 60.0f
 
@@ -31,32 +30,25 @@ int main(void) {
     bool menuInitialized = false;
     bool gameInitialized = false;
 
-    /* Initialize the library */
     if (!glfwInit())
         return -1;
 
-    /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(SCREEN_WIDTH * SCALE_FACTOR, SCREEN_HEIGHT * SCALE_FACTOR, "Whomp'em", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
     }
 
-    /* Set window initial position */
     glfwSetWindowPos(window, 10, 40);
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    /* Set callbacks */
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
-    /* Init glew to have access to GL extensions */
     glewExperimental = GL_TRUE;
     glewInit();
 
-    // Configuración inicial para el menú
     Shader vShader, fShader;
     vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
     fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
@@ -70,22 +62,32 @@ int main(void) {
 
     Menu menu(&texProgram);
 
-    // Variable para detectar el clic
-    bool mousePressed = false;
+    // Estructura para capturar clics
+    struct ClickData {
+        bool pressed = false;
+        float x = 0.0f;
+        float y = 0.0f;
+    } clickData;
+
+    // Callback personalizado para capturar posición del clic
     glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-            void* userData = glfwGetWindowUserPointer(window);
-            if (userData) {
-                bool* pressed = static_cast<bool*>(userData);
-                *pressed = true;
+            ClickData* data = static_cast<ClickData*>(glfwGetWindowUserPointer(window));
+            if (data) {
+                data->pressed = true;
+                double xpos, ypos;
+                glfwGetCursorPos(window, &xpos, &ypos);
+                data->x = static_cast<float>(xpos / SCALE_FACTOR); // Ajustar por escala
+                data->y = static_cast<float>(ypos / SCALE_FACTOR);
+                // Para depuración (opcional)
+                // std::cout << "Clic en: " << data->x << ", " << data->y << std::endl;
             }
         }
         });
-    glfwSetWindowUserPointer(window, &mousePressed);
+    glfwSetWindowUserPointer(window, &clickData);
 
     timePreviousFrame = glfwGetTime();
 
-    /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         currentTime = glfwGetTime();
         if (currentTime - timePreviousFrame >= timePerFrame) {
@@ -98,9 +100,12 @@ int main(void) {
                 }
                 menu.render(projection);
 
-                if (mousePressed) {
-                    jugar = true;
-                    mousePressed = false; // Resetear para evitar múltiples transiciones
+                // Verificar si el clic está dentro del botón "Play"
+                if (clickData.pressed) {
+                    if (menu.isPlayClicked(clickData.x, clickData.y)) {
+                        jugar = true;
+                    }
+                    clickData.pressed = false; // Resetear después de procesar
                 }
             }
             else {
