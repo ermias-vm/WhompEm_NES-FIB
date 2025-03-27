@@ -33,13 +33,14 @@ public:
 	* @param posPlayer Posición del jugador.
 	*/
 	void setPosition(const glm::vec2 &pos);
-	glm::vec2 Player::getPosition();
-	glm::vec2 Player::getVelocity();
+	glm::vec2 getPosition();
+	glm::vec2 getVelocity();
 
 	void changeAnimToRightLeft(Sprite &sprite, int animation);
-	void Player::righLeftKeyPressed();
-	void Player::righLeftKeyReleased();
-	void Player::printAnimName(Sprite* sprite, int animation);
+	void righLeftKeyPressed();
+	void righLeftKeyReleased();
+	void printAnimName(Sprite* sprite, int animation);
+	void stopMovement();
 	
 private:
 	bool bJumping, bFalling, bLookingLeft, bCrouching;

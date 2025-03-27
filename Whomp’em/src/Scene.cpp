@@ -8,7 +8,7 @@
 //#define SCREEN_X 16
 //#define SCREEN_Y 50
 
-#define INIT_PLAYER_X_TILES 4
+#define INIT_PLAYER_X_TILES 20
 #define INIT_PLAYER_Y_TILES 10		// MAPA DE 16x15 TILES
 
 
@@ -31,8 +31,7 @@ void Scene::init() {
 	map = TileMap::createTileMap("levels/FINAL_MAP.tmx", glm::vec2(0, 0), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
-	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setPosition(glm::vec2(16,0));
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
 	horitzontal = true;

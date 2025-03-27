@@ -211,6 +211,11 @@ void Player::righLeftKeyPressed() {
                 changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
             }
         }
+		else if (Game::instance().getKey(GLFW_KEY_UP)) {
+            if (playerAnim != (COVER_RIGHT + bLookingLeft)) {
+                changeAnimToRightLeft(*playerSprite, COVER_RIGHT);
+            }
+		}
         else {
             if (playerAnim != (MOVE_RIGHT + bLookingLeft)) {
                 changeAnimToRightLeft(*playerSprite, MOVE_RIGHT);
@@ -229,22 +234,30 @@ void Player::righLeftKeyPressed() {
 void Player::righLeftKeyReleased() {
     if (b_X_Attacking) return;
     int playerAnim = playerSprite->animation();
-    if (!bFalling && !bJumping) {
-        if (bCrouching) {
-            if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
-                changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
-            }
-        }
-        else {
-            if (playerAnim != (STAND_RIGHT + bLookingLeft)) {
-                changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
-            }
+    // Si aún se mantiene UP presionada, mantener COVER
+    if (Game::instance().getKey(GLFW_KEY_UP)) {
+        if (playerAnim != (COVER_RIGHT + bLookingLeft)) {
+            changeAnimToRightLeft(*playerSprite, COVER_RIGHT);
         }
     }
     else {
-        if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
-            if (playerAnim != (ATTACK_UP_R + bLookingLeft) && playerAnim != (ATTACK_DOWN_R + bLookingLeft)) {
-                changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+        if (!bFalling && !bJumping) {
+            if (bCrouching) {
+                if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+                }
+            }
+            else {
+                if (playerAnim != (STAND_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+                }
+            }
+        }
+        else {
+            if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
+                if (playerAnim != (ATTACK_UP_R + bLookingLeft) && playerAnim != (ATTACK_DOWN_R + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
+                }
             }
         }
     }
@@ -265,9 +278,11 @@ void Player::update(int deltaTime)
             b_X_Attacking = true;
             if (!bJumping && !bFalling) {
                 if (is_Right_pressed || is_Left_pressed) {
-                    changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
-                    changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
-                }
+					if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
+                        changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
+                        changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
+					}
+				}
                 else if (is_DOWN_pressed) {
                     if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                         changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
@@ -344,28 +359,39 @@ void Player::update(int deltaTime)
         is_Z_pressed = !is_Z_pressed;
     }
 
+	// GESTION MOVIMEINTO DERECHA/IZQUIERDA
+    bool rightKey = Game::instance().getKey(GLFW_KEY_RIGHT);
+    bool leftKey = Game::instance().getKey(GLFW_KEY_LEFT);
+    int anim = playerSprite->animation();
 
-    if (Game::instance().getKey(GLFW_KEY_RIGHT)) {
-        is_Right_pressed = true;
-        if (!Game::instance().getKey(GLFW_KEY_LEFT)) {
-            bLookingLeft= false;
-            if (!bCrouching) posPlayer.x += playerSpeed;
-            if (map->collisionMoveRight(posPlayer, glm::ivec2(25, 32))) posPlayer.x -= playerSpeed ;
+    // Movimiento a la derecha
+    if (rightKey && !is_UP_pressed) {
+        if (anim == MOVE_LEFT || anim == CHARGE_LEFT) changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+        if (!leftKey) {
+            is_Right_pressed = true;
+            bLookingLeft = false;
+            if (!bCrouching)
+                posPlayer.x += playerSpeed;
+            if (map->collisionMoveRight(posPlayer, glm::ivec2(25, 32)))
+                posPlayer.x -= playerSpeed;
             righLeftKeyPressed();
         }
     }
     else if (is_Right_pressed) {
         is_Right_pressed = false;
         righLeftKeyReleased();
-
     }
 
-    if (Game::instance().getKey(GLFW_KEY_LEFT)) {
-        is_Left_pressed = true;
-        if (!Game::instance().getKey(GLFW_KEY_RIGHT)) {
-            bLookingLeft= true;
-            if (!bCrouching) posPlayer.x -= playerSpeed;
-            if (map->collisionMoveLeft(posPlayer, glm::ivec2(25, 32))) posPlayer.x += playerSpeed;
+    // Movimiento a la izquierda
+    if (leftKey && !is_UP_pressed) {
+        if (anim == MOVE_RIGHT || anim == CHARGE_RIGHT) changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
+        if (!rightKey) {
+            is_Left_pressed = true;
+            bLookingLeft = true;
+            if (!bCrouching)
+                posPlayer.x -= playerSpeed;
+            if (map->collisionMoveLeft(posPlayer, glm::ivec2(25, 32)))
+                posPlayer.x += playerSpeed;
             righLeftKeyPressed();
         }
     }
@@ -373,7 +399,6 @@ void Player::update(int deltaTime)
         is_Left_pressed = false;
         righLeftKeyReleased();
     }
-
 
     if (bJumping || bFalling) {         // EN AIRE SIN ESTAR PRESIONANDO X
         if (!b_X_Attacking){
