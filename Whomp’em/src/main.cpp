@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include "Game.h"
 #include "Menu.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 #define TARGET_FRAMERATE 60.0f
 
@@ -80,7 +81,7 @@ int main(void) {
                 data->x = static_cast<float>(xpos / SCALE_FACTOR); // Ajustar por escala
                 data->y = static_cast<float>(ypos / SCALE_FACTOR);
                 // Para depuración (opcional)
-                // std::cout << "Clic en: " << data->x << ", " << data->y << std::endl;
+                std::cout << "Clic en: " << data->x << ", " << data->y << std::endl;
             }
         }
         });

@@ -16,12 +16,13 @@ TileMap* TileMap::createTileMap(const string& levelFile, const glm::vec2& minCoo
 
 TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program)
 {
+    FRONT = nullptr;
     map = nullptr; // Inicializar map como nullptr
     hasImageLayer = true; // Por defecto, no hay capa de imagen
     imageLayerPos = glm::vec2(0.0f, 0.0f);
     imageLayerSize = glm::vec2(0.0f, 0.0f);
     if (!loadLevel(levelFile)) {
-        cout << "Fallo al cargar el nivel: " << levelFile << endl;
+        std::cout << "Fallo al cargar el nivel: " << levelFile << endl;
         return; // Salir del constructor si falla
     }
     prepareArrays(minCoords, program);
@@ -33,6 +34,9 @@ TileMap::~TileMap()
 {
     if (map != NULL)
         delete[] map; // Use delete[] for array deallocation
+    if (FRONT != NULL)
+        delete[] FRONT; // Use delete[] for array deallocation
+
 }
 
 int TileMap::getTileId(int x, int y) const {
@@ -60,6 +64,18 @@ void TileMap::render() const
     glEnableVertexAttribArray(texCoordLocation);
     glDrawArrays(GL_TRIANGLES, 0, 6 * nTiles);
     glDisable(GL_TEXTURE_2D);
+
+}
+
+void TileMap::renderFRONT() const
+{
+    glEnable(GL_TEXTURE_2D);
+    frontsheet.use();
+    glBindVertexArray(foregroundVao);
+    glEnableVertexAttribArray(foregroundPosLocation);
+    glEnableVertexAttribArray(foregroundTexCoordLocation);
+    glDrawArrays(GL_TRIANGLES, 0, 6 * frontTiles);
+    glDisable(GL_TEXTURE_2D);
 }
 
 void TileMap::free()
@@ -69,22 +85,22 @@ void TileMap::free()
         glDeleteBuffers(1, &imageVbo);
         glDeleteVertexArrays(1, &imageVao);
     }
+    glDeleteBuffers(1, &foregroundVbo);
 }
 
 bool TileMap::loadLevel(const string& levelFile)
 {
-    cout << "Tilesheet size: " << tilesheetSize.x << "x" << tilesheetSize.y
-        << " = " << tilesheetSize.x * tilesheetSize.y << " tiles" << endl;
+    
     XMLDocument doc;
     if (doc.LoadFile(levelFile.c_str()) != XML_SUCCESS) {
-        cout << "Error loading TMX file: " << levelFile << endl;
+        std::cout << "Error loading TMX file: " << levelFile << endl;
         return false;
     }
 
     // Get the root <map> element
     XMLElement* mapElement = doc.FirstChildElement("map");
     if (!mapElement) {
-        cout << "No <map> element found in TMX file" << endl;
+        std::cout << "No <map> element found in TMX file" << endl;
         return false;
     }
 
@@ -97,13 +113,13 @@ bool TileMap::loadLevel(const string& levelFile)
     // Load external tileset (.tsx file)
     XMLElement* tilesetElement = mapElement->FirstChildElement("tileset");
     if (!tilesetElement) {
-        cout << "No <tileset> element found in TMX file" << endl;
+        std::cout << "No <tileset> element found in TMX file" << endl;
         return false;
     }
 
     const char* tsxFile = tilesetElement->Attribute("source");
     if (!tsxFile) {
-        cout << "No 'source' attribute in <tileset>" << endl;
+        std::cout << "No 'source' attribute in <tileset>" << endl;
         return false;
     }
 
@@ -111,7 +127,7 @@ bool TileMap::loadLevel(const string& levelFile)
     string tsxPath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + tsxFile;
     XMLDocument tsxDoc;
     if (tsxDoc.LoadFile(tsxPath.c_str()) != XML_SUCCESS) {
-        cout << "Error loading TSX file: " << tsxPath << endl;
+        std::cout << "Error loading TSX file: " << tsxPath << endl;
         return false;
     }
 
@@ -124,7 +140,7 @@ bool TileMap::loadLevel(const string& levelFile)
             string imageFile = imageElement->Attribute("source");
             string imagePath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + imageFile;
             if (!imageLayerTexture.loadFromFile(imagePath, TEXTURE_PIXEL_FORMAT_RGBA)) {
-                cout << "Error al cargar imagen de capa: " << imagePath << endl;
+                std::cout << "Error al cargar imagen de capa: " << imagePath << endl;
                 return false;
             }
             imageLayerTexture.setWrapS(GL_CLAMP_TO_EDGE);
@@ -144,25 +160,25 @@ bool TileMap::loadLevel(const string& levelFile)
             imageLayerSize.y = static_cast<float>(height); // Convertir int a float
 
             hasImageLayer = true;
-            cout << "Capa de imagen cargada: " << imagePath << endl;
+            std::cout << "Capa de imagen cargada: " << imagePath << endl;
         }
     }
     XMLElement* tilesetRoot = tsxDoc.FirstChildElement("tileset");
     XMLElement* imageElement = tilesetRoot->FirstChildElement("image");
     if (!imageElement) {
-        cout << "No <image> element found in TSX file" << endl;
+        std::cout << "No <image> element found in TSX file" << endl;
         return false;
     }
 
     string tilesheetFile = imageElement->Attribute("source");
     // Construct full path to tilesheet (assumes same directory as .tmx)
     string tilesheetPath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + tilesheetFile;
-    cout << "Intentando cargar tilesheet desde: " << tilesheetPath << endl;
+    std::cout << "Intentando cargar tilesheet desde: " << tilesheetPath << endl;
     if (!tilesheet.loadFromFile(tilesheetPath, TEXTURE_PIXEL_FORMAT_RGBA)) {
-        cout << "Error al cargar tilesheet: " << tilesheetPath << endl;
+        std::cout << "Error al cargar tilesheet: " << tilesheetPath << endl;
         ifstream file(tilesheetPath);
         if (!file.good()) {
-            cout << "El archivo no existe o no se puede abrir." << endl;
+            std::cout << "El archivo no existe o no se puede abrir." << endl;
         }
         return false;
     }
@@ -171,46 +187,102 @@ bool TileMap::loadLevel(const string& levelFile)
     tilesheet.setMinFilter(GL_NEAREST);
     tilesheet.setMagFilter(GL_NEAREST);
 
+    string frontsheetFile = imageElement->Attribute("source");
+    // Construct full path to tilesheet (assumes same directory as .tmx)
+    string frontsheetPath = levelFile.substr(0, levelFile.find_last_of("/\\") + 1) + frontsheetFile;
+    std::cout << "Intentando cargar tilesheet desde: " << frontsheetPath << endl;
+    if (!tilesheet.loadFromFile(frontsheetPath, TEXTURE_PIXEL_FORMAT_RGBA)) {
+        std::cout << "Error al cargar tilesheet: " << frontsheetPath << endl;
+        ifstream file(frontsheetPath);
+        if (!file.good()) {
+            std::cout << "El archivo no existe o no se puede abrir." << endl;
+        }
+        return false;
+    }
+    frontsheet.setWrapS(GL_CLAMP_TO_EDGE);
+    frontsheet.setWrapT(GL_CLAMP_TO_EDGE);
+    frontsheet.setMinFilter(GL_NEAREST);
+    frontsheet.setMagFilter(GL_NEAREST);
+
     int tilesheetWidth, tilesheetHeight;
     imageElement->QueryIntAttribute("width", &tilesheetWidth);
     imageElement->QueryIntAttribute("height", &tilesheetHeight);
     tilesheetSize = glm::ivec2(tilesheetWidth / tileSize, tilesheetHeight / tileSize);
     tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 
-    // Load layer data (FONS layer)
+    int frontsheetWidth, frontsheetHeight;
+    imageElement->QueryIntAttribute("width", &frontsheetWidth);
+    imageElement->QueryIntAttribute("height", &frontsheetHeight);
+    frontsheetSize = glm::ivec2(frontsheetWidth / tileSize, frontsheetHeight / tileSize);
+    frontTexSize = glm::vec2(1.f / frontsheetSize.x, 1.f / frontsheetSize.y);
+
+
+
     XMLElement* layerElement = mapElement->FirstChildElement("layer");
-    if (!layerElement) {
-        cout << "No <layer> element found in TMX file" << endl;
-        return false;
-    }
+    while (layerElement) {
+        const char* layerName = layerElement->Attribute("name");
+        cout << "Capa encontrada: " << layerName << endl; // Debug
 
-    XMLElement* dataElement = layerElement->FirstChildElement("data");
-    if (!dataElement || strcmp(dataElement->Attribute("encoding"), "csv") != 0) {
-        cout << "Only CSV-encoded data is supported" << endl;
-        return false;
-    }
+        if (string(layerName) == "ID's") {
+            XMLElement* dataElement = layerElement->FirstChildElement("data");
+            if (!dataElement || strcmp(dataElement->Attribute("encoding"), "csv") != 0) {
+                std::cout << "Only CSV-encoded data is supported" << endl;
+                return false;
+            }
 
-    // Parse CSV tile data
-    string csvData = dataElement->GetText();
-    vector<int> tiles;
-    stringstream ss(csvData);
-    string tileValue;
+            // Parse CSV tile data
+            string csvData = dataElement->GetText();
+            vector<int> tiles;
+            stringstream ss(csvData);
+            string tileValue;
+            while (getline(ss, tileValue, ',')) {
+                tiles.push_back(stoi(tileValue));
+            }
 
-    while (getline(ss, tileValue, ',')) {
-        tiles.push_back(stoi(tileValue));
-    }
+            if (tiles.size() != mapSize.x * mapSize.y) {
+                std::cout << "Tile data size (" << tiles.size() << ") does not match map dimensions (" << mapSize.x * mapSize.y << ")" << endl;
+                return false;
+            }
 
-    if (tiles.size() != mapSize.x * mapSize.y) {
-        cout << "Tile data size (" << tiles.size() << ") does not match map dimensions (" << mapSize.x * mapSize.y << ")" << endl;
-        return false;
-    }
+            // Allocate and fill the map array
+            if (map != nullptr) delete[] map; // Use delete[] for array
+            map = new int[mapSize.x * mapSize.y];
+            for (int i = 0; i < tiles.size(); ++i) {
+                map[i] = tiles[i]; // TMX uses 0 for empty tiles
+            }
+        }
+        else if (string(layerName) == "Foreground") {
+            XMLElement* dataElementFons = layerElement->FirstChildElement("data");
+            if (!dataElementFons || strcmp(dataElementFons->Attribute("encoding"), "csv") != 0) {
+                std::cout << "Only CSV-encoded data is supported" << endl;
+                return false;
+            }
 
-    // Allocate and fill the map array
-    if (map != nullptr) delete[] map; // Use delete[] for array
-    map = new int[mapSize.x * mapSize.y];
-    for (int i = 0; i < tiles.size(); ++i) {
-        map[i] = tiles[i]; // TMX uses 0 for empty tiles
+            // Parse CSV tile data
+            string csvDataFons = dataElementFons->GetText();
+            vector<int> tilesFons;
+            stringstream ss(csvDataFons);
+            string tileValueFons;
+            while (getline(ss, tileValueFons, ',')) {
+                tilesFons.push_back(stoi(tileValueFons));
+            }
+
+            if (tilesFons.size() != mapSize.x * mapSize.y) {
+                std::cout << "Tile data size (" << tilesFons.size() << ") does not match map dimensions (" << mapSize.x * mapSize.y << ")" << endl;
+                return false;
+            }
+
+            // Allocate and fill the map array
+            if (FRONT != nullptr) delete[] FRONT; // Use delete[] for array
+            FRONT = new int[mapSize.x * mapSize.y];
+            for (int i = 0; i < tilesFons.size(); ++i) {
+                FRONT[i] = tilesFons[i]; // TMX uses 0 for empty tiles
+            }
+        }
+
+        layerElement = layerElement->NextSiblingElement("layer");
     }
+    
 
     // Load collision objects (COLISIONS layer)
     XMLElement* objectGroup = mapElement->FirstChildElement("objectgroup");
@@ -243,13 +315,6 @@ bool TileMap::loadLevel(const string& levelFile)
             object = object->NextSiblingElement("object");
         }
     }
-    cout << "Map size: " << mapSize.x << "x" << mapSize.y << " = " << mapSize.x * mapSize.y << " tiles" << endl;
-    cout << "Tiles loaded: " << tiles.size() << endl;
-    cout << "First few tiles: ";
-    for (int i = 0; i < min(10, (int)tiles.size()); i++) {
-        cout << tiles[i] << ", ";
-    }
-    cout << "..." << endl;
 
     return true;
 }
@@ -268,7 +333,7 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
             if (tile != 0) {
                 // Verificar que el tile est� dentro del rango del tileset
                 if (tile - 1 >= tilesheetSize.x * tilesheetSize.y) {
-                    cout << "Warning: Tile value " << tile << " at (" << i << ", " << j << ") exceeds tilesheet size. Clamping to 1." << endl;
+                    std::cout << "Warning: Tile value " << tile << " at (" << i << ", " << j << ") exceeds tilesheet size. Clamping to 1." << endl;
                     tile = 1; // O manejar de otra forma (por ejemplo, ignorar el tile)
                 }
                 nTiles++;
@@ -303,37 +368,43 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
     glBufferData(GL_ARRAY_BUFFER, 24 * nTiles * sizeof(float), &vertices[0], GL_STATIC_DRAW);
     posLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
     texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    /*
-    // Capa de primer plano
-    foregroundTiles = 0;
+
+    int tileFons;
+    glm::vec2 posTileFons, texCoordTileFons[2], halfTexelFons;
+    vector<float> verticesFons;
+
+    frontTiles = 0;
+    halfTexelFons = glm::vec2(0.5f / tilesheet.width(), 0.5f / tilesheet.height());
     for (int j = 0; j < mapSize.y; j++) {
         for (int i = 0; i < mapSize.x; i++) {
-            int tile = foregroundMap[j * mapSize.x + i];
-            if (tile != 0) {
-                if (tile - 1 >= tilesheetSize.x * tilesheetSize.y) {
-                    cout << "Warning: Tile value " << tile << " at (" << i << ", " << j << ") exceeds tilesheet size. Clamping to 1." << endl;
-                    tile = 1;
+            tileFons = map[j * mapSize.x + i];
+            if (tileFons != 0) {
+                // Verificar que el tile est� dentro del rango del tileset
+                if (tileFons - 1 >= tilesheetSize.x * tilesheetSize.y) {
+                    std::cout << "Warning: Tile value " << tileFons << " at (" << i << ", " << j << ") exceeds tilesheet size. Clamping to 1." << endl;
+                    tileFons = 1; // O manejar de otra forma (por ejemplo, ignorar el tile)
                 }
-                foregroundTiles++;
-                posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-                texCoordTile[0] = glm::vec2(float((tile - 1) % tilesheetSize.x) / tilesheetSize.x, float((tile - 1) / tilesheetSize.x) / tilesheetSize.y);
-                texCoordTile[1] = texCoordTile[0] + tileTexSize - halfTexel;
+                frontTiles++;
+                posTileFons = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+                texCoordTileFons[0] = glm::vec2(float((tileFons - 1) % tilesheetSize.x) / tilesheetSize.x, float((tileFons - 1) / tilesheetSize.x) / tilesheetSize.y);
+                texCoordTileFons[1] = texCoordTileFons[0] + tileTexSize;
+                texCoordTileFons[1] -= halfTexelFons;
 
-                // Primer triángulo
-                foregroundVertices.push_back(posTile.x); foregroundVertices.push_back(posTile.y);
-                foregroundVertices.push_back(texCoordTile[0].x); foregroundVertices.push_back(texCoordTile[0].y);
-                foregroundVertices.push_back(posTile.x + blockSize); foregroundVertices.push_back(posTile.y);
-                foregroundVertices.push_back(texCoordTile[1].x); foregroundVertices.push_back(texCoordTile[0].y);
-                foregroundVertices.push_back(posTile.x + blockSize); foregroundVertices.push_back(posTile.y + blockSize);
-                foregroundVertices.push_back(texCoordTile[1].x); foregroundVertices.push_back(texCoordTile[1].y);
+                // First triangle
+                verticesFons.push_back(posTileFons.x); verticesFons.push_back(posTileFons.y);
+                verticesFons.push_back(texCoordTileFons[0].x); verticesFons.push_back(texCoordTileFons[0].y);
+                verticesFons.push_back(posTileFons.x + blockSize); verticesFons.push_back(posTileFons.y);
+                verticesFons.push_back(texCoordTileFons[1].x); verticesFons.push_back(texCoordTileFons[0].y);
+                verticesFons.push_back(posTileFons.x + blockSize); verticesFons.push_back(posTileFons.y + blockSize);
+                verticesFons.push_back(texCoordTileFons[1].x); verticesFons.push_back(texCoordTileFons[1].y);
 
-                // Segundo triángulo
-                foregroundVertices.push_back(posTile.x); foregroundVertices.push_back(posTile.y);
-                foregroundVertices.push_back(texCoordTile[0].x); foregroundVertices.push_back(texCoordTile[0].y);
-                foregroundVertices.push_back(posTile.x + blockSize); foregroundVertices.push_back(posTile.y + blockSize);
-                foregroundVertices.push_back(texCoordTile[1].x); foregroundVertices.push_back(texCoordTile[1].y);
-                foregroundVertices.push_back(posTile.x); foregroundVertices.push_back(posTile.y + blockSize);
-                foregroundVertices.push_back(texCoordTile[0].x); foregroundVertices.push_back(texCoordTile[1].y);
+                // Second triangle
+                verticesFons.push_back(posTileFons.x); verticesFons.push_back(posTileFons.y);
+                verticesFons.push_back(texCoordTileFons[0].x); verticesFons.push_back(texCoordTileFons[0].y);
+                verticesFons.push_back(posTileFons.x + blockSize); verticesFons.push_back(posTileFons.y + blockSize);
+                vertices.push_back(texCoordTileFons[1].x); verticesFons.push_back(texCoordTileFons[1].y);
+                verticesFons.push_back(posTileFons.x); verticesFons.push_back(posTileFons.y + blockSize);
+                verticesFons.push_back(texCoordTileFons[0].x); verticesFons.push_back(texCoordTileFons[1].y);
             }
         }
     }
@@ -342,11 +413,10 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
     glBindVertexArray(foregroundVao);
     glGenBuffers(1, &foregroundVbo);
     glBindBuffer(GL_ARRAY_BUFFER, foregroundVbo);
-    glBufferData(GL_ARRAY_BUFFER, 24 * foregroundTiles * sizeof(float), foregroundVertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 24 * frontTiles * sizeof(float), &verticesFons[0], GL_STATIC_DRAW);
     foregroundPosLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
     foregroundTexCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    */
-    // Preparar arrays para la capa de imagen
+    
     if (hasImageLayer) {
         vector<float> imageVertices = {
             // Posiciones           // Coordenadas de textura

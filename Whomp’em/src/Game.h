@@ -8,7 +8,7 @@
 
 #define SCREEN_WIDTH 256		// 16 tiles * 16 píxeles/tile
 #define SCREEN_HEIGHT 240	// 15 tiles * 16 píxeles/tile
-#define SCALE_FACTOR 4.0f
+#define SCALE_FACTOR 2.0f
 
 
 

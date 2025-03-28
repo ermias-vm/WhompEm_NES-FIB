@@ -110,14 +110,15 @@ void Menu::init() {
     // Configurar VAO/VBO para los botones
     float totalWidth = playWidth + instructionsWidth + creditsWidth + 40.0f; // 20px de espacio entre botones
     float startX = (SCREEN_WIDTH - totalWidth) / 2.0f; // Centrar horizontalmente
-    float centerY = SCREEN_HEIGHT / 2.0f; // Centrar verticalmente
+    float centerY = SCREEN_HEIGHT / 2.0f + 20.0f; // Centrar verticalmente
 
     // Guardar coordenadas del botón "Play" para detección de clics
     playXMin = startX;
     playXMax = startX + playWidth;
     playYMin = centerY - playHeight / 2.0f;
     playYMax = centerY + playHeight / 2.0f;
-
+    std::cout << "playYMin = " << playYMin << " playYMax = " << playHeight << std::endl;
+    std::cout << "minX = " << startX << "maxX = " << playXMax << "minY = " << playYMin << "maxY = " << playYMax << std::endl;
     float buttonVertices[] = {
         // Play
         startX, centerY - playHeight / 2.0f,                 0.0f, 0.0f,

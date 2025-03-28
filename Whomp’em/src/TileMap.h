@@ -27,6 +27,7 @@ public:
 	~TileMap();
 
 	void render() const;
+	void renderFRONT() const;
 	void free();
 
 	int getTileSize() const { return tileSize; }
@@ -49,11 +50,15 @@ private:
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
 	int nTiles;
-	glm::ivec2 position, mapSize, tilesheetSize;
+	int frontTiles;
+	glm::ivec2 position, mapSize, tilesheetSize, frontsheetSize;
 	int tileSize, blockSize;
 	Texture tilesheet;
+	Texture frontsheet;
 	glm::vec2 tileTexSize;
+	glm::vec2 frontTexSize;
 	int* map;
+	int* FRONT;
 	GLuint foregroundVao, foregroundVbo;
 	GLint foregroundPosLocation, foregroundTexCoordLocation;
 	std::vector<CollisionRect> collisionObjects; // Declare collisionObjects here

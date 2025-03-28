@@ -33,6 +33,7 @@ private:
 
 private:
 	TileMap *map;
+	TileMap *foreground;
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
