@@ -213,7 +213,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
-	map->renderFRONT();
+	//map->renderFRONT();
 }
 
 void Scene::initShaders()
