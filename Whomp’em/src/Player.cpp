@@ -359,7 +359,7 @@ void Player::update(int deltaTime)
         is_Z_pressed = !is_Z_pressed;
     }
 
-	// GESTION MOVIMEINTO DERECHA/IZQUIERDA
+	////  GESTION MOVIMEINTO DERECHA/IZQUIERDA
     bool rightKey = Game::instance().getKey(GLFW_KEY_RIGHT);
     bool leftKey = Game::instance().getKey(GLFW_KEY_LEFT);
     int anim = playerSprite->animation();
@@ -372,7 +372,7 @@ void Player::update(int deltaTime)
             bLookingLeft = false;
             if (!bCrouching)
                 posPlayer.x += playerSpeed;
-            if (map->collisionMoveRight(posPlayer, glm::ivec2(25, 32)))
+            if (map->collisionMoveRight(posPlayer, glm::ivec2(28, 32)))
                 posPlayer.x -= playerSpeed;
             righLeftKeyPressed();
         }
@@ -399,6 +399,7 @@ void Player::update(int deltaTime)
         is_Left_pressed = false;
         righLeftKeyReleased();
     }
+    ////
 
     if (bJumping || bFalling) {         // EN AIRE SIN ESTAR PRESIONANDO X
         if (!b_X_Attacking){

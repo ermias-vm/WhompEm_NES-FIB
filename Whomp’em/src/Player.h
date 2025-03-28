@@ -40,7 +40,6 @@ public:
 	void righLeftKeyPressed();
 	void righLeftKeyReleased();
 	void printAnimName(Sprite* sprite, int animation);
-	void stopMovement();
 	
 private:
 	bool bJumping, bFalling, bLookingLeft, bCrouching;
