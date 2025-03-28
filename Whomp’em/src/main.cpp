@@ -93,7 +93,7 @@ int main(void) {
         currentTime = glfwGetTime();
         if (currentTime - timePreviousFrame >= timePerFrame) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+            /*
             if (!jugar) {
                 if (!menuInitialized) {
                     menu.init();
@@ -110,6 +110,7 @@ int main(void) {
                 }
             }
             else {
+            */
                 if (!gameInitialized) {
                     Game::instance().init();
                     gameInitialized = true;
@@ -117,7 +118,7 @@ int main(void) {
                 if (!Game::instance().update(int(1000.0f * (currentTime - timePreviousFrame))))
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
                 Game::instance().render();
-            }
+           // }
 
             timePreviousFrame = currentTime;
             glfwSwapBuffers(window);

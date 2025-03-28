@@ -438,17 +438,6 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
     }
 }
 
-bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
-{
-    for (const auto& rect : collisionObjects) {
-        if (pos.x <= rect.x + rect.width && pos.x + size.x > rect.x &&
-            pos.y + size.y > rect.y && pos.y < rect.y + rect.height) {
-            if (rect.platform) return false;
-            else return true;
-        }
-    }
-    return false;
-}
 
 bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
 {
@@ -457,6 +446,33 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
             pos.y + size.y > rect.y && pos.y < rect.y + rect.height) {
             if (rect.platform) return false;
             else return true;
+        }
+    }
+    return false;
+}
+
+bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+    for (const auto& rect : collisionObjects) {
+        if (pos.x  <= rect.x + rect.width - 4 && pos.x + size.x > rect.x &&
+            pos.y + size.y > rect.y && pos.y < rect.y + rect.height) {
+            if (rect.platform) return false;
+            else return true;
+        }
+    }
+    return false;
+}
+
+
+bool TileMap::collisionMoveHoritz(const glm::ivec2& pos, const glm::ivec2& size, bool movingLeft) const {
+    glm::ivec2 posAjustada = pos;
+    if (movingLeft)
+        posAjustada.x += 0; // Ajustar solo para el movimiento a la izquierda
+
+    for (const auto& rect : collisionObjects) {
+        if (posAjustada.x <= rect.x + rect.width && posAjustada.x + size.x > rect.x &&
+            posAjustada.y + size.y > rect.y && posAjustada.y < rect.y + rect.height) {
+            return !rect.platform;
         }
     }
     return false;
