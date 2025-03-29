@@ -4,8 +4,9 @@
 #include "Snake.h"
 #include "Game.h"
 
-#define SNAKE_SPEED 16.f // Velocidad de la serpiente (pixeles por segundo)
-#define ANIMATION_SPEED 7 // Velocidad de las animaciones (más lento)
+
+    #define SNAKE_SPEED 16
+    #define ANIMATION_SPEED 7 // Velocidad de las animaciones (más lento)
 
 enum SnakeAnims {
     STAND_RIGHT,

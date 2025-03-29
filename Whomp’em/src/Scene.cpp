@@ -67,6 +67,7 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	snake->update(deltaTime);
+	playerHub->update(deltaTime);
 	// Determinar la sección actual
 	if (player->getPosition().x == 2036 && !part1) {
 		player->setPosition(glm::vec2(2054, 64));
@@ -132,6 +133,7 @@ void Scene::update(int deltaTime)
 		horitzontal = true;
 	}
 	Scene::updateCamera(player->getPosition(),deltaTime);
+	playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
 	//std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
 	//std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
 	//auto offset = Scene::getPlayerOffset(player);

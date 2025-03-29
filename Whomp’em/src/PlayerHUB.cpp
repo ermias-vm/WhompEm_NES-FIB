@@ -134,9 +134,9 @@ void PlayerHUB::setTotemAnimation(bool bUsingTotem) {
 
 void PlayerHUB::update(int deltaTime)
 {
-
     heartSprite->update(deltaTime);
-    heartSprite->setPosition(glm::vec2(float(tileMapDispl.x + posHearts.x), float(tileMapDispl.y + posHearts.y)));
+    lifeSprite->update(deltaTime);
+    totemSprite->update(deltaTime);
 }
 
 void PlayerHUB::render() {
@@ -148,7 +148,9 @@ void PlayerHUB::render() {
 
 void PlayerHUB::setPosition(const glm::vec2& pos) {
     posHearts = pos;
-    heartSprite->setPosition(glm::vec2(float(tileMapDispl.x + posHearts.x), float(tileMapDispl.y + posHearts.y)));
+    heartSprite->setPosition(glm::vec2(float(pos.x), float(pos.y)));
+    lifeSprite->setPosition(glm::vec2(pos.x + 16, pos.y - 5));
+    totemSprite->setPosition(glm::vec2(pos.x + 20, pos.y));
 
 }
 
