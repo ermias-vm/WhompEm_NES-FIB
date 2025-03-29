@@ -14,6 +14,11 @@ public:
 	void render();
 	void setPosition(const glm::vec2& pos);
 	void setTileMap(TileMap* tileMap);
+	bool isPlayerDead() const;
+	void modifyPlayerHP(int amount, bool addHeart);
+	int getPlayerHP() const;
+	int getPlayerLifes() const;
+	void setTotemAnimation(bool bUsingTotem);
 
 
 private:
@@ -21,6 +26,8 @@ private:
 	glm::ivec2 tileMapDispl, posHearts, posLifes, posTotem;
 	Texture hubSpriteSheet;
 	Sprite* heartSprite;
+	Sprite* lifeSprite;
+	Sprite* totemSprite;
 	TileMap* map;
 };
 

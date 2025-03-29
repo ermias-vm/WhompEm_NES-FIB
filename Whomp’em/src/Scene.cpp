@@ -50,10 +50,11 @@ void Scene::init() {
 	cameraPos.x = fixedXVertical2;
 
 	// Inicializar HUB
-	HUB = new PlayerHUB();
-	HUB->init(glm::ivec2(0, 0), texProgram);
-	HUB->setPosition(glm::vec2(0,0));
-	HUB->setTileMap(map);
+	playerHub = new PlayerHUB();
+	playerHub->init(glm::ivec2(0, 0), texProgram);
+	playerHub->setPosition(glm::vec2(0,0));
+	playerHub->setTileMap(map);
+	player->setPlayerHUB(playerHub);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
@@ -232,8 +233,8 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	playerHub->render();
 	snake->render();
-	HUB->render();
 	//map->renderFRONT();
 }
 

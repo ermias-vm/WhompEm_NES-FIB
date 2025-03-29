@@ -1,4 +1,4 @@
-#include <cmath>
+ï»¿#include <cmath>
 #include <iostream>
 #include <GL/glew.h>
 #include "Player.h"
@@ -32,14 +32,16 @@ enum PlayerLargeAnims
 
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 
-    bJumping = bFalling = b_X_Attacking = bDamaged = bFalling = bLookingLeft = bCrouching =  false;
-    is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = is_V_pressed =false;
+    bJumping = bFalling = b_X_Attacking = bDamaged = bFalling = false;
+    bLookingLeft = bCrouching = bUsingTotem = false;
+    is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = is_V_pressed = false;
+    is_T_pressed = is_O_pressed = is_P_pressed = is_I_pressed = false;
     playerSpeed = 2.f;
- 
-                    // ANIMACIONES PLAYER //
+
+    // ANIMACIONES PLAYER //
 
     playerSpritesheet.loadFromFile("images/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    //(pixels frame, %espació ocupado(ancho,alto), playerSpritesheet, shaderProgram)
+    //(pixels frame, %espaciï¿½ ocupado(ancho,alto), playerSpritesheet, shaderProgram)
     playerSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.05), &playerSpritesheet, &shaderProgram);
     playerSprite->setNumberAnimations(30);
 
@@ -121,7 +123,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     // ANIMACIONES DE LA LANZA //
 
     spearSpritesheet.loadFromFile("images/spearFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    spearSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.20f, 0.10f), &spearSpritesheet, &shaderProgram);  // Tamaño ajustado para ataque
+    spearSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.20f, 0.10f), &spearSpritesheet, &shaderProgram);  // Tamaï¿½o ajustado para ataque
     spearSprite->setNumberAnimations(15);
 
     spearSprite->setAnimationSpeed(SPEAR_ATTACK_RIGHT, SPEAR_ANIMATION_SPEED);
@@ -183,7 +185,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     spearSprite->setAnimationSpeed(NONE2, SPEAR_ANIMATION_SPEED);  //TODO: MODIFICAR A NO RENDERIZAR
     spearSprite->addKeyframe(NONE2, glm::vec2(0.8, 0.0f));
 
-    changeAnimToRightLeft(*playerSprite, STAND_RIGHT);  // Animación inicial
+    changeAnimToRightLeft(*playerSprite, STAND_RIGHT);  // Animaciï¿½n inicial
     tileMapDispl = tileMapPos;				            // Desplazamiento del tile map (0,0)
     playerSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
     spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
@@ -206,16 +208,16 @@ void Player::righLeftKeyPressed() {
     if (b_X_Attacking) return;
     int playerAnim = playerSprite->animation();
     if (!bFalling && !bJumping) {
-        if (bCrouching){
+        if (bCrouching) {
             if (playerAnim != (CROUCH_RIGHT + bLookingLeft)) {
                 changeAnimToRightLeft(*playerSprite, CROUCH_RIGHT);
             }
         }
-		else if (Game::instance().getKey(GLFW_KEY_UP)) {
+        else if (Game::instance().getKey(GLFW_KEY_UP)) {
             if (playerAnim != (COVER_RIGHT + bLookingLeft)) {
                 changeAnimToRightLeft(*playerSprite, COVER_RIGHT);
             }
-		}
+        }
         else {
             if (playerAnim != (MOVE_RIGHT + bLookingLeft)) {
                 changeAnimToRightLeft(*playerSprite, MOVE_RIGHT);
@@ -234,7 +236,7 @@ void Player::righLeftKeyPressed() {
 void Player::righLeftKeyReleased() {
     if (b_X_Attacking) return;
     int playerAnim = playerSprite->animation();
-    // Si aún se mantiene UP presionada, mantener COVER
+    // Si aï¿½n se mantiene UP presionada, mantener COVER
     if (Game::instance().getKey(GLFW_KEY_UP)) {
         if (playerAnim != (COVER_RIGHT + bLookingLeft)) {
             changeAnimToRightLeft(*playerSprite, COVER_RIGHT);
@@ -278,11 +280,11 @@ void Player::update(int deltaTime)
             b_X_Attacking = true;
             if (!bJumping && !bFalling) {
                 if (is_Right_pressed || is_Left_pressed) {
-					if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
+                    if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
                         changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
                         changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
-					}
-				}
+                    }
+                }
                 else if (is_DOWN_pressed) {
                     if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                         changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
@@ -300,7 +302,7 @@ void Player::update(int deltaTime)
                 changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
             }
         }
-        else if (!bJumping && !bFalling)  { // ANIMACIONES cuando ya se ha atacado y player (EN TIERRA) pero se mantiene X presionada)
+        else if (!bJumping && !bFalling) { // ANIMACIONES cuando ya se ha atacado y player (EN TIERRA) pero se mantiene X presionada)
             if (is_Right_pressed || is_Left_pressed) {
                 if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
@@ -314,7 +316,7 @@ void Player::update(int deltaTime)
                 }
             }
             else {
-                if (playerAnim != (HOLD_SPEAR_R + bLookingLeft)) { 
+                if (playerAnim != (HOLD_SPEAR_R + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
                     changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
                 }
@@ -359,7 +361,7 @@ void Player::update(int deltaTime)
         is_Z_pressed = !is_Z_pressed;
     }
 
-	////  GESTION MOVIMEINTO DERECHA/IZQUIERDA
+    ////  GESTION MOVIMEINTO DERECHA/IZQUIERDA
     bool rightKey = Game::instance().getKey(GLFW_KEY_RIGHT);
     bool leftKey = Game::instance().getKey(GLFW_KEY_LEFT);
     int anim = playerSprite->animation();
@@ -402,7 +404,7 @@ void Player::update(int deltaTime)
     ////
 
     if (bJumping || bFalling) {         // EN AIRE SIN ESTAR PRESIONANDO X
-        if (!b_X_Attacking){
+        if (!b_X_Attacking) {
             if (Game::instance().getKey(GLFW_KEY_UP)) {
                 if (playerSprite->animation() != (ATTACK_UP_R + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, ATTACK_UP_R);
@@ -445,7 +447,7 @@ void Player::update(int deltaTime)
             }
         }
         else if (is_DOWN_pressed) {
-            is_DOWN_pressed = bCrouching = false ;
+            is_DOWN_pressed = bCrouching = false;
             if (playerSprite->animation() != (STAND_RIGHT + bLookingLeft)) {
                 changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
             }
@@ -461,7 +463,7 @@ void Player::update(int deltaTime)
                 changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
             }
         }
-        else {                      // El jugador está en el aire (subiendo o bajando)
+        else {                      // El jugador estï¿½ en el aire (subiendo o bajando)
             posPlayer.y = int(startY - JUMP_HEIGHT * sin(PI * jumpAngle / 180.f));
 
             if (jumpAngle > 90) {   // Bajando
@@ -473,7 +475,7 @@ void Player::update(int deltaTime)
         }
     }
 
-    if (!bJumping) { 
+    if (!bJumping) {
         if (!map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y)) {
             bFalling = true;
             posPlayer.y += FALL_STEP;
@@ -495,24 +497,73 @@ void Player::update(int deltaTime)
     spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
 
 
-                ///////////////////////////////////////////////////////////////////////
-               
+    if (Game::instance().getKey(GLFW_KEY_T)) {
+        if (!is_T_pressed) {
+            bUsingTotem = !bUsingTotem;
+            if (playerHub) {
+                playerHub->setTotemAnimation(bUsingTotem);
+                cout << "PLAYER: Totem " << (bUsingTotem ? "Activated" : "Deactivated") << endl;
+            }
+            is_T_pressed = true;
+        }
+    }
+    else {
+        is_T_pressed = false; // Reiniciar el estado cuando se suelta la tecla
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
     if (Game::instance().getKey(GLFW_KEY_V)) {
-        if (!is_V_pressed) { 
+        if (!is_V_pressed) {
             playerSpeed = (playerSpeed == 2) ? 4 : 2;
             is_V_pressed = true;
         }
     }
     else {
-        is_V_pressed = false; 
+        is_V_pressed = false;
     }
 
-    // Imprimir la posición del jugador cada 500ms
+    // Imprimir la posiciï¿½n del jugador cada 500ms
     static int timeSinceLastPrint = 0;
     timeSinceLastPrint += deltaTime;
     if (timeSinceLastPrint >= 500) {
-        std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
+        //std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
         timeSinceLastPrint = 0;
+    }
+
+    // Gestionar la tecla O para aumentar la vida
+    if (Game::instance().getKey(GLFW_KEY_O)) {
+        if (!is_O_pressed) {
+            is_O_pressed = true;
+            if (playerHub) {
+                heal(1);
+            }
+        }
+    }
+    else {
+        is_O_pressed = false;
+    }
+
+    // Gestionar la tecla P para aplicar daï¿½o
+    if (Game::instance().getKey(GLFW_KEY_P)) {
+        if (!is_P_pressed) {
+            is_P_pressed = true;
+            takeDamage(1);
+        }
+    }
+    else {
+        is_P_pressed = false;
+    }
+
+    // Gestionar la tecla I para aï¿½adir un corazï¿½n (si HP >= 12)
+    if (Game::instance().getKey(GLFW_KEY_I)) {
+        if (!is_I_pressed) {
+            is_I_pressed = true;
+            addHeart();
+        }
+    }
+    else {
+        is_I_pressed = false;
     }
 }
 
@@ -554,18 +605,57 @@ glm::vec2 Player::getVelocity() {
 
     // Velocidad vertical
     if (bJumping) {
-        // Aproximación de la velocidad vertical durante el salto
+        // Aproximaciï¿½n de la velocidad vertical durante el salto
         velocity.y = -JUMP_HEIGHT * cos(PI * jumpAngle / 180.f) * JUMP_ANGLE_STEP / 180.f * PI;
     }
     else {
-        // Si está cayendo
+        // Si estï¿½ cayendo
         velocity.y = FALL_STEP;
     }
 
     return velocity;
 }
 
+void Player::takeDamage(int damage) {
+    if (playerHub) {
+        playerHub->modifyPlayerHP(-damage, false);
+        if (playerHub->isPlayerDead()) {
+            cout << endl << "PLAYER: Dead -> ----GAME OVER-----" << endl << endl;
+            //changeAnimToRightLeft(*playerSprite, DIE_RIGHT + bLookingLeft);
+        }
+        else {
+            cout << "PLAYER: Damaged [-" << damage << "] (" << playerHub->getPlayerHP() << " HP left)" << endl;
+            changeAnimToRightLeft(*playerSprite, DAMAGED_RIGHT + bLookingLeft);
+        }
+    }
+}
+void Player::heal(int hp) {
+    if (playerHub) {
+        playerHub->modifyPlayerHP(hp, false);
+        cout << "PLAYER: Healed [+" << hp << "] (" << playerHub->getPlayerHP() << " HP left)" << endl;
+    }
+}
+void Player::addHeart() {
+    if (playerHub && playerHub->getPlayerHP() >= 12) {
+        playerHub->modifyPlayerHP(3, true);
+        cout << "PLAYER: ADD HEART [+" << 3 << "] (" << playerHub->getPlayerHP() << " HP left)" << endl;
 
+    }
+    else {
+        cout << "PLAYER: ADD HEART [FAILED] (curretHP < 12) (" << playerHub->getPlayerHP() << " HP left)" << endl;
+    }
+}
+
+bool Player::isPlayerDead() const {
+    return playerHub ? playerHub->isPlayerDead() : false;
+}
+
+void Player::setPlayerHUB(PlayerHUB* hub) {
+    playerHub = hub;
+}
+
+
+///
 void Player::printAnimName(Sprite* sprite, int animation) {
     // Determine if the sprite is the player's or the spear's
     if (sprite == playerSprite) {

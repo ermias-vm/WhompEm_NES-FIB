@@ -38,7 +38,7 @@ private:
 	TileMap *foreground;
 	Player *player;
 	Snake *snake;
-	PlayerHUB *HUB;
+	PlayerHUB *playerHub;
 
 	ShaderProgram texProgram;
 	float currentTime;
