@@ -29,14 +29,26 @@ Scene::~Scene()
 void Scene::init() {
 	initShaders();
 	map = TileMap::createTileMap("levels/FINAL_MAP.tmx", glm::vec2(0, 0), texProgram);
+	
+	// Inicializar el jugador
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
+
+
+	// Inicializar cámara
 	horitzontal = true;
 	cameraPos = glm::vec2(0.f, 0.f);
 	cameraPos.x = fixedXVertical2;
+
+	// Inicializar HUB
+	HUB = new PlayerHUB();
+	HUB->init(glm::ivec2(0, 0), texProgram);
+	HUB->setPosition(glm::vec2(0,0));
+	HUB->setTileMap(map);
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
 }
@@ -213,6 +225,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	HUB->render();
 	//map->renderFRONT();
 }
 

@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "PlayerHUB.h"
 
 
 // Scene contains all the entities of our game.
@@ -26,7 +27,7 @@ public:
 	glm::vec2 getPlayerOffset(Player* player);
 	void setcameraPos(const glm::vec2& offset);
 	void updateCamera(glm::vec2& posjugador,int deltaTime);
-
+	glm::vec2 getCameraPos() const { return cameraPos; }
 
 private:
 	void initShaders();
@@ -35,6 +36,8 @@ private:
 	TileMap *map;
 	TileMap *foreground;
 	Player *player;
+	PlayerHUB *HUB;
+
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

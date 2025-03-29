@@ -50,6 +50,9 @@
     <ClCompile Include="src\Menu.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlayerHUB.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h">
@@ -80,6 +83,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Menu.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayerHUB.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -123,5 +129,8 @@
     <None Include="images\MenuFons.png">
       <Filter>Images</Filter>
     </None>
+    <None Include="images\play_button.png" />
+    <None Include="images\credits_button.png" />
+    <None Include="images\instructions_button.png" />
   </ItemGroup>
 </Project>

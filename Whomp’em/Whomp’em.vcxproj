@@ -14,6 +14,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PlayerHUB.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
@@ -21,12 +22,12 @@
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\Menu.cpp" />
-
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\PlayerHUB.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShaderProgram.h" />
@@ -34,7 +35,6 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\Menu.h" />
-
   </ItemGroup>
   <ItemGroup>
     <None Include="images\bub.png" />
@@ -53,8 +53,6 @@
     <None Include="images\play_button.png" />
     <None Include="images\credits_button.png" />
     <None Include="images\instructions_button.png" />
-
-
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}</ProjectGuid>
@@ -116,6 +114,7 @@
       <Command>
         copy "$(ProjectDir)libs\glew-1.13.0\bin\Release\Win32\glew32.dll" "$(OutDir)"
         copy "$(ProjectDir)libs\glfw-3.3.8\lib-vc2022\glfw3.dll" "$(OutDir)"
+        copy "$(ProjectDir)libs\x86-windows\bin\tinyxml2.dll" "$(OutDir)"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -150,4 +149,3 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
-
