@@ -15,6 +15,7 @@
 
 Scene::Scene()
 {
+
 	map = NULL;
 	player = NULL;
 }
@@ -34,8 +35,13 @@ void Scene::init() {
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	std::cout << map->getTileSize() << std::endl;
 	player->setTileMap(map);
+
+	snake = new Snake();
+	snake->init(glm::ivec2(0, 0), texProgram);
+	snake->setPosition(glm::vec2((INIT_PLAYER_X_TILES+2) * map->getTileSize(), (INIT_PLAYER_Y_TILES+1) * map->getTileSize()));
+	snake->setTileMap(map);
+
 
 
 	// Inicializar cámara
@@ -59,6 +65,7 @@ void Scene::update(int deltaTime)
 	//std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	snake->update(deltaTime);
 	// Determinar la sección actual
 	if (player->getPosition().x == 2036 && !part1) {
 		player->setPosition(glm::vec2(2054, 64));
@@ -225,6 +232,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	snake->render();
 	HUB->render();
 	//map->renderFRONT();
 }

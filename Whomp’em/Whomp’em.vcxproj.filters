@@ -129,8 +129,17 @@
     <None Include="images\MenuFons.png">
       <Filter>Images</Filter>
     </None>
-    <None Include="images\play_button.png" />
-    <None Include="images\credits_button.png" />
-    <None Include="images\instructions_button.png" />
+    <None Include="images\SNAKE.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="images\instructions_button.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="images\credits_button.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="images\play_button.png">
+      <Filter>Images</Filter>
+    </None>
   </ItemGroup>
 </Project>

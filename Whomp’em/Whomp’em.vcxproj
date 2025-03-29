@@ -22,6 +22,7 @@
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\Menu.h" />
+    <ClCompile Include="src\Snake.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="images\bub.png" />
@@ -53,6 +55,7 @@
     <None Include="images\play_button.png" />
     <None Include="images\credits_button.png" />
     <None Include="images\instructions_button.png" />
+    <None Include="images\SNAKE.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}</ProjectGuid>

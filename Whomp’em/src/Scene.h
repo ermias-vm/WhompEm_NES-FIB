@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "PlayerHUB.h"
+#include "Snake.h"
 
 
 // Scene contains all the entities of our game.
@@ -36,6 +37,7 @@ private:
 	TileMap *map;
 	TileMap *foreground;
 	Player *player;
+	Snake *snake;
 	PlayerHUB *HUB;
 
 	ShaderProgram texProgram;
