@@ -53,6 +53,9 @@
     <ClCompile Include="src\PlayerHUB.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="src\Snake.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h">
@@ -86,6 +89,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\PlayerHUB.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Snake.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

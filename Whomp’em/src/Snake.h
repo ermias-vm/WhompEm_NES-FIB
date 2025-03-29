@@ -59,5 +59,4 @@ private:
 	TileMap* map;
 };
 
-
 #endif // _Snake_INCLUDE

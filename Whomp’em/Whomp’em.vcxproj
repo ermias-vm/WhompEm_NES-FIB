@@ -17,12 +17,12 @@
     <ClCompile Include="src\PlayerHUB.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Snake.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\Menu.cpp" />
-    <ClCompile Include="src\Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h" />
@@ -32,11 +32,11 @@
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShaderProgram.h" />
+    <ClInclude Include="src\Snake.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\Menu.h" />
-    <ClCompile Include="src\Snake.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="images\bub.png" />
