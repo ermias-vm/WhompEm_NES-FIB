@@ -68,18 +68,6 @@ void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     lifeSprite->changeAnimation(playerLifes);
     totemSprite->changeAnimation(NORMAL_SPEAR);
 
-    // Posición base para heartSprite
-    posHearts = glm::vec2(float(tileMapDispl.x + posHearts.x), float(tileMapDispl.y + posHearts.y));
-    heartSprite->setPosition(posHearts);
-
-    // Posición de totemSprite (encima de heartSprite)
-    glm::vec2 posTotem = glm::vec2(posHearts.x + 16, posHearts.y - 5);
-    totemSprite->setPosition(posTotem);
-
-    // Posición de lifeSprite (al lado derecho de totemSprite y encima de heartSprite)
-    glm::vec2 posLife = glm::vec2(posTotem.x + 20, posTotem.y);
-    lifeSprite->setPosition(posLife);
-
 }
 
 bool PlayerHUB::isPlayerDead() const {
@@ -148,10 +136,9 @@ void PlayerHUB::render() {
 
 void PlayerHUB::setPosition(const glm::vec2& pos) {
     posHearts = pos;
-    heartSprite->setPosition(glm::vec2(float(pos.x), float(pos.y)));
-    lifeSprite->setPosition(glm::vec2(pos.x + 16, pos.y - 5));
-    totemSprite->setPosition(glm::vec2(pos.x + 20, pos.y));
-
+    heartSprite->setPosition(glm::vec2(float(pos.x + 8), float(pos.y + 24)));
+    totemSprite->setPosition(glm::vec2(float(pos.x + 8), float(pos.y - 10)));
+    lifeSprite->setPosition(glm::vec2(float(pos.x + 28), float(pos.y -10)));
 }
 
 void PlayerHUB::setTileMap(TileMap* tileMap) {
