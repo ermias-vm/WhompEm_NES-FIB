@@ -4,9 +4,8 @@
 #include "Snake.h"
 #include "Game.h"
 
-
-    #define SNAKE_SPEED 16
-    #define ANIMATION_SPEED 7 // Velocidad de las animaciones (más lento)
+#define SNAKE_SPEED 16
+#define ANIMATION_SPEED 7 // Velocidad de las animaciones (más lento)
 
 enum SnakeAnims {
     STAND_RIGHT,
@@ -21,7 +20,7 @@ void Snake::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     timeAccumulator = 0.0f; // Inicializa el acumulador de tiempo
     posSnake = glm::vec2(100.0f, 160.0f); // Posición inicial razonable
 
-    SnakeSpritesheet.loadFromFile("images/SNAKE.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    SnakeSpritesheet.loadFromFile("images/sprites/snakeFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     SnakeSprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.25, 0.5), &SnakeSpritesheet, &shaderProgram);
     SnakeSprite->setNumberAnimations(8);
 

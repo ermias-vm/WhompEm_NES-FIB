@@ -22,7 +22,7 @@ void Menu::init() {
     int width, height;
 
     // Cargar la imagen de fondo
-    unsigned char* image = SOIL_load_image("images/MenuFons.png", &width, &height, 0, SOIL_LOAD_RGBA);
+    unsigned char* image = SOIL_load_image("images/menu/MenuFons.png", &width, &height, 0, SOIL_LOAD_RGBA);
     if (!image) {
         std::cerr << "Error loading MenuFons.png" << std::endl;
         return;
@@ -37,7 +37,7 @@ void Menu::init() {
     SOIL_free_image_data(image);
 
     // Cargar la imagen del botón "Play"
-    image = SOIL_load_image("images/play_button.png", &width, &height, 0, SOIL_LOAD_RGBA);
+    image = SOIL_load_image("images/menu/play_button.png", &width, &height, 0, SOIL_LOAD_RGBA);
     if (!image) {
         std::cerr << "Error loading play_button.png" << std::endl;
         return;
@@ -54,7 +54,7 @@ void Menu::init() {
     SOIL_free_image_data(image);
 
     // Cargar la imagen del botón "Instructions"
-    image = SOIL_load_image("images/instructions_button.png", &width, &height, 0, SOIL_LOAD_RGBA);
+    image = SOIL_load_image("images/menu/instructions_button.png", &width, &height, 0, SOIL_LOAD_RGBA);
     if (!image) {
         std::cerr << "Error loading instructions_button.png" << std::endl;
         return;
@@ -71,7 +71,7 @@ void Menu::init() {
     SOIL_free_image_data(image);
 
     // Cargar la imagen del botón "Credits"
-    image = SOIL_load_image("images/credits_button.png", &width, &height, 0, SOIL_LOAD_RGBA);
+    image = SOIL_load_image("images/menu/credits_button.png", &width, &height, 0, SOIL_LOAD_RGBA);
     if (!image) {
         std::cerr << "Error loading credits_button.png" << std::endl;
         return;

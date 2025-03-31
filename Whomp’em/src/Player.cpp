@@ -40,7 +40,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 
     // ANIMACIONES PLAYER //
 
-    playerSpritesheet.loadFromFile("images/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    playerSpritesheet.loadFromFile("images/sprites/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     //(pixels frame, %espaci� ocupado(ancho,alto), playerSpritesheet, shaderProgram)
     playerSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.05), &playerSpritesheet, &shaderProgram);
     playerSprite->setNumberAnimations(30);
@@ -122,7 +122,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 
     // ANIMACIONES DE LA LANZA //
 
-    spearSpritesheet.loadFromFile("images/spearFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    spearSpritesheet.loadFromFile("images/sprites/spearFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spearSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.20f, 0.10f), &spearSpritesheet, &shaderProgram);  // Tama�o ajustado para ataque
     spearSprite->setNumberAnimations(15);
 
@@ -526,8 +526,8 @@ void Player::update(int deltaTime)
     // Imprimir la posici�n del jugador cada 500ms
     static int timeSinceLastPrint = 0;
     timeSinceLastPrint += deltaTime;
-    if (timeSinceLastPrint >= 500) {
-        //std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
+    if (timeSinceLastPrint >= 2000) {
+        std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
         timeSinceLastPrint = 0;
     }
 

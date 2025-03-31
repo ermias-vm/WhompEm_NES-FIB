@@ -17,7 +17,7 @@ void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     playerLifes = 2;
     playerHP = 12;
     // CORAZONES
-    hubSpriteSheet.loadFromFile("images/playerHUBframes.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    hubSpriteSheet.loadFromFile("images/sprites/playerHUBframes.png", TEXTURE_PIXEL_FORMAT_RGBA);
     heartSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.1), &hubSpriteSheet, &shaderProgram);
     heartSprite->setNumberAnimations(25);
 

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PlayerHUB.cpp" />
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ClInclude Include="src\AnimKeyframes.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Platform.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerHUB.h" />
     <ClInclude Include="src\Scene.h" />
