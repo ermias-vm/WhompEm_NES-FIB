@@ -9,14 +9,16 @@
 
 
 
-void Platform::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram,float startY, float range, float speed) {
-
+void Platform::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, float startX, float startY, float range, float speed, bool goingUp) {
+    
     this->startY = startY;
     this->range = range;
     this->speed = speed;
-    direction = -1; // Inicia subiendo
-    deltaY = 0.0f;
+    
+    if (goingUp) direction = -1;
+	else direction = 1;
 
+    deltaY = 0.0f;
     posPlatform = glm::vec2(tileMapPos.x, startY);
 
     platformSpriteSheet.loadFromFile("images/sprites/plataformFrame.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -30,6 +32,7 @@ void Platform::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram,f
 
     tileMapDispl = tileMapPos;
     platformSprite->changeAnimation(0);
+    setPosition(glm::vec2(startX, startY));
 }
 
 void Platform::update(int deltaTime) {

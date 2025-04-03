@@ -23,6 +23,7 @@ public:
 	~Scene();
 
 	void init();
+	void initPlatforms();
 	void update(int deltaTime);
 	void render();
 	bool isOffScreen(Player* player);
@@ -43,7 +44,7 @@ private:
 	Player *player;
 	Snake *snake;
 	PlayerHUB *playerHub;
-	Platform* platform;
+	std::vector<Platform*> platforms;
 
 	ShaderProgram texProgram;
 	float currentTime;
@@ -55,10 +56,7 @@ private:
 	float cameraVx = 0.0f;
 	float cameraVy = 0.0f;
 	bool horitzontal;
-	bool part1 = false;
-	bool part2 = false;
-	bool part3 = false;
-	bool part4 = false;
+	bool part1, part2, part3, part4;
 	float fixedXVertical2 = 3072;
 	float fixedYHorizontal = 0; // y = 10 * tileSize (10 * 32 = 320, para el pasadizo superior)
 	float fixedXVertical = 2048;  // x = 2082 (inicio del pasadizo vertical)

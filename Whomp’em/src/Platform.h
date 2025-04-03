@@ -9,7 +9,7 @@ class Platform
 {
 
 public:
-	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, float startY, float range, float speed);
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, float startX, float startY, float range, float speed, bool goingUP);
 	void update(int deltaTime);
 	void render();
 	void setPosition(const glm::vec2& pos);

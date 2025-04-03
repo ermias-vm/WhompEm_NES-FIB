@@ -12,9 +12,8 @@
 //#define INIT_PLAYER_X_TILES 6
 //#define INIT_PLAYER_Y_TILES 10	
 
-#define INIT_PLAYER_X_TILES 38
+#define INIT_PLAYER_X_TILES 6
 #define INIT_PLAYER_Y_TILES 10	
-
 
 
 Scene::Scene()
@@ -28,6 +27,9 @@ Scene::~Scene()
 {
 	if(map != NULL) delete map;
 	if(player != NULL) delete player;
+	for (auto& platform : platforms) {
+		delete platform;
+	}
 }
 
 
@@ -35,23 +37,23 @@ void Scene::init() {
 	initShaders();
 	map = TileMap::createTileMap("levels/FINAL_MAP.tmx", glm::vec2(0, 0), texProgram);
 	
+	// Inicializar cámara
+	part1 = part2 = part3 = part4 = false;
+	horitzontal = true;
+	cameraPos = glm::vec2(0.f, 0.f);
+	cameraPos.x = fixedXVertical2;
+
 	// Inicializar el jugador
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	//player->setPosition(glm::vec2(3224,816));
 	player->setTileMap(map);
 
 	snake = new Snake();
 	snake->init(glm::ivec2(0, 0), texProgram);
 	snake->setPosition(glm::vec2((INIT_PLAYER_X_TILES+2) * map->getTileSize(), (INIT_PLAYER_Y_TILES+1) * map->getTileSize()));
 	snake->setTileMap(map);
-
-
-
-	// Inicializar cámara
-	horitzontal = true;
-	cameraPos = glm::vec2(0.f, 0.f);
-	cameraPos.x = fixedXVertical2;
 
 	// Inicializar HUB
 	playerHub = new PlayerHUB();
@@ -61,36 +63,65 @@ void Scene::init() {
 	player->setPlayerHUB(playerHub);
 
 	// Inicializar Plataformas
-	platform = new Platform();
-	platform->init(glm::ivec2(0, 0), texProgram, 140.0f, 30.0f, 1.0f);
-	platform->setPosition(glm::vec2(40 * map->getTileSize(), 140.0f));
-	platform->setTileMap(map);
-
-
+	initPlatforms();
 
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
+
+		// -> TP parte 3 (plataformas) (andriu fix the game)
+	//cameraPos.x = fixedXVertical2;  // part 3
+	//horitzontal = false;			  // part 3
 }
 
+void Scene::initPlatforms() {
+	Platform* platform1 = new Platform();
+	platform1->init(glm::ivec2(0, 0), texProgram, 3172.0f, 780.0f, 20.0f, 1.0f, true);
+	platform1->setTileMap(map);
+	platforms.push_back(platform1);
+
+	Platform* platform2 = new Platform();
+	platform2->init(glm::ivec2(0, 0), texProgram, 3140.0f, 745.0f, 25.0f, 1.0f, false);
+	platform2->setTileMap(map);
+	platforms.push_back(platform2);
+
+	Platform* platform3 = new Platform();
+	platform3->init(glm::ivec2(0, 0), texProgram, 3228.0f, 705.0f, 25.0f, 1.0f, true);
+	platform3->setTileMap(map);
+	platforms.push_back(platform3);
+
+	Platform* platform4 = new Platform();
+	platform4->init(glm::ivec2(0, 0), texProgram, 3165.0f, 655.0f, 20.0f, 1.0f, true);
+	platform4->setTileMap(map);
+	platforms.push_back(platform4);
+
+	Platform* platform5 = new Platform();
+	platform5->init(glm::ivec2(0, 0), texProgram, 3140.0f, 615.0f, 25.0f, 1.0f, false);
+	platform5->setTileMap(map);
+	platforms.push_back(platform5);
+
+	Platform* platform6 = new Platform();
+	platform6->init(glm::ivec2(0, 0), texProgram, 3200.0f, 580.0f, 15.0f, 1.0f, true);
+	platform6->setTileMap(map);
+	platforms.push_back(platform6);
+}
 void Scene::update(int deltaTime)
 {
 
 	//std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 	currentTime += deltaTime;
 	
-	// Actualizar la plataforma primero
-	platform->update(deltaTime);
+	// Actualizar todas las plataformas
+	for (auto& platform : platforms) {
+		platform->update(deltaTime);
 
-	// Verificar colisión entre el jugador y la plataforma
-	bool onPlatform = checkPlatformCollision(player, platform);
-	if (onPlatform) {
-		//cout << "----------------PLATFORM COLISION" << endl;
-		float deltaY = platform->getDeltaY(); // Obtener el movimiento vertical de la plataforma
-		//cout << "DeltaY: " << deltaY << endl;
-		glm::vec2 playerPos = player->getPosition();
-		glm::vec2 platformPos = platform->getPosition();
-		player->setPosition(glm::vec2(playerPos.x, playerPos.y + deltaY));
+		// Verificar colisión entre el jugador y la plataforma actual
+		bool onPlatform = checkPlatformCollision(player, platform);
+		if (onPlatform) {
+			float deltaY = platform->getDeltaY(); // Obtener el movimiento vertical de la plataforma
+			glm::vec2 playerPos = player->getPosition();
+			player->setPosition(glm::vec2(playerPos.x, playerPos.y + deltaY));
+		}
 	}
 	
 	
@@ -109,14 +140,19 @@ void Scene::update(int deltaTime)
 }
 
 bool Scene::playerColisionPlatform() {
-	return checkPlatformCollision(player, platform);
+	for (auto& platform : platforms) {
+		if (checkPlatformCollision(player, platform)) {
+			return true;
+		}
+	}
+	return false; 
 }
 
 bool Scene::checkPlatformCollision(Player* player, Platform* platform) {
 	glm::vec2 playerPos = player->getPosition();
 	glm::ivec2 playerSize(25, 32); // Tamaño del jugador (ajusta según tu código)
 	glm::vec2 platformPos = platform->getPosition();
-	glm::ivec2 platformSize(32,16); // Tamaño de la plataforma
+	glm::ivec2 platformSize(25,16); // Tamaño de la plataforma
 	
 	platformPos.y += 16;
 	// Verificar si hay colisión
@@ -127,11 +163,10 @@ bool Scene::checkPlatformCollision(Player* player, Platform* platform) {
 		// Ajustar la posición del jugador solo si está cerca de la parte superior de la plataforma
 		int deltaY = platformPos.y - (playerPos.y + playerSize.y);
 		if (deltaY <= 4 && deltaY >= -4) { // Umbral ajustable
-			//player->setPosition(glm::vec2(playerPos.x, platformPos.y - playerSize.y));
 			return true; // Colisión detectada
 		}
 	}
-	return false; // Sin colisión
+	return false;
 }
 
 void Scene::handleSceneTransitions() {
@@ -297,7 +332,10 @@ void Scene::render()
 	player->render();
 	playerHub->render();
 	snake->render();
-	platform->render();
+
+	if (part3) {
+		for (auto& platform : platforms) platform->render();
+	}
 	//map->renderFRONT();
 }
 
