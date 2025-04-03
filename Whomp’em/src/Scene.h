@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "PlayerHUB.h"
 #include "Snake.h"
+#include "Platform.h"
 
 
 // Scene contains all the entities of our game.
@@ -25,6 +26,9 @@ public:
 	void update(int deltaTime);
 	void render();
 	bool isOffScreen(Player* player);
+	bool checkPlatformCollision(Player* player, Platform* platform);
+	bool playerColisionPlatform();
+	void handleSceneTransitions();
 	glm::vec2 getPlayerOffset(Player* player);
 	void setcameraPos(const glm::vec2& offset);
 	void updateCamera(glm::vec2& posjugador,int deltaTime);
@@ -39,6 +43,7 @@ private:
 	Player *player;
 	Snake *snake;
 	PlayerHUB *playerHub;
+	Platform* platform;
 
 	ShaderProgram texProgram;
 	float currentTime;

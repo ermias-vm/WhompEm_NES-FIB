@@ -8,8 +8,12 @@
 //#define SCREEN_X 16
 //#define SCREEN_Y 50
 
-#define INIT_PLAYER_X_TILES 6
-#define INIT_PLAYER_Y_TILES 10		// MAPA DE 16x15 TILES
+// MAPA DE 16x15 TILES
+//#define INIT_PLAYER_X_TILES 6
+//#define INIT_PLAYER_Y_TILES 10	
+
+#define INIT_PLAYER_X_TILES 38
+#define INIT_PLAYER_Y_TILES 10	
 
 
 
@@ -56,6 +60,15 @@ void Scene::init() {
 	playerHub->setTileMap(map);
 	player->setPlayerHUB(playerHub);
 
+	// Inicializar Plataformas
+	platform = new Platform();
+	platform->init(glm::ivec2(0, 0), texProgram, 140.0f, 30.0f, 1.0f);
+	platform->setPosition(glm::vec2(40 * map->getTileSize(), 140.0f));
+	platform->setTileMap(map);
+
+
+
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);	
 	currentTime = 0.0f;
 }
@@ -65,9 +78,63 @@ void Scene::update(int deltaTime)
 
 	//std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 	currentTime += deltaTime;
+	
+	// Actualizar la plataforma primero
+	platform->update(deltaTime);
+
+	// Verificar colisión entre el jugador y la plataforma
+	bool onPlatform = checkPlatformCollision(player, platform);
+	if (onPlatform) {
+		//cout << "----------------PLATFORM COLISION" << endl;
+		float deltaY = platform->getDeltaY(); // Obtener el movimiento vertical de la plataforma
+		//cout << "DeltaY: " << deltaY << endl;
+		glm::vec2 playerPos = player->getPosition();
+		glm::vec2 platformPos = platform->getPosition();
+		player->setPosition(glm::vec2(playerPos.x, playerPos.y + deltaY));
+	}
+	
+	
+	///
 	player->update(deltaTime);
 	snake->update(deltaTime);
 	playerHub->update(deltaTime);
+	handleSceneTransitions();
+
+	updateCamera(player->getPosition(),deltaTime);
+	playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
+	//std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
+	//std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
+	//auto offset = Scene::getPlayerOffset(player);
+	//Scene::setcameraPos(offset);
+}
+
+bool Scene::playerColisionPlatform() {
+	return checkPlatformCollision(player, platform);
+}
+
+bool Scene::checkPlatformCollision(Player* player, Platform* platform) {
+	glm::vec2 playerPos = player->getPosition();
+	glm::ivec2 playerSize(25, 32); // Tamaño del jugador (ajusta según tu código)
+	glm::vec2 platformPos = platform->getPosition();
+	glm::ivec2 platformSize(32,16); // Tamaño de la plataforma
+	
+	platformPos.y += 16;
+	// Verificar si hay colisión
+	if (playerPos.x + playerSize.x > platformPos.x &&
+		playerPos.x < platformPos.x + platformSize.x &&
+		playerPos.y + playerSize.y >= platformPos.y &&
+		playerPos.y < platformPos.y + platformSize.y) {
+		// Ajustar la posición del jugador solo si está cerca de la parte superior de la plataforma
+		int deltaY = platformPos.y - (playerPos.y + playerSize.y);
+		if (deltaY <= 4 && deltaY >= -4) { // Umbral ajustable
+			//player->setPosition(glm::vec2(playerPos.x, platformPos.y - playerSize.y));
+			return true; // Colisión detectada
+		}
+	}
+	return false; // Sin colisión
+}
+
+void Scene::handleSceneTransitions() {
 	// Determinar la sección actual
 	if (player->getPosition().x == 2036 && !part1) {
 		player->setPosition(glm::vec2(2054, 64));
@@ -87,7 +154,7 @@ void Scene::update(int deltaTime)
 		if (player->getPosition().x <= 2304) player->setPosition(glm::vec2(2304, player->getPosition().y));
 	}
 
-	if (player->getPosition().x == 3008  && !part3) {
+	if (player->getPosition().x == 3008 && !part3) {
 		player->setPosition(glm::vec2(3056, 1600));
 		part3 = true;
 	}
@@ -105,22 +172,22 @@ void Scene::update(int deltaTime)
 			player->setPosition(glm::vec2(3328, player->getPosition().y));
 		}
 	}
-	
 
-	
-	if (player->getPosition().x >= 2042 && player->getPosition().x <= 2288  && part1) {
+
+
+	if (player->getPosition().x >= 2042 && player->getPosition().x <= 2288 && part1) {
 		if (horitzontal) { // Transición de horizontal a vertical
 			cameraPos.x = fixedXVertical; // Fijar X al entrar al pasadizo vertical
 		}
 		horitzontal = false;
 	}
-	else if (player->getPosition().x >= 2288 && player->getPosition().x <= 3008  && part2) {
+	else if (player->getPosition().x >= 2288 && player->getPosition().x <= 3008 && part2) {
 		if (!horitzontal) { // Transición de vertical a horizontal
-		  cameraPos.y = fixedYHorizontal2; // Fijar Y al entrar al pasadizo inferior
+			cameraPos.y = fixedYHorizontal2; // Fijar Y al entrar al pasadizo inferior
 		}
 		horitzontal = true;
 	}
-	else if(player->getPosition().x >= 3040 && (player->getPosition().x <= 3256)){
+	else if (player->getPosition().x >= 3040 && (player->getPosition().x <= 3256)) {
 		if (horitzontal) { // Transición de vertical a horizontal
 			cameraPos.x = fixedXVertical2;
 		}
@@ -132,14 +199,7 @@ void Scene::update(int deltaTime)
 		}
 		horitzontal = true;
 	}
-	Scene::updateCamera(player->getPosition(),deltaTime);
-	playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
-	//std::cout << player->getPosition().x << " " << player->getPosition().y << " " << this->cameraPos.x << "" << this->cameraPos.y << std::endl;
-	//std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
-	//auto offset = Scene::getPlayerOffset(player);
-	//Scene::setcameraPos(offset);
 }
-
 
 void Scene::updateCamera(glm::vec2 &posJugador,int deltaTime) {
 		float jugadorX = posJugador.x; // Cambiar a float
@@ -237,6 +297,7 @@ void Scene::render()
 	player->render();
 	playerHub->render();
 	snake->render();
+	platform->render();
 	//map->renderFRONT();
 }
 

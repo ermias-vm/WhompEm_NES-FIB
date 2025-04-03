@@ -191,7 +191,10 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
 }
 
-
+bool Player::colisionPlatform() {
+    Scene* scene = Game::instance().getScene();
+	return scene->playerColisionPlatform();
+}
 void Player::changeAnimToRightLeft(Sprite& sprite, int animation) {
     if (bLookingLeft) {
         animation++;
@@ -347,7 +350,7 @@ void Player::update(int deltaTime)
         if (!is_Z_pressed) {
             cout << "-------------------- Z (Jumping)" << endl;
             is_Z_pressed = true;
-            if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
+            if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y) || colisionPlatform()) {
                 bJumping = true;
                 jumpAngle = 0;
                 startY = posPlayer.y;
@@ -459,15 +462,15 @@ void Player::update(int deltaTime)
         if (jumpAngle == 180) {     // El salto ha terminado
             bJumping = false;
             posPlayer.y = startY;
-            if (map->collisionMoveDown(posPlayer, glm::ivec2(25, 32), &posPlayer.y)) {
+            if (map->collisionMoveDown(posPlayer, glm::ivec2(25, 32), &posPlayer.y) || colisionPlatform()) {
                 changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
             }
         }
-        else {                      // El jugador est� en el aire (subiendo o bajando)
+        else {                      // El jugador esta en el aire (subiendo o bajando)
             posPlayer.y = int(startY - JUMP_HEIGHT * sin(PI * jumpAngle / 180.f));
 
             if (jumpAngle > 90) {   // Bajando
-                if (map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y)) {
+                if (map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y) || colisionPlatform()) {
                     bJumping = false;
                     changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
                 }
@@ -476,7 +479,7 @@ void Player::update(int deltaTime)
     }
 
     if (!bJumping) {
-        if (!map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y)) {
+        if (!map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y) && !colisionPlatform()) {
             bFalling = true;
             posPlayer.y += FALL_STEP;
             int anim = playerSprite->animation();
@@ -565,6 +568,7 @@ void Player::update(int deltaTime)
     else {
         is_I_pressed = false;
     }
+
 }
 
 void Player::render() {

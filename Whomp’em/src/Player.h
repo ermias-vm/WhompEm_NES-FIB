@@ -47,6 +47,8 @@ public:
 	void heal(int hp);
 	void addHeart();
 	bool isPlayerDead() const;
+	void setFalling(bool falling) { bFalling = falling; }
+	bool colisionPlatform();
 
 private:
 	bool bJumping, bFalling, bLookingLeft, bCrouching, bUsingTotem, is_DOWN_pressed;
