@@ -25,8 +25,10 @@ void Game::render()
 
 void Game::keyPressed(int key)
 {
-	if(key == GLFW_KEY_ESCAPE) // Escape code
-		bPlay = false;
+	if (key == GLFW_KEY_ESCAPE) {// Escape code
+		//bPlay = false;
+	}
+	
 	keys[key] = true;
 }
 
