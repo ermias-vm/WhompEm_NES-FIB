@@ -170,65 +170,68 @@ bool Scene::checkPlatformCollision(Player* player, Platform* platform) {
 }
 
 void Scene::handleSceneTransitions() {
-	// Determinar la sección actual
-	if (player->getPosition().x == 2036 && !part1) {
+	glm::vec2 playerPos = player->getPosition();
+
+	if (playerPos.x >= 2036 && playerPos.x <= 2040 && !part1) {
 		player->setPosition(glm::vec2(2054, 64));
 		part1 = true;
 	}
 	else if (part1) {
-		if (player->getPosition().x <= 2042) player->setPosition(glm::vec2(2042, player->getPosition().y));
+		if (playerPos.x <= 2042) player->setPosition(glm::vec2(2042, playerPos.y));
 	}
 
-	if (player->getPosition().x >= 2278 && player->getPosition().y < 1600 && !part2) player->setPosition(glm::vec2(2278, player->getPosition().y));
+	if (playerPos.x >= 2278 && playerPos.y < 1600 && !part2) {
+		player->setPosition(glm::vec2(2278, playerPos.y));
+	}
 
-	if (player->getPosition().x == 2288 && !part2) {
+	if (playerPos.x >= 2288 && playerPos.x <= 2292 && !part2) {
 		player->setPosition(glm::vec2(2330, 1600));
 		part2 = true;
 	}
 	else if (part2) {
-		if (player->getPosition().x <= 2304) player->setPosition(glm::vec2(2304, player->getPosition().y));
+		if (playerPos.x <= 2304) player->setPosition(glm::vec2(2304, playerPos.y));
 	}
 
-	if (player->getPosition().x == 3008 && !part3) {
+	if (playerPos.x >= 3008 && playerPos.x <= 3012 && !part3) {
 		player->setPosition(glm::vec2(3056, 1600));
 		part3 = true;
 	}
 	else if (part3) {
-		if (player->getPosition().x <= 3056) {
-			player->setPosition(glm::vec2(3056, player->getPosition().y));
+		if (playerPos.x <= 3056) {
+			player->setPosition(glm::vec2(3056, playerPos.y));
 		}
 	}
-	if (player->getPosition().x == 3296 && !part4) {
+
+	if (playerPos.x >= 3296 && playerPos.x <= 3300 && !part4) {
 		player->setPosition(glm::vec2(3328, 576));
 		part4 = true;
 	}
 	else if (part4) {
-		if (player->getPosition().x <= 3328) {
-			player->setPosition(glm::vec2(3328, player->getPosition().y));
+		if (playerPos.x <= 3328) {
+			player->setPosition(glm::vec2(3328, playerPos.y));
 		}
 	}
 
-
-
-	if (player->getPosition().x >= 2042 && player->getPosition().x <= 2288 && part1) {
+	// Transiciones de cámara
+	if (playerPos.x >= 2042 && playerPos.x <= 2288 && part1) {
 		if (horitzontal) { // Transición de horizontal a vertical
 			cameraPos.x = fixedXVertical; // Fijar X al entrar al pasadizo vertical
 		}
 		horitzontal = false;
 	}
-	else if (player->getPosition().x >= 2288 && player->getPosition().x <= 3008 && part2) {
+	else if (playerPos.x >= 2288 && playerPos.x <= 3008 && part2) {
 		if (!horitzontal) { // Transición de vertical a horizontal
 			cameraPos.y = fixedYHorizontal2; // Fijar Y al entrar al pasadizo inferior
 		}
 		horitzontal = true;
 	}
-	else if (player->getPosition().x >= 3040 && (player->getPosition().x <= 3256)) {
+	else if (playerPos.x >= 3040 && playerPos.x <= 3256) {
 		if (horitzontal) { // Transición de vertical a horizontal
 			cameraPos.x = fixedXVertical2;
 		}
 		horitzontal = false;
 	}
-	else if (player->getPosition().x >= 3296 && (player->getPosition().x <= 4096)) {
+	else if (playerPos.x >= 3296 && playerPos.x <= 4096) {
 		if (!horitzontal) { // Transición de vertical a horizontal
 			cameraPos.y = fixedYHorizontal3;
 		}
