@@ -29,11 +29,13 @@ public:
 	bool isOffScreen(Player* player);
 	bool checkPlatformCollision(Player* player, Platform* platform);
 	bool playerColisionPlatform();
+	bool readyToJump();
 	void handleSceneTransitions();
 	glm::vec2 getPlayerOffset(Player* player);
 	void setcameraPos(const glm::vec2& offset);
 	void updateCamera(glm::vec2& posjugador,int deltaTime);
 	glm::vec2 getCameraPos() const { return cameraPos; }
+	bool CheckEnemyCollission();
 
 private:
 	void initShaders();
@@ -50,12 +52,14 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	float zoomFactor; // Factor de zoom
+	int damagecooldown = 0;
 	glm::vec2 cameraPos; 
 	int cameraWidth = 16 * 16;
 	int cameraHeight = 16 * 15;
 	float cameraVx = 0.0f;
 	float cameraVy = 0.0f;
 	bool horitzontal;
+	bool hasJumped = false;
 	bool part1, part2, part3, part4;
 	float fixedXVertical2 = 3072;
 	float fixedYHorizontal = 0; // y = 10 * tileSize (10 * 32 = 320, para el pasadizo superior)

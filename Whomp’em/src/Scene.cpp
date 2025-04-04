@@ -52,7 +52,6 @@ void Scene::init() {
 
 	snake = new Snake();
 	snake->init(glm::ivec2(0, 0), texProgram);
-	snake->setPosition(glm::vec2((INIT_PLAYER_X_TILES+2) * map->getTileSize(), (INIT_PLAYER_Y_TILES+1) * map->getTileSize()));
 	snake->setTileMap(map);
 
 	// Inicializar HUB
@@ -127,9 +126,28 @@ void Scene::update(int deltaTime)
 	
 	///
 	player->update(deltaTime);
-	snake->update(deltaTime);
+	if (snake != nullptr) { // Verificar que la serpiente exista
+		snake->update(deltaTime);
+		// Trigger jump cuando readyToJump es true y no ha saltado aún
+		if (readyToJump() && !hasJumped) {
+			snake->snakeJump();
+			hasJumped = true;
+		}
+
+		// Verificar colisión con el jugador
+		if (CheckEnemyCollission() && damagecooldown == 0) {
+			damagecooldown = 1000; // 1 segundo de cooldown
+			playerHub->modifyPlayerHP(-1, false); // Restar 1 de vida
+		}
+		// Verificar si la serpiente debe desaparecer
+		if (snake->shouldDisappear()) {
+			delete snake; // Liberar memoria
+			snake = nullptr; // Establecer a null para evitar accesos inválidos
+		}
+	}
 	playerHub->update(deltaTime);
 	handleSceneTransitions();
+
 
 	updateCamera(player->getPosition(),deltaTime);
 	playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
@@ -137,6 +155,19 @@ void Scene::update(int deltaTime)
 	//std::cout << "Vel: " << player->getVelocity().x << " " << player->getVelocity().y << std::endl;
 	//auto offset = Scene::getPlayerOffset(player);
 	//Scene::setcameraPos(offset);
+}
+
+bool Scene::readyToJump() {
+	glm::vec2 playerPos = player->getPosition();
+	glm::vec2 snakePos = snake->getPosition();
+	float distance = glm::length(playerPos - snakePos);
+	int snakeDirection = snake->getMovementDirection();
+	const float jumpThreshold = 16.0f * 3;
+	bool isApproachingFromRight = (snakePos.x > playerPos.x && snakeDirection == -1);
+	if (distance < jumpThreshold && isApproachingFromRight) {
+		return true;
+	}
+	return false;
 }
 
 bool Scene::playerColisionPlatform() {
@@ -334,12 +365,31 @@ void Scene::render()
 	map->render();
 	player->render();
 	playerHub->render();
-	snake->render();
+	if (snake != nullptr) { 
+		snake->render();
+	}
 
 	if (part3) {
 		for (auto& platform : platforms) platform->render();
 	}
 	//map->renderFRONT();
+}
+
+bool Scene::CheckEnemyCollission() {
+	glm::vec2 playerPos = player->getPosition();
+	glm::ivec2 playerSize(25, 32); // Tamaño del jugador (ajusta según tu código)
+	glm::vec2 snakeformPos = snake->getPosition();
+	glm::ivec2 snakeformSize(16, 16); // Tamaño de la plataforma
+
+	snakeformPos.y += 16;
+	// Verificar si hay colisión
+	if (playerPos.x + playerSize.x > snakeformPos.x &&
+		playerPos.x < snakeformPos.x + snakeformSize.x &&
+		playerPos.y + playerSize.y >= snakeformPos.y &&
+		playerPos.y < snakeformPos.y + snakeformSize.y) {
+		return true;
+	}
+	return false;
 }
 
 void Scene::initShaders()

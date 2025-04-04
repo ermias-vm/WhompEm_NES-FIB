@@ -42,11 +42,21 @@ public:
 
 	void changeAnimToRightLeft(Sprite& sprite, int animation);
 	void righLeftKeyPressed();
+	void snakeJump();
 	void righLeftKeyReleased();
 	void printAnimName(Sprite* sprite, int animation);
+	bool shouldDisappear() const;
+	int getMovementDirection();
 
 private:
+	glm::vec2 spawnPos;
 	bool bLookingLeft, bCrouching;
+	bool isJumping = false;
+	float jumpTime = 0.0f;
+	glm::vec2 jumpStartPos;
+	float jumpDuration = 500.0f; // 0.5 seconds
+	float jumpHeight = 16.0f;    // 1 tile
+	float jumpWidth = 48.0f;     // 3 tiles
 	float timeAccumulator; // Acumulador de tiempo
 	bool bDamaged, b_X_Attacking;
 	int movementDirection;
