@@ -49,6 +49,10 @@ public:
 	bool isPlayerDead() const;
 	void setFalling(bool falling) { bFalling = falling; }
 	bool colisionPlatform();
+	bool isAttacking() const; // Verifica si está agachado y atacando
+	bool Crouching() const;
+	bool lookingleft() const;
+	
 
 private:
 	bool bJumping, bFalling, bLookingLeft, bCrouching, bUsingTotem, is_DOWN_pressed;

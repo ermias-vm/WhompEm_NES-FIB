@@ -10,20 +10,21 @@
 class Menu {
 private:
     GLuint backgroundTextureId;
-    GLuint playTextureId;
-    GLuint instructionsTextureId;
-    GLuint creditsTextureId;
+    GLuint instructionsBackgroundTextureId; // New texture ID for instructions background
     GLuint backgroundVao, backgroundVbo;
-    GLuint buttonsVao, buttonsVbo;
     ShaderProgram* texProgram;
-    float playXMin, playXMax, playYMin, playYMax; // Coordenadas del quad de "Play"
-
+    bool showInstructions; // Flag to toggle instructions display
+  
+   
 public:
     Menu(ShaderProgram* program);
     ~Menu();
     void init();
     void render(glm::mat4& projection);
-    bool isPlayClicked(float x, float y); // Método para verificar clic en "Play"
+    void loadInstructionsBackground(); // New function to load instructions background
+    void setShowInstructions(bool value); // Setter for showInstructions
+    bool isShowingInstructions() const;   // Getter for showInstructions
+
 };
 
 #endif // MENU_H

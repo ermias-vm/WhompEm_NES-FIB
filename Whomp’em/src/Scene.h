@@ -36,6 +36,7 @@ public:
 	void updateCamera(glm::vec2& posjugador,int deltaTime);
 	glm::vec2 getCameraPos() const { return cameraPos; }
 	bool CheckEnemyCollission();
+	bool checkSpearCollisionWithSnake();
 
 private:
 	void initShaders();

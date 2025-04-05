@@ -20,8 +20,7 @@ public:
 	* @param tileMapPos Posición del tile map para calcular el desplazamiento del sprite.
 	* @param shaderProgram Programa de shader empleado para renderizar el sprite.
 	*/
-	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
-
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram,int direction,glm::vec2 pos);
 	void update(int deltaTime);
 
 	void render();
@@ -47,6 +46,7 @@ public:
 	void printAnimName(Sprite* sprite, int animation);
 	bool shouldDisappear() const;
 	int getMovementDirection();
+	
 
 private:
 	glm::vec2 spawnPos;
@@ -61,6 +61,8 @@ private:
 	bool bDamaged, b_X_Attacking;
 	int movementDirection;
 	int startY;
+	int maxpos;
+	int minpos;
 	float SnakeSpeed;
 	glm::ivec2 tileMapDispl;
 	glm::vec2 posSnake;

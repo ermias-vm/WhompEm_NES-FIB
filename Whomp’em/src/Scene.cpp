@@ -51,7 +51,7 @@ void Scene::init() {
 	player->setTileMap(map);
 
 	snake = new Snake();
-	snake->init(glm::ivec2(0, 0), texProgram);
+	snake->init(glm::ivec2(0, 0), texProgram,-1,glm::vec2(16.0f*16.0f,176.0f));
 	snake->setTileMap(map);
 
 	// Inicializar HUB
@@ -136,15 +136,24 @@ void Scene::update(int deltaTime)
 
 		// Verificar colisión con el jugador
 		if (CheckEnemyCollission() && damagecooldown == 0) {
-			damagecooldown = 1000; // 1 segundo de cooldown
+			damagecooldown = 100; // 1 segundo de cooldown
 			playerHub->modifyPlayerHP(-1, false); // Restar 1 de vida
 		}
+
+		// Verificar si el jugador está agachado y atacando, y si la lanza toca a la serpiente
+		if (player->isAttacking() && checkSpearCollisionWithSnake()) {
+			delete snake; // Liberar memoria
+			snake = nullptr; // Hacer que desaparezca
+			std::cout << "SNAKE: Killed by spear attack while crouching!" << std::endl;
+		}
+
 		// Verificar si la serpiente debe desaparecer
 		if (snake->shouldDisappear()) {
 			delete snake; // Liberar memoria
 			snake = nullptr; // Establecer a null para evitar accesos inválidos
 		}
 	}
+	if(damagecooldown > 0)--damagecooldown;
 	playerHub->update(deltaTime);
 	handleSceneTransitions();
 
@@ -157,6 +166,40 @@ void Scene::update(int deltaTime)
 	//Scene::setcameraPos(offset);
 }
 
+bool Scene::checkSpearCollisionWithSnake() {
+	if (!snake || !player) return false; // Si no hay serpiente o jugador, no hay colisión
+
+	// Obtener posición de la lanza desde Player
+	glm::vec2 spearPos = player->getPosition();
+	if(player->Crouching())spearPos.y += 16.0f;
+	glm::ivec2 spearSize(32, 16); // Tamaño de la lanza (ajusta según tu spritesheet)
+
+	// Obtener posición y tamaño de la serpiente
+	glm::vec2 snakePos = snake->getPosition();
+	glm::ivec2 snakeSize(16, 10); // Tamaño de la serpiente (ajusta según tu código)
+
+	if (!player->lookingleft()) {
+		spearPos.x += 32.0f;
+		// Verificar colisión entre la lanza y la serpiente a la derecha
+		if (spearPos.x + spearSize.x > snakePos.x &&
+			spearPos.x < snakePos.x + snakeSize.x &&
+			spearPos.y + spearSize.y > snakePos.y &&
+			spearPos.y < snakePos.y + snakeSize.y) {
+			return true;
+		}
+	}
+	else {
+		// Verificar colisión entre la lanza y la serpiente a la izquierda
+		spearPos.x -= 32.0f; 
+		if (spearPos.x + spearSize.x > snakePos.x &&
+			spearPos.x < snakePos.x + snakeSize.x &&
+			spearPos.y + spearSize.y > snakePos.y &&
+			spearPos.y < snakePos.y + snakeSize.y) {
+			return true;
+		}
+	}
+	return false;
+}
 bool Scene::readyToJump() {
 	glm::vec2 playerPos = player->getPosition();
 	glm::vec2 snakePos = snake->getPosition();

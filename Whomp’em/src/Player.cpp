@@ -714,3 +714,15 @@ void Player::printAnimName(Sprite* sprite, int animation) {
 }
 
 
+bool Player::isAttacking() const {
+    // Está agachado (is_DOWN_pressed) y atacando (b_X_Attacking)
+    return b_X_Attacking;
+}
+
+bool Player::Crouching() const {
+    return is_DOWN_pressed;
+}
+
+bool Player::lookingleft() const {
+    return bLookingLeft;
+}

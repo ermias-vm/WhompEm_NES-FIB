@@ -5,7 +5,7 @@
 #include "Game.h"
 
 
-#define SNAKE_SPEED 16
+#define SNAKE_SPEED 20
 #define ANIMATION_SPEED 7 // Velocidad de las animaciones (más lento)
 
 enum SnakeAnims {
@@ -15,11 +15,19 @@ enum SnakeAnims {
     MOVE_LEFT
 };
 
-void Snake::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
-    movementDirection = -1; // Empieza moviéndose a la izquierda
+void Snake::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, int direction, glm::vec2 pos) {
+    movementDirection = direction; 
+    if (direction == 1) {
+        minpos = pos.x;
+        maxpos = pos.x + 16.0f*16.0f;
+    }
+    else {
+        maxpos = pos.x;
+        minpos = pos.x - 16.0f * 16.0f;
+    }
     tileMapDispl = tileMapPos;
     timeAccumulator = 0.0f; // Inicializa el acumulador de tiempo
-    posSnake = glm::vec2(160.0f, 176.0f); // Posición inicial razonable
+    posSnake = pos;
     spawnPos = posSnake;
     SnakeSpritesheet.loadFromFile("images/sprites/snakeFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     SnakeSprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.25, 0.5), &SnakeSpritesheet, &shaderProgram);
@@ -41,9 +49,7 @@ void Snake::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 }
 
 bool Snake::shouldDisappear() const {
-    const float maxDistance = 8.0f * 16.0f; // 10 tiles = 160 píxeles
-    float distanceTraveled = abs(posSnake.x - spawnPos.x); // Distancia recorrida en x
-    return distanceTraveled >= maxDistance;
+    return false;
 }
 
 void Snake::render() {
@@ -94,6 +100,14 @@ void Snake::update(int deltaTime) {
                 float(tileMapDispl.y + posSnake.y)
             ));
             timeAccumulator -= updateInterval;
+            if (posSnake.x >= maxpos) {
+                movementDirection = -1;
+                SnakeSprite->changeAnimation(MOVE_LEFT);
+            }
+            else if (posSnake.x <= minpos) {
+                movementDirection = 1;
+                SnakeSprite->changeAnimation(MOVE_RIGHT);
+            }
         }
     }
 }
