@@ -9,11 +9,11 @@
     ],
     "fileStates": {
         "FINAL_MAP.tmx": {
-            "scale": 3,
+            "scale": 16,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 75,
-                "y": 202.16666666666663
+                "x": 1305.59375,
+                "y": 162.8125
             }
         },
         "Final-Tileset.tsx": {

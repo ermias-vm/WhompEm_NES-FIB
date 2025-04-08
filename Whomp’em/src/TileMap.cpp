@@ -295,26 +295,34 @@ bool TileMap::loadLevel(const string& levelFile)
             object->QueryIntAttribute("width", &collisionObj.width);
             object->QueryIntAttribute("height", &collisionObj.height);
 
-            // Buscar la propiedad Platform dentro de <properties>
+            // Inicializar valores predeterminados para platform y damage
+            collisionObj.platform = false; // Por defecto, no es una plataforma
+            collisionObj.damage = false;   // Por defecto, no hace daño
+
+            // Buscar las propiedades dentro de <properties>
             XMLElement* properties = object->FirstChildElement("properties");
             if (properties) {
                 XMLElement* property = properties->FirstChildElement("property");
                 while (property) {
                     const char* name = property->Attribute("name");
-                    if (name && string(name) == "Platform") {
-                        bool platformValue = false; // Temporal para leer el valor
-                        property->QueryBoolAttribute("value", &platformValue);
-                        collisionObj.platform = platformValue;
-                        break; // Ya encontramos la propiedad Platform, podemos salir del bucle
+                    if (name) {
+                        if (string(name) == "Platform") {
+                            property->QueryBoolAttribute("value", &collisionObj.platform);
+                        }
+                        else if (string(name) == "Damage") {
+                            property->QueryBoolAttribute("value", &collisionObj.damage);
+                        }
                     }
                     property = property->NextSiblingElement("property");
                 }
             }
 
+            // Agregar el objeto de colisión al vector
             collisionObjects.push_back(collisionObj);
             object = object->NextSiblingElement("object");
         }
     }
+
 
     return true;
 }
@@ -464,19 +472,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
 }
 
 
-bool TileMap::collisionMoveHoritz(const glm::ivec2& pos, const glm::ivec2& size, bool movingLeft) const {
-    glm::ivec2 posAjustada = pos;
-    if (movingLeft)
-        posAjustada.x += 0; // Ajustar solo para el movimiento a la izquierda
 
-    for (const auto& rect : collisionObjects) {
-        if (posAjustada.x <= rect.x + rect.width && posAjustada.x + size.x > rect.x &&
-            posAjustada.y + size.y > rect.y && posAjustada.y < rect.y + rect.height) {
-            return !rect.platform;
-        }
-    }
-    return false;
-}
 
 bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
@@ -487,6 +483,34 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
                 *posY = rect.y - size.y;
                 return true;
             }
+        }
+    }
+    return false;
+}
+
+bool TileMap::collisionDownDoesDamage(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
+{
+    for (const auto& rect : collisionObjects) {
+        if (pos.x + size.x > rect.x && pos.x < rect.x + rect.width &&
+            pos.y + size.y >= rect.y && pos.y < rect.y + rect.height) {
+            if (*posY - rect.y + size.y <= 4) { 
+                *posY = rect.y - size.y;
+                return  rect.damage;
+            }
+        }
+    }
+    return false;
+}
+
+bool TileMap::collisionMoveHoritz(const glm::ivec2& pos, const glm::ivec2& size, bool movingLeft) const {
+    glm::ivec2 posAjustada = pos;
+    if (movingLeft)
+        posAjustada.x += 0; // Ajustar solo para el movimiento a la izquierda
+
+    for (const auto& rect : collisionObjects) {
+        if (posAjustada.x <= rect.x + rect.width && posAjustada.x + size.x > rect.x &&
+            posAjustada.y + size.y > rect.y && posAjustada.y < rect.y + rect.height) {
+            return !rect.platform;
         }
     }
     return false;

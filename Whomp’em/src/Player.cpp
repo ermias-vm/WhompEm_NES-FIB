@@ -36,8 +36,20 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     bLookingLeft = bCrouching = bUsingTotem = false;
     is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = is_V_pressed = false;
     is_T_pressed = is_O_pressed = is_P_pressed = is_I_pressed = false;
+    
     playerSpeed = 2.f;
+    damageCooldown = 1300; 
+    timeSinceLastDamage = 0;
 
+    setAnimations(shaderProgram);
+
+    tileMapDispl = tileMapPos;				            // Desplazamiento del tile map (0,0)
+    playerSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+    spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
+}
+
+
+void Player::setAnimations(ShaderProgram& shaderProgram) {
     // ANIMACIONES PLAYER //
 
     playerSpritesheet.loadFromFile("images/sprites/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -185,16 +197,13 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     spearSprite->setAnimationSpeed(NONE2, SPEAR_ANIMATION_SPEED);  //TODO: MODIFICAR A NO RENDERIZAR
     spearSprite->addKeyframe(NONE2, glm::vec2(0.8, 0.0f));
 
-    changeAnimToRightLeft(*playerSprite, STAND_RIGHT);  // Animaci�n inicial
-    tileMapDispl = tileMapPos;				            // Desplazamiento del tile map (0,0)
-    playerSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-    spearSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + spearDist), float(tileMapDispl.y + posPlayer.y)));
+    changeAnimToRightLeft(*playerSprite, STAND_RIGHT);  // Animacion inicial
 }
 
 bool Player::colisionPlatform() {
-    Scene* scene = Game::instance().getScene();
-	return scene->playerColisionPlatform();
+	return Game::instance().getScene()->playerColisionPlatform();
 }
+
 void Player::changeAnimToRightLeft(Sprite& sprite, int animation) {
     if (bLookingLeft) {
         animation++;
@@ -268,11 +277,64 @@ void Player::righLeftKeyReleased() {
     }
 }
 
-void Player::update(int deltaTime)
-{
+bool Player::isOnCooldown() const { return timeSinceLastDamage > 0;}
+
+void Player::checkCheats() {
+
+    if (Game::instance().getKey(GLFW_KEY_V)) {
+        if (!is_V_pressed) {
+            playerSpeed = (playerSpeed == 2) ? 4 : 2;
+            is_V_pressed = true;
+        }
+    }
+    else {
+        is_V_pressed = false;
+    }
+    // Gestionar la tecla O para aumentar la vida
+    if (Game::instance().getKey(GLFW_KEY_O)) {
+        if (!is_O_pressed) {
+            is_O_pressed = true;
+            if (playerHub) {
+                heal(1);
+            }
+        }
+    }
+    else {
+        is_O_pressed = false;
+    }
+    // Gestionar la tecla P para aplicar daño
+    if (Game::instance().getKey(GLFW_KEY_P)) {
+        if (!is_P_pressed) {
+            is_P_pressed = true;
+            takeDamage(1);
+        }
+    }
+    else {
+        is_P_pressed = false;
+    }
+    // Gestionar la tecla I para añadir un coraz�n (si HP >= 12)
+    if (Game::instance().getKey(GLFW_KEY_I)) {
+        if (!is_I_pressed) {
+            is_I_pressed = true;
+            addHeart();
+        }
+    }
+    else {
+        is_I_pressed = false;
+    }
+}
+
+void Player::update(int deltaTime) {
 
     spearSprite->update(deltaTime);
     playerSprite->update(deltaTime);
+
+    if (timeSinceLastDamage > 0) {
+        timeSinceLastDamage -= deltaTime;
+        if (timeSinceLastDamage < 0) {
+            timeSinceLastDamage = 0; // Asegurarse de que no sea negativo
+        }
+    }
 
     if (Game::instance().getKey(GLFW_KEY_X)) {
         int playerAnim = playerSprite->animation();
@@ -282,16 +344,17 @@ void Player::update(int deltaTime)
 
             b_X_Attacking = true;
             if (!bJumping && !bFalling) {
-                if (is_Right_pressed || is_Left_pressed) {
-                    if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
-                        changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
-                        changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
-                    }
-                }
-                else if (is_DOWN_pressed) {
+  
+                if (is_DOWN_pressed) {
                     if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                         changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
                         changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
+                    }
+                }
+                else if ((is_Right_pressed || is_Left_pressed)) {
+                    if (playerAnim != (CHARGE_RIGHT + bLookingLeft) ) {
+                        changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
+                        changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
                     }
                 }
                 else {
@@ -306,16 +369,16 @@ void Player::update(int deltaTime)
             }
         }
         else if (!bJumping && !bFalling) { // ANIMACIONES cuando ya se ha atacado y player (EN TIERRA) pero se mantiene X presionada)
-            if (is_Right_pressed || is_Left_pressed) {
-                if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
-                    changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
-                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
-                }
-            }
-            else if (is_DOWN_pressed) {
+            if (is_DOWN_pressed) {
                 if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
                     changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
+                }
+            }
+            else if ((is_Right_pressed || is_Left_pressed)) {
+                if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
+                    changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
+                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
                 }
             }
             else {
@@ -514,6 +577,9 @@ void Player::update(int deltaTime)
         is_T_pressed = false; // Reiniciar el estado cuando se suelta la tecla
     }
 
+    if (map->collisionDownDoesDamage(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
+		takeDamage(1);
+    }
 	checkCheats();
 
     // Imprimir la posicion del jugador cada 500ms
@@ -525,58 +591,29 @@ void Player::update(int deltaTime)
     }
 }
 
-void Player::checkCheats() {
-
-    if (Game::instance().getKey(GLFW_KEY_V)) {
-        if (!is_V_pressed) {
-            playerSpeed = (playerSpeed == 2) ? 4 : 2;
-            is_V_pressed = true;
-        }
-    }
-    else {
-        is_V_pressed = false;
-    }
-    // Gestionar la tecla O para aumentar la vida
-    if (Game::instance().getKey(GLFW_KEY_O)) {
-        if (!is_O_pressed) {
-            is_O_pressed = true;
-            if (playerHub) {
-                heal(1);
-            }
-        }
-    }
-    else {
-        is_O_pressed = false;
-    }
-    // Gestionar la tecla P para aplicar daño
-    if (Game::instance().getKey(GLFW_KEY_P)) {
-        if (!is_P_pressed) {
-            is_P_pressed = true;
-            //takeDamage(1);
-        }
-    }
-    else {
-        is_P_pressed = false;
-    }
-    // Gestionar la tecla I para añadir un coraz�n (si HP >= 12)
-    if (Game::instance().getKey(GLFW_KEY_I)) {
-        if (!is_I_pressed) {
-            is_I_pressed = true;
-            addHeart();
-        }
-    }
-    else {
-        is_I_pressed = false;
-    }
-}
 
 void Player::render() {
     int playerAnim = playerSprite->animation();
-
-    if (playerAnim > 11 && playerAnim < 18) { //ANIMACIONES DE ATAQUE CON LANZA EXTENDIDA
-        spearSprite->render();
+    // Verificar si el jugador está en cooldown
+    if (isOnCooldown()) {
+        // Calcular el tiempo restante en el ciclo de parpadeo
+        int blinkCycle = timeSinceLastDamage % 50; // Ciclo de 400 ms (200 ms visible, 200 ms invisible)
+        if (blinkCycle < 25) {
+            // Durante los primeros 200 ms del ciclo, renderizar el jugador
+            playerSprite->render();
+            if (playerAnim > 11 && playerAnim < 18) { //ANIMACIONES DE ATAQUE CON LANZA EXTENDIDA
+                spearSprite->render();
+            }
+        }
+        // Durante los siguientes 200 ms, no renderizar el jugador (parpadeo)
     }
-    playerSprite->render();
+    else {
+        // Si no está en cooldown, renderizar normalmente
+        playerSprite->render();
+        if (playerAnim > 11 && playerAnim < 18) { //ANIMACIONES DE ATAQUE CON LANZA EXTENDIDA
+            spearSprite->render();
+        }
+    }
 }
 
 void Player::setTileMap(TileMap* tileMap) {
@@ -612,7 +649,7 @@ glm::vec2 Player::getVelocity() {
         velocity.y = -JUMP_HEIGHT * cos(PI * jumpAngle / 180.f) * JUMP_ANGLE_STEP / 180.f * PI;
     }
     else {
-        // Si est� cayendo
+        // Si esta cayendo
         velocity.y = FALL_STEP;
     }
 
@@ -620,7 +657,7 @@ glm::vec2 Player::getVelocity() {
 }
 
 void Player::takeDamage(int damage) {
-    if (playerHub && !isGodMode()) {
+    if (playerHub && !isGodMode() && !isOnCooldown()) {
         playerHub->modifyPlayerHP(-damage, false);
         if (playerHub->isPlayerDead()) {
             cout << endl << "PLAYER: Dead -> ----GAME OVER-----" << endl << endl;
@@ -628,16 +665,19 @@ void Player::takeDamage(int damage) {
         }
         else {
             cout << "PLAYER: Damaged [-" << damage << "] (" << playerHub->getPlayerHP() << " HP left)" << endl;
-            changeAnimToRightLeft(*playerSprite, DAMAGED_RIGHT + bLookingLeft);
+            changeAnimToRightLeft(*playerSprite, DAMAGED_RIGHT);
+            timeSinceLastDamage = damageCooldown;
         }
     }
 }
+
 void Player::heal(int hp) {
     if (playerHub) {
         playerHub->modifyPlayerHP(hp, false);
         cout << "PLAYER: Healed [+" << hp << "] (" << playerHub->getPlayerHP() << " HP left)" << endl;
     }
 }
+
 void Player::addHeart() {
     if (playerHub && playerHub->getPlayerHP() >= 12) {
         playerHub->modifyPlayerHP(3, true);

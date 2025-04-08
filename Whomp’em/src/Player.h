@@ -41,6 +41,7 @@ public:
 	void righLeftKeyPressed();
 	void righLeftKeyReleased();
 	void printAnimName(Sprite* sprite, int animation);
+	void setAnimations(ShaderProgram& shaderProgram);
 
 	void setPlayerHUB(PlayerHUB* hub);
 	void takeDamage(int damage);
@@ -55,7 +56,7 @@ public:
 	bool lookingleft() const;
 	void checkCheats();
 	bool isGodMode() const;
-
+	bool isOnCooldown() const;
 	
 
 private:
@@ -65,6 +66,7 @@ private:
 	bool is_V_pressed, is_O_pressed, is_P_pressed, is_I_pressed;
 
 	int jumpAngle, startY, spearDist;
+	int damageCooldown, timeSinceLastDamage;
 	float playerSpeed;
 	glm::ivec2 tileMapDispl, posPlayer;
 	Texture playerSpritesheet, spearSpritesheet;

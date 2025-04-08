@@ -136,7 +136,7 @@ void Scene::update(int deltaTime) {
 
         if (CheckEnemyCollission(snake) && damagecooldown == 0) {
             damagecooldown = 100;
-            playerHub->modifyPlayerHP(-1, false);
+			player->takeDamage(1);
             std::cout << "PLAYER: Damaged by snake at " << snake->getPosition().x << std::endl;
         }
 
@@ -167,7 +167,7 @@ void Scene::update(int deltaTime) {
         bamboo->update(deltaTime);
         if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
             if (damagecooldown == 0) {
-                playerHub->modifyPlayerHP(-1, false);
+				player->takeDamage(1);
                 damagecooldown = 100;
                 std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
             }

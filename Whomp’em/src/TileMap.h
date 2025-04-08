@@ -35,6 +35,7 @@ public:
 	bool collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
+	bool collisionDownDoesDamage(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	bool collisionMoveHoritz(const glm::ivec2& pos, const glm::ivec2& size, bool movingLeft) const;
 
 private:
@@ -44,7 +45,7 @@ private:
 private:
 	struct CollisionRect {
 		int x, y, width, height;
-		bool platform;
+		bool platform, damage;
 	};
 	int* foregroundMap; // Capa de primer plano
 	GLuint vao;
