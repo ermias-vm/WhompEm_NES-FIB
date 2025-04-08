@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Bamboo.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="src\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Bamboo.h" />
     <ClInclude Include="src\AnimKeyframes.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Platform.h" />

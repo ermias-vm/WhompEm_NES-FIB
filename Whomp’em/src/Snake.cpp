@@ -4,9 +4,8 @@
 #include "Snake.h"
 #include "Game.h"
 
-
-#define SNAKE_SPEED 20
-#define ANIMATION_SPEED 7 // Velocidad de las animaciones (más lento)
+#define SNAKE_SPEED 30
+#define ANIMATION_SPEED 7
 
 enum SnakeAnims {
     STAND_RIGHT,
@@ -15,18 +14,25 @@ enum SnakeAnims {
     MOVE_LEFT
 };
 
+Snake::Snake() : SnakeSprite(nullptr), map(nullptr), movementDirection(0), timeAccumulator(0.f), isJumping(false), hasJumpedOnce(false), jumpTime(0.f) {
+}
+
+Snake::~Snake() {
+    if (SnakeSprite) delete SnakeSprite;
+}
+
 void Snake::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, int direction, glm::vec2 pos) {
-    movementDirection = direction; 
+    movementDirection = direction;
     if (direction == 1) {
         minpos = pos.x;
-        maxpos = pos.x + 16.0f*16.0f;
+        maxpos = pos.x + 16.0f * 16.0f;
     }
     else {
         maxpos = pos.x;
         minpos = pos.x - 16.0f * 16.0f;
     }
     tileMapDispl = tileMapPos;
-    timeAccumulator = 0.0f; // Inicializa el acumulador de tiempo
+    timeAccumulator = 0.0f;
     posSnake = pos;
     spawnPos = posSnake;
     SnakeSpritesheet.loadFromFile("images/sprites/snakeFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -44,7 +50,8 @@ void Snake::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, int
     SnakeSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.50, 0.0f));
     SnakeSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75, 0.0f));
 
-    SnakeSprite->changeAnimation(MOVE_LEFT);
+    if (direction == -1) SnakeSprite->changeAnimation(MOVE_LEFT);
+    else if (direction == 1) SnakeSprite->changeAnimation(MOVE_RIGHT);
     SnakeSprite->setPosition(glm::vec2(float(tileMapDispl.x + posSnake.x), float(tileMapDispl.y + posSnake.y)));
 }
 
@@ -70,15 +77,12 @@ void Snake::update(int deltaTime) {
         float direction = (movementDirection == 1) ? 1.0f : -1.0f;
 
         if (t >= 1.0f) {
-            // Jump complete
             posSnake.x = jumpStartPos.x + (jumpWidth * direction);
             posSnake.y = jumpStartPos.y;
             isJumping = false;
         }
         else {
-            // Horizontal movement (linear)
             posSnake.x = jumpStartPos.x + (jumpWidth * t * direction);
-            // Vertical movement (parabolic) - Invertido para tu sistema
             posSnake.y = jumpStartPos.y + (4.0f * jumpHeight * t * t) - (4.0f * jumpHeight * t);
         }
 
@@ -93,8 +97,6 @@ void Snake::update(int deltaTime) {
         if (timeAccumulator >= updateInterval) {
             float displacement = SNAKE_SPEED * (updateInterval / 1000.0f);
             posSnake.x += (displacement * movementDirection);
-            // Quitamos las condiciones de cambio de dirección
-            // La serpiente seguirá moviéndose en la dirección inicial
             SnakeSprite->setPosition(glm::vec2(
                 float(tileMapDispl.x + posSnake.x),
                 float(tileMapDispl.y + posSnake.y)
@@ -113,12 +115,12 @@ void Snake::update(int deltaTime) {
 }
 
 void Snake::snakeJump() {
-    if (!isJumping) {
+    if (!isJumping && !hasJumpedOnce) { // Solo salta si no está saltando y no ha saltado antes
         isJumping = true;
+        hasJumpedOnce = true; // Marca que ya ha saltado
         jumpTime = 0.0f;
         jumpStartPos = posSnake;
 
-        // Set animation based on direction
         if (movementDirection == 1) {
             SnakeSprite->changeAnimation(MOVE_RIGHT);
         }
@@ -131,6 +133,7 @@ void Snake::snakeJump() {
 int Snake::getMovementDirection() {
     return movementDirection;
 }
+
 void Snake::setPosition(const glm::vec2& pos) {
     posSnake = pos;
     SnakeSprite->setPosition(glm::vec2(float(tileMapDispl.x + posSnake.x), float(tileMapDispl.y + posSnake.y)));
@@ -139,4 +142,3 @@ void Snake::setPosition(const glm::vec2& pos) {
 glm::vec2 Snake::getPosition() {
     return posSnake;
 }
-
