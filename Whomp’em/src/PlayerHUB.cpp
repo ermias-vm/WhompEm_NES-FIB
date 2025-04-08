@@ -13,7 +13,7 @@ enum TotemAnims {
 
 
 void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
-
+	godMode = false;
     playerLifes = 2;
     playerHP = 12;
     // CORAZONES
@@ -81,6 +81,13 @@ int PlayerHUB::getPlayerHP() const {
 int PlayerHUB::getPlayerLifes() const {
     return playerLifes;
 }
+void PlayerHUB::restoreLivesHp() {
+	playerHP = 12;
+	playerLifes = 2;
+	heartSprite->changeAnimation(playerHP);
+	lifeSprite->changeAnimation(playerLifes);
+    cout << "PLAYER: Restored Lives and HP" << endl;
+}
 
 void PlayerHUB::modifyPlayerHP(int amount, bool addHeart) {
     if (addHeart) playerHP += 3;
@@ -122,6 +129,7 @@ void PlayerHUB::setTotemAnimation(bool bUsingTotem) {
 
 void PlayerHUB::update(int deltaTime)
 {
+	checkCheats();
     heartSprite->update(deltaTime);
     lifeSprite->update(deltaTime);
     totemSprite->update(deltaTime);
@@ -132,6 +140,30 @@ void PlayerHUB::render() {
     heartSprite->render();
     lifeSprite->render();
     totemSprite->render();
+}
+void PlayerHUB::checkCheats() {
+    // Gestionar la tecla H  para curar completamente al jugador
+    if (Game::instance().getKey(GLFW_KEY_H)) {
+        if (!is_H_pressed) {
+            is_H_pressed = true;
+            restoreLivesHp();;
+        }
+    }
+    else {
+        is_H_pressed = false;
+    }
+    // Gestionar la tecla G  activar godMode
+    if (Game::instance().getKey(GLFW_KEY_G)) {
+        if (!is_G_pressed) {
+            is_G_pressed = true;
+			godMode = !godMode;
+            if (godMode) cout << "PLAYER: God Mode Activated" << endl;
+            else cout << "PLAYER: God Mode Deactivated" << endl;
+        }
+    }
+    else {
+        is_G_pressed = false;
+    }
 }
 
 void PlayerHUB::setPosition(const glm::vec2& pos) {

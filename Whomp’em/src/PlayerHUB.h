@@ -19,10 +19,13 @@ public:
 	int getPlayerHP() const;
 	int getPlayerLifes() const;
 	void setTotemAnimation(bool bUsingTotem);
-
+	void restoreLivesHp();
+	void checkCheats();
+	bool isGodMode() const { return godMode; }
 
 private:
 	int playerHP, playerLifes;
+	bool godMode, is_H_pressed, is_G_pressed;
 	glm::ivec2 tileMapDispl, posHearts, posLifes, posTotem;
 	Texture hubSpriteSheet;
 	Sprite* heartSprite;

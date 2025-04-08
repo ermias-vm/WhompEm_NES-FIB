@@ -514,7 +514,18 @@ void Player::update(int deltaTime)
         is_T_pressed = false; // Reiniciar el estado cuando se suelta la tecla
     }
 
-    ///////////////////////////////////////////////////////////////////////
+	checkCheats();
+
+    // Imprimir la posicion del jugador cada 500ms
+    static int timeSinceLastPrint = 0;
+    timeSinceLastPrint += deltaTime;
+    if (timeSinceLastPrint >= 2000) {
+        std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
+        timeSinceLastPrint = 0;
+    }
+}
+
+void Player::checkCheats() {
 
     if (Game::instance().getKey(GLFW_KEY_V)) {
         if (!is_V_pressed) {
@@ -525,15 +536,6 @@ void Player::update(int deltaTime)
     else {
         is_V_pressed = false;
     }
-
-    // Imprimir la posici�n del jugador cada 500ms
-    static int timeSinceLastPrint = 0;
-    timeSinceLastPrint += deltaTime;
-    if (timeSinceLastPrint >= 2000) {
-        std::cout << "Posicion: (" << posPlayer.x << ", " << posPlayer.y << ")" << std::endl;
-        timeSinceLastPrint = 0;
-    }
-
     // Gestionar la tecla O para aumentar la vida
     if (Game::instance().getKey(GLFW_KEY_O)) {
         if (!is_O_pressed) {
@@ -546,19 +548,17 @@ void Player::update(int deltaTime)
     else {
         is_O_pressed = false;
     }
-
-    // Gestionar la tecla P para aplicar da�o
+    // Gestionar la tecla P para aplicar daño
     if (Game::instance().getKey(GLFW_KEY_P)) {
         if (!is_P_pressed) {
             is_P_pressed = true;
-            takeDamage(1);
+            //takeDamage(1);
         }
     }
     else {
         is_P_pressed = false;
     }
-
-    // Gestionar la tecla I para a�adir un coraz�n (si HP >= 12)
+    // Gestionar la tecla I para añadir un coraz�n (si HP >= 12)
     if (Game::instance().getKey(GLFW_KEY_I)) {
         if (!is_I_pressed) {
             is_I_pressed = true;
@@ -568,7 +568,6 @@ void Player::update(int deltaTime)
     else {
         is_I_pressed = false;
     }
-
 }
 
 void Player::render() {
@@ -621,7 +620,7 @@ glm::vec2 Player::getVelocity() {
 }
 
 void Player::takeDamage(int damage) {
-    if (playerHub) {
+    if (playerHub && !isGodMode()) {
         playerHub->modifyPlayerHP(-damage, false);
         if (playerHub->isPlayerDead()) {
             cout << endl << "PLAYER: Dead -> ----GAME OVER-----" << endl << endl;
@@ -648,6 +647,12 @@ void Player::addHeart() {
     else {
         cout << "PLAYER: ADD HEART [FAILED] (curretHP < 12) (" << playerHub->getPlayerHP() << " HP left)" << endl;
     }
+}
+bool Player::isGodMode() const {  
+   if (playerHub) {  
+       return playerHub->isGodMode();  
+   }  
+   return false;  
 }
 
 bool Player::isPlayerDead() const {
