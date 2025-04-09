@@ -2,8 +2,8 @@
 #include "Game.h"
 
 Menu::Menu(ShaderProgram* program) : texProgram(program),
-backgroundTextureId(0), instructionsBackgroundTextureId(0),
-backgroundVao(0), backgroundVbo(0), showInstructions(false) {
+backgroundTextureId(0), instructionsBackgroundTextureId(0), creditsBackgroundTextureId(0),
+backgroundVao(0), backgroundVbo(0), showInstructions(false), showCredits(false) {
 }
 
 Menu::~Menu() {
@@ -75,6 +75,29 @@ void Menu::loadInstructionsBackground() {
     showInstructions = true; // Set flag to show instructions
 }
 
+void Menu::loadCreditsBackground() {
+    int width, height;
+
+    // Cargar la imagen de fondo de instrucciones
+    unsigned char* image = SOIL_load_image("images/menu/CREDITS.png", &width, &height, 0, SOIL_LOAD_RGBA);
+    if (!image) {
+        std::cerr << "Error loading CREDITS.png" << std::endl;
+        return;
+    }
+    if (creditsBackgroundTextureId == 0) {
+        glGenTextures(1, &creditsBackgroundTextureId);
+    }
+    glBindTexture(GL_TEXTURE_2D, creditsBackgroundTextureId);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    SOIL_free_image_data(image);
+
+    showCredits = true; // Set flag to show instructions
+}
+
 void Menu::render(glm::mat4& projection) {
     texProgram->use();
     texProgram->setUniformMatrix4f("projection", projection);
@@ -86,6 +109,13 @@ void Menu::render(glm::mat4& projection) {
     if (showInstructions && instructionsBackgroundTextureId != 0) {
         // Render instructions background instead of main menu
         glBindTexture(GL_TEXTURE_2D, instructionsBackgroundTextureId);
+        glBindVertexArray(backgroundVao);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+    }
+    else if (showCredits && creditsBackgroundTextureId != 0) {
+        // Render instructions background instead of main menu
+        glBindTexture(GL_TEXTURE_2D, creditsBackgroundTextureId);
         glBindVertexArray(backgroundVao);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
@@ -102,6 +132,14 @@ void Menu::setShowInstructions(bool value) {
     showInstructions = value;
 }
 
+void Menu::setShowCredits(bool value) {
+    showCredits = value;
+}
+
 bool Menu::isShowingInstructions() const {
+    return showInstructions;
+}
+
+bool Menu::isShowingCredits() const {
     return showInstructions;
 }

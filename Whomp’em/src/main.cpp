@@ -22,10 +22,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             else if (key == GLFW_KEY_I && !data->jugar) {
                 data->menu->loadInstructionsBackground(); // Load instructions background
             }
+            else if (key == GLFW_KEY_C && !data->jugar) {
+                data->menu->loadCreditsBackground(); // Load instructions background
+            }
             else if (key == GLFW_KEY_ESCAPE && !data->jugar) {
                 Menu* menu = data->menu;
                 if (menu && menu->isShowingInstructions()) {
                     menu->setShowInstructions(false); // Return to main menu
+                }
+                if (menu && menu->isShowingCredits()) {
+                    menu->setShowCredits(false); // Return to main menu
                 }
             }
         }
