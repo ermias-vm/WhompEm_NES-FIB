@@ -11,6 +11,7 @@
 #include "Bamboo.h"
 #include "Platform.h"
 #include "Boss.h"
+#include "Cyclope.h"
 
 class Scene {
 public:
@@ -34,6 +35,7 @@ public:
     glm::vec2 getCameraPos() const { return cameraPos; }
     bool CheckEnemyCollission(Snake* snake);
     bool checkSpearCollisionWithSnake(Snake* snake);
+    glm::vec2 getPlayerPos() const;
 
 private:
     void initShaders();
@@ -44,8 +46,11 @@ private:
     TileMap* foreground;
     Player* player;
     Boss* boss;
-    std::vector<Snake*> snakes;
     PlayerHUB* playerHub;
+
+	Cyclope* cyclope;
+
+    std::vector<Snake*> snakes;
     std::vector<Platform*> platforms;
     std::vector<Bamboo*> bamboos;
     std::vector<Bamboo*> bambooslaunch;

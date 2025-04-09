@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\Boss.cpp" />
     <ClCompile Include="src\Bamboo.cpp" />
+    <ClCompile Include="src\Cyclope.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="resource1.h" />
     <ClInclude Include="src\Bamboo.h" />
     <ClInclude Include="src\AnimKeyframes.h" />
+    <ClInclude Include="src\Cyclope.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Platform.h" />
     <ClInclude Include="src\Player.h" />

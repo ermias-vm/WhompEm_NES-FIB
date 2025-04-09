@@ -36,6 +36,11 @@ void Scene::init() {
     //player->setPosition(glm::vec2(3760, 608));
     player->setTileMap(map);
 
+	cyclope = new Cyclope();
+    cyclope->init(glm::ivec2(0, 0), texProgram);
+    cyclope->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 20, INIT_PLAYER_Y_TILES * 16));
+    cyclope->setTileMap(map);
+
     playerHub = new PlayerHUB();
     playerHub->init(glm::ivec2(0, 0), texProgram);
     playerHub->setPosition(glm::vec2(0, 0));
@@ -136,6 +141,7 @@ void Scene::update(int deltaTime) {
 
     player->update(deltaTime);
     boss->update(deltaTime);
+	cyclope->update(deltaTime);
 
     // Hacer que el jefe lance bambúes
     if (boss->shouldThrowBamboo()) {
@@ -203,7 +209,6 @@ void Scene::update(int deltaTime) {
     if (snakesSpawned && snakes.empty()) {
         snakesSpawned = false;
     }
-
 
 
     for (auto& bamboo : bamboos) {
@@ -499,6 +504,8 @@ void Scene::render() {
     map->render();
     player->render();
     playerHub->render();
+	cyclope->render();
+
     if (part5)boss->render();
     for (auto& snake : snakes) {
         snake->render();
@@ -557,3 +564,6 @@ void Scene::initShaders() {
     fShader.free();
 }
 
+glm::vec2 Scene::getPlayerPos() const {
+    return player->getPosition();
+}

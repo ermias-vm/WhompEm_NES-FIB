@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="256" height="105" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="269">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="256" height="105" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="274">
  <tileset firstgid="1" source="Final-Tileset.tsx"/>
  <imagelayer id="2" name="Imagen-Fondo" opacity="0.7">
   <image source="Mapa_Woods.png" width="4096" height="1680"/>
@@ -116,826 +116,1027 @@
  <objectgroup id="3" name="COLISIONS" opacity="0.9">
   <object id="1" x="368" y="96" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="2" x="368" y="144" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="3" x="416" y="112" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="4" x="512" y="128" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="5" x="560" y="96" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="6" x="608" y="64" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="7" x="0" y="192" width="688" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="8" x="672" y="80" width="16" height="112">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="9" x="688" y="80" width="304" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="10" x="976" y="96" width="16" height="32">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="11" x="992" y="112" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="12" x="1008" y="128" width="16" height="32">
    <properties>
-    <property name="Platform" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="13" x="1024" y="144" width="288" height="16">
-   <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="14" x="1296" y="160" width="16" height="48">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="17" x="1376" y="160" width="63.9967" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="19" x="1408" y="128" width="112" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="21" x="1488" y="96" width="160" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="23" x="1632" y="128" width="64" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="29" x="1744" y="96" width="112" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="31" x="1824" y="64" width="96" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="33" x="1888" y="128" width="64" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="34" x="1952" y="96" width="16" height="48">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="35" x="1968" y="96" width="112" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="36" x="2064" y="112" width="16" height="544">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="37" x="2080" y="640" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="38" x="2096" y="624" width="16" height="16">
+  <object id="38" x="2096" y="624" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="true"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="39" x="2304" y="0" width="16" height="1440">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="40" x="2260" y="48" width="24" height="16">
+  <object id="40" x="2260" y="48" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="41" x="2132" y="112" width="40" height="16">
+  <object id="41" x="2132" y="112" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="42" x="2244" y="96" width="24" height="16">
+  <object id="42" x="2244" y="96" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="43" x="2276" y="144" width="28" height="16">
+  <object id="43" x="2276" y="144" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="44" x="2212" y="192" width="40" height="16">
+  <object id="44" x="2212" y="192" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="45" x="2080" y="176" width="28" height="16">
+  <object id="45" x="2080" y="176" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="46" x="2116" y="224" width="24" height="16">
+  <object id="46" x="2116" y="224" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="47" x="2164" y="208" width="24" height="16">
+  <object id="47" x="2164" y="208" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="48" x="2196" y="256" width="24" height="16">
+  <object id="48" x="2196" y="256" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="49" x="2132" y="304" width="40" height="16">
+  <object id="49" x="2132" y="304" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="50" x="2212" y="336" width="40" height="16">
+  <object id="50" x="2212" y="336" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="51" x="2260" y="288" width="24" height="16">
+  <object id="51" x="2260" y="288" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="52" x="2096" y="368" width="44" height="16">
+  <object id="52" x="2112" y="368" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="53" x="2164" y="368" width="24" height="16">
+  <object id="53" x="2164" y="368" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="54" x="2276" y="368" width="28" height="16">
+  <object id="54" x="2276" y="368" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="56" x="2196" y="416" width="24" height="16">
+  <object id="56" x="2196" y="416" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="57" x="2244" y="448" width="60" height="16">
+  <object id="57" x="2244" y="448" width="60" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="58" x="2132" y="480" width="40" height="16">
+  <object id="58" x="2132" y="480" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="59" x="2080" y="448" width="28" height="16">
+  <object id="59" x="2080" y="448" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="60" x="2116" y="544" width="24" height="16">
+  <object id="60" x="2116" y="544" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="61" x="2164" y="528" width="28" height="16">
+  <object id="61" x="2164" y="528" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="62" x="2192" y="528" width="28" height="16">
+  <object id="62" x="2192" y="528" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="63" x="2212" y="592" width="40" height="16">
+  <object id="63" x="2212" y="592" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="64" x="2240" y="624" width="48" height="16">
+  <object id="64" x="2240" y="624" width="48" height="4">
    <properties>
+    <property name="Damage" type="bool" value="true"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="65" x="2240" y="640" width="64" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="67" x="2240" y="656" width="16" height="672">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="68" x="2256" y="1312" width="48" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="69" x="2212" y="1328" width="44" height="16">
+  <object id="69" x="2212" y="1328" width="44" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="71" x="2196" y="1216" width="24" height="16">
+  <object id="71" x="2196" y="1216" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="72" x="2132" y="624" width="40" height="16">
+  <object id="72" x="2132" y="624" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="73" x="2196" y="656" width="24" height="16">
+  <object id="73" x="2196" y="656" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="74" x="2164" y="688" width="24" height="16">
+  <object id="74" x="2164" y="688" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="75" x="2132" y="736" width="40" height="16">
+  <object id="75" x="2132" y="736" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="76" x="2212" y="752" width="12" height="16">
+  <object id="76" x="2212" y="752" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="78" x="2128" y="800" width="12" height="16">
+  <object id="78" x="2128" y="800" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="79" x="2164" y="832" width="56" height="16">
+  <object id="79" x="2164" y="832" width="56" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="80" x="2112" y="880" width="28" height="16">
+  <object id="80" x="2112" y="880" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="81" x="2096" y="656" width="16" height="672">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="82" x="2064" y="1312" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="83" x="2064" y="1328" width="16" height="320">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="84" x="2080" y="1632" width="1248" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="85" x="2112" y="1328" width="28" height="16">
+  <object id="85" x="2112" y="1328" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="86" x="2132" y="1392" width="40" height="16">
+  <object id="86" x="2132" y="1392" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="87" x="2196" y="1376" width="24" height="16">
+  <object id="87" x="2196" y="1376" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="88" x="2164" y="1296" width="24" height="16">
+  <object id="88" x="2164" y="1296" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="89" x="2132" y="1264" width="40" height="16">
+  <object id="89" x="2132" y="1264" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="91" x="2132" y="960" width="40" height="16">
+  <object id="91" x="2132" y="960" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="92" x="2164" y="992" width="24" height="16">
+  <object id="92" x="2164" y="992" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="93" x="2112" y="1040" width="28" height="16">
+  <object id="93" x="2112" y="1040" width="28" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="94" x="2132" y="1088" width="40" height="16">
+  <object id="94" x="2132" y="1088" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="95" x="2196" y="1040" width="24" height="16">
+  <object id="95" x="2196" y="1040" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="97" x="2164" y="1152" width="56" height="16">
+  <object id="97" x="2164" y="1152" width="56" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="103" x="2164" y="1456" width="24" height="16">
+  <object id="103" x="2164" y="1456" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="104" x="2196" y="1440" width="24" height="16">
+  <object id="104" x="2196" y="1440" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="105" x="2244" y="1440" width="24" height="16">
+  <object id="105" x="2244" y="1440" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="111" x="2320" y="1424" width="752" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="112" x="3120" y="480" width="16" height="1088">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="114" x="3184" y="1568" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="115" x="3236" y="1600" width="28" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="116" x="3264" y="576" width="16" height="1056">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="117" x="3232" y="576" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="118" x="3264" y="480" width="16" height="48">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="119" x="3172" y="864" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="120" x="3232" y="848" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="121" x="3248" y="880" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="122" x="3136" y="896" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="123" x="3188" y="912" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="126" x="3168" y="960" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="127" x="3136" y="1008" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="128" x="3200" y="976" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="129" x="3168" y="1056" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="131" x="3232" y="1072" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="132" x="3204" y="1120" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="134" x="3168" y="1152" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="135" x="3204" y="1184" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="137" x="3220" y="1264" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="140" x="3168" y="1328" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="141" x="3232" y="1312" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="143" x="3204" y="1360" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="144" x="3168" y="1440" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="148" x="3172" y="1488" width="24" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="149" x="3280" y="608" width="80" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="150" x="3344" y="624" width="16" height="32">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="151" x="3360" y="640" width="736" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="152" x="4096" y="480" height="160">
+  <object id="152" x="4080" y="480" width="16" height="160">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="153" x="3968" y="560" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="154" x="4032" y="608" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="155" x="3904" y="592" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="156" x="0" y="0" width="16" height="192">
+  <object id="156" x="0" y="0" width="4" height="192">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="161" x="3712" y="608" width="32" height="32">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="162" x="1888" y="144" width="16" height="32">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="163" x="1584" y="160" width="303" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="165" x="1312" y="192" width="272" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="167" x="1584" y="176" width="16" height="32">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="181" x="2212" y="1568" width="40" height="16">
+  <object id="181" x="2212" y="1568" width="40" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="222" x="176" y="144" width="32" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="223" x="2116" y="1488" width="24" height="16">
+  <object id="223" x="2116" y="1488" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="224" x="2164" y="1536" width="56" height="16">
+  <object id="224" x="2164" y="1536" width="56" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="225" x="2260" y="1520" width="24" height="16">
+  <object id="225" x="2260" y="1520" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="226" x="2100" y="1568" width="72" height="16">
+  <object id="226" x="2100" y="1568" width="72" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="227" x="2276" y="1568" width="24" height="16">
+  <object id="227" x="2276" y="1568" width="24" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="230" x="2080" y="368" width="16" height="16">
+  <object id="230" x="2080" y="368" width="32" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="231" x="2224" y="752" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="232" x="2212" y="912" width="12" height="16">
+  <object id="232" x="2212" y="912" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="233" x="2224" y="912" width="16" height="16">
+  <object id="233" x="2224" y="912" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="234" x="2212" y="1104" width="12" height="16">
+  <object id="234" x="2212" y="1104" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="235" x="2224" y="1104" width="16" height="16">
+  <object id="235" x="2224" y="1104" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="236" x="2212" y="1264" width="12" height="16">
+  <object id="236" x="2212" y="1264" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="237" x="2224" y="1264" width="16" height="16">
+  <object id="237" x="2224" y="1264" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="238" x="2276" y="1408" width="12" height="16">
+  <object id="238" x="2276" y="1408" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="239" x="2288" y="1408" width="16" height="16">
+  <object id="239" x="2288" y="1408" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="240" x="2112" y="800" width="16" height="16">
+  <object id="240" x="2112" y="800" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="241" x="2096" y="1456" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="242" x="2080" y="1456" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="243" x="2096" y="1536" width="12" height="16">
+  <object id="243" x="2096" y="1536" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="244" x="2080" y="1536" width="16" height="16">
+  <object id="244" x="2080" y="1536" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="245" x="2128" y="1168" width="12" height="16">
+  <object id="245" x="2128" y="1168" width="12" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="246" x="2112" y="1168" width="16" height="16">
+  <object id="246" x="2112" y="1168" width="16" height="4">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="247" x="3156" y="1536" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="248" x="3140" y="1536" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="249" x="3152" y="1408" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="250" x="3136" y="1408" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="251" x="3152" y="1280" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="252" x="3136" y="1280" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="253" x="3152" y="1216" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="254" x="3136" y="1216" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="255" x="3152" y="1104" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="256" x="3136" y="1104" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="257" x="3236" y="928" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="258" x="3248" y="928" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="259" x="3236" y="1024" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="260" x="3248" y="1024" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="261" x="3236" y="1216" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="262" x="3248" y="1216" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="263" x="3236" y="1408" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="264" x="3248" y="1408" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
   <object id="265" x="3236" y="1472" width="12" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="true"/>
    </properties>
   </object>
   <object id="266" x="3248" y="1472" width="16" height="16">
    <properties>
+    <property name="Damage" type="bool" value="false"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="267" x="1104" y="144" width="32" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="false"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="268" x="1023.99" y="143.999" width="32.0104" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="false"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="269" x="1056" y="144" width="48" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="true"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="270" x="1136" y="144" width="48" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="true"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="271" x="1184" y="144" width="32" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="false"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="272" x="1216" y="144" width="48" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="true"/>
+    <property name="Platform" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="273" x="1264" y="144" width="48" height="16">
+   <properties>
+    <property name="Damage" type="bool" value="false"/>
     <property name="Platform" type="bool" value="false"/>
    </properties>
   </object>
