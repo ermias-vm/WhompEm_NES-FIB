@@ -33,13 +33,12 @@ void Scene::init() {
 
     player = new Player();
     player->init(glm::ivec2(0, 0), texProgram);
-    player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
-    //player->setPosition(glm::vec2(3760, 608));
+    player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));    //player->setPosition(glm::vec2(3760, 608));
     player->setTileMap(map);
 
 	cyclope = new Cyclope();
     cyclope->init(glm::ivec2(0, 0), texProgram);
-    cyclope->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 20, INIT_PLAYER_Y_TILES * 16));
+    cyclope->setPosition(glm::vec2(35 * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
     cyclope->setTileMap(map);
 
     playerHub = new PlayerHUB();
@@ -624,7 +623,7 @@ void Scene::render() {
     map->render();
     player->render();
     playerHub->render();
-	cyclope->render();
+    if (!part1)cyclope->render();
 
     if (part5)boss->render();
     for (auto& snake : snakes) {

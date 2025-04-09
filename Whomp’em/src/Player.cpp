@@ -762,12 +762,11 @@ bool Player::Crouching() const {
 bool Player::lookingleft() const {
     return bLookingLeft;
 }
+
 bool Player::isBlocking() const {
     int anim = playerSprite->animation();
 	return (anim == COVER_RIGHT || anim == COVER_LEFT);
 }
-
-
 
 ///
 void Player::printAnimName(Sprite* sprite, int animation) {
