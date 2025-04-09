@@ -93,7 +93,7 @@ void Scene::initSpiders() {
     // Crear algunas arañas en posiciones específicas
     // Por ejemplo, una araña en X=3888 (cerca del jefe) y otra en X=4048
     Spider* spider1 = new Spider();
-    spider1->init(glm::ivec2(0, 0), texProgram, 2144.f, 400.f);  // Posición inicial: X=3888, Y=560
+    spider1->init(glm::ivec2(0, 0), texProgram, 2128.f, 400.f);  // Posición inicial: X=3888, Y=560
     spider1->setTileMap(map);
     spiders.push_back(spider1);
 
@@ -112,11 +112,12 @@ void Scene::checkSpiderPlayerInteraction() {
         glm::vec2 spiderPos = spider->getPosition();
         Spider::SpiderState spiderState = spider->getState();
 
-        bool shotFired = false;
+        bool canShoot = false;  // Indica si el jugador está en una posición que activa un disparo
 
         // Disparo horizontal: misma Y
         if (std::abs(spiderPos.y - playerPos.y) <= Y_TOLERANCE) {
             spider->setStop(true);
+            canShoot = true;
             if (!spider->hasShot()) {
                 // Crear un proyectil horizontal
                 Proyectil* proyectil = new Proyectil();
@@ -129,7 +130,6 @@ void Scene::checkSpiderPlayerInteraction() {
                 proyectil->setTileMap(map);
                 proyectiles.push_back(proyectil);
                 spider->setShot(true);
-                shotFired = true;
                 std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (playerToLeft ? "left" : "right") << std::endl;
             }
 
@@ -153,6 +153,7 @@ void Scene::checkSpiderPlayerInteraction() {
         // Disparo vertical: misma X, dentro de 4 tiles de altura
         else if (spider->isPlayerInVerticalRange(playerPos.x, playerPos.y, MAX_VERTICAL_DISTANCE)) {
             spider->setStop(true);
+            canShoot = true;
             if (!spider->hasShot()) {
                 // Crear un proyectil vertical
                 Proyectil* proyectil = new Proyectil();
@@ -164,12 +165,12 @@ void Scene::checkSpiderPlayerInteraction() {
                 proyectil->setTileMap(map);
                 proyectiles.push_back(proyectil);
                 spider->setShot(true);
-                shotFired = true;
                 std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (direction == Proyectil::UP ? "up" : "down") << std::endl;
             }
         }
 
-        if (!shotFired) {
+        // Si el jugador no está en una posición que active un disparo, reiniciar el estado
+        if (!canShoot) {
             spider->setStop(false);
             spider->setShot(false);
         }
