@@ -225,6 +225,8 @@ bool Scene::checkProyectilCollision(Proyectil* proyectil) {
 
 void Scene::update(int deltaTime) {
     currentTime += deltaTime;
+    void collisionsPlayerEnemy();
+    void collisionsSpearEnemy();
 
     for (auto& platform : platforms) {
         platform->update(deltaTime);
@@ -583,6 +585,7 @@ void Scene::handleSceneTransitions() {
     if (playerPos.x >= 3808 && !part5) {
         player->setPosition(glm::vec2(3840, 608));
         part5 = true;
+        playerHub->setShowBossHP(true);
         bossready = true;
     }
     else if (part5) {
