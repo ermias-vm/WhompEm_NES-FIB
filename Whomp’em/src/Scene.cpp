@@ -7,30 +7,32 @@
 #define INIT_PLAYER_X_TILES 6
 #define INIT_PLAYER_Y_TILES 10
 
-Scene::Scene() : map(NULL), player(NULL), playerHub(NULL) {
+Scene::Scene() : map(NULL), player(NULL), playerHub(NULL), boss(NULL) {
 }
 
 Scene::~Scene() {
     if (map != NULL) delete map;
     if (player != NULL) delete player;
     if (playerHub != NULL) delete playerHub;
+    if (boss != NULL) delete boss;
     for (auto& platform : platforms) delete platform;
     for (auto& bamboo : bamboos) delete bamboo;
     for (auto& snake : snakes) delete snake;
+    for (auto& bossBamboo : bossBamboos) delete bossBamboo;
 }
 
 void Scene::init() {
     initShaders();
     map = TileMap::createTileMap("levels/FINAL_MAP.tmx", glm::vec2(0, 0), texProgram);
 
-    part1 = part2 = part3 = part4 = false;
+    part1 = part2 = part3 = part4 = part5 = part6 = false;
+    start = true;
     horitzontal = true;
     cameraPos = glm::vec2(0.f, 0.f);
 
     player = new Player();
     player->init(glm::ivec2(0, 0), texProgram);
-    player->setPosition(glm::vec2(INIT_PLAYER_X_TILES*16, INIT_PLAYER_Y_TILES*16));
-    //player->setPosition(glm::vec2(1270, 112));
+    player->setPosition(glm::vec2(3760, 608));
     player->setTileMap(map);
 
     playerHub = new PlayerHUB();
@@ -39,15 +41,21 @@ void Scene::init() {
     playerHub->setTileMap(map);
     player->setPlayerHUB(playerHub);
 
+    boss = new Boss();
+    boss->init(glm::ivec2(0, 0), texProgram, glm::vec2(3968, 592));
+    boss->setTileMap(map);
+
     initPlatforms();
     initBamboos();
+    initBossBamboos();
+    //initBamboosLaunch();
 
     projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
     currentTime = 0.0f;
     snakesSpawned = false;
-    cameraPos.y = fixedYHorizontal;
+    cameraPos.y = fixedYHorizontal3;
     horitzontal = true;
-
+    part1 = part2 = part3 = part4 = true;
     updateCamera(player->getPosition(), 0);
 }
 
@@ -55,11 +63,26 @@ void Scene::initBamboos() {
     int delay = 0;
     for (float x : bambooSpawnXPositions) {
         Bamboo* bamboo = new Bamboo();
-        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, -delay * 120.f));
+        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, -delay * 120.f), false);
         bamboo->setTileMap(map);
         bamboos.push_back(bamboo);
         delay++;
     }
+}
+
+void Scene::initBamboosLaunch() {
+    for (float x : bambooSpawnLaunchPositions) {
+        Bamboo* bamboo = new Bamboo();
+        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, 480.f), true);
+        bamboo->setTileMap(map);
+        bambooslaunch.push_back(bamboo);
+
+    }
+}
+
+void Scene::initBossBamboos() {
+    // Inicializamos el vector de bambúes del jefe vacío
+    bossBamboos.clear();
 }
 
 void Scene::initPlatforms() {
@@ -108,6 +131,22 @@ void Scene::update(int deltaTime) {
     }
 
     player->update(deltaTime);
+    boss->update(deltaTime);
+
+    // Hacer que el jefe lance bambúes
+    if (boss->shouldThrowBamboo()) {
+        Bamboo* bamboo = new Bamboo();
+        glm::vec2 bossPos = boss->getPosition();
+        // Ajustar la posición inicial del bambú para que se alinee con el centro del sprite del jefe
+        float bambooX = bossPos.x + 16.f;  // El jefe tiene un ancho de 32 píxeles, así que +16 lo centra
+        float bambooY = bossPos.y + 48.f;  // El jefe tiene una altura de 48 píxeles, así que lo lanzamos desde la parte inferior
+        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(bambooX, bambooY), true);
+        bamboo->setTileMap(map);
+        bossBamboos.push_back(bamboo);
+        std::cout << "Boss threw a bamboo at (" << bambooX << ", " << bambooY << ")" << std::endl;
+        // Reiniciar el temporizador y aumentar el contador
+        boss->resetBambooThrow();
+    }
 
     glm::vec2 playerPos = player->getPosition();
     if (!snakesSpawned && playerPos.x >= 2560) {
@@ -130,13 +169,14 @@ void Scene::update(int deltaTime) {
         Snake* snake = *it;
         snake->update(deltaTime);
 
-        if (readyToJump(snake) && !snake->isjumping() && !snake->hasJumped()) { // Añadimos !snake->hasJumped()
+        if (readyToJump(snake) && !snake->isjumping() && !snake->hasJumped()) {
             snake->snakeJump();
             std::cout << "Snake at " << snake->getPosition().x << " jumped!" << std::endl;
         }
 
-        if (CheckEnemyCollission(snake)) {
-			player->takeDamage(1);
+        if (CheckEnemyCollission(snake) && damagecooldown == 0) {
+            damagecooldown = 100;
+            player->takeDamage(1);
             std::cout << "PLAYER: Damaged by snake at " << snake->getPosition().x << std::endl;
         }
 
@@ -161,12 +201,14 @@ void Scene::update(int deltaTime) {
         snakesSpawned = false;
     }
 
+    if (damagecooldown > 0) --damagecooldown;
 
     for (auto& bamboo : bamboos) {
         bamboo->update(deltaTime);
         if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
-            if (!player->isBlocking()) {
+            if (damagecooldown == 0) {
                 player->takeDamage(1);
+                damagecooldown = 100;
                 std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
             }
             bamboo->reset();
@@ -175,6 +217,46 @@ void Scene::update(int deltaTime) {
             bamboo->reset();
         }
     }
+
+
+    // Actualizar los bambúes del jefe
+    for (auto it = bossBamboos.begin(); it != bossBamboos.end();) {
+        Bamboo* bamboo = *it;
+        bamboo->update(deltaTime);
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
+            if (damagecooldown == 0) {
+                player->takeDamage(1);
+                damagecooldown = 100;
+                std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
+            }
+        }
+        else if (!bamboo->isActive()) {
+            delete bamboo;
+            it = bossBamboos.erase(it);
+            std::cout << "Boss bamboo removed" << std::endl;
+        }
+        else {
+            ++it;
+        }
+    }
+    /*
+    if (boss->lounchBamboo()) {
+        for (auto& bamboo : bambooslaunch) {
+            bamboo->update(deltaTime);
+            if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
+                if (damagecooldown == 0) {
+                    player->takeDamage(1);
+                    damagecooldown = 100;
+                    std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
+                }
+
+            }
+            else if (!bamboo->isActive()) {
+                delete bamboo;
+            }
+        }
+    }
+    */
 
     playerHub->update(deltaTime);
     handleSceneTransitions();
@@ -224,7 +306,7 @@ bool Scene::readyToJump(Snake* snake) {
     return distance < jumpThreshold && isApproaching;
 }
 
-bool Scene::playerCollisionPlatform() {
+bool Scene::playerColisionPlatform() {
     for (auto& platform : platforms) {
         if (checkPlatformCollision(player, platform)) {
             return true;
@@ -319,6 +401,20 @@ void Scene::handleSceneTransitions() {
         }
         horitzontal = true;
     }
+    if (playerPos.x >= 3808 && !part5) {
+        player->setPosition(glm::vec2(3840, 608));
+        part5 = true;
+        bossready = true;
+    }
+    else if (part5) {
+        if (playerPos.x <= 3840) player->setPosition(glm::vec2(3840, playerPos.y));
+    }
+    if (playerPos.x >= 3904) part6 = true;
+    if (part6 && start) {
+        boss->startFight();
+        start = false;
+    }
+
 }
 
 void Scene::updateCamera(glm::vec2& posJugador, int deltaTime) {
@@ -368,8 +464,8 @@ void Scene::updateCamera(glm::vec2& posJugador, int deltaTime) {
         cameraY = std::max(0.0f, cameraY);
         if (part2) cameraY = std::max(480.0f, cameraY);
     }
-
     this->cameraPos = glm::vec2(cameraX, cameraY);
+    if (part5) this->cameraPos = glm::vec2(3840, 480);
 }
 
 bool Scene::isOffScreen(glm::vec2 pos) {
@@ -405,6 +501,7 @@ void Scene::render() {
     map->render();
     player->render();
     playerHub->render();
+    if (part5)boss->render();
     for (auto& snake : snakes) {
         snake->render();
     }
@@ -414,6 +511,9 @@ void Scene::render() {
     }
     for (auto& bamboo : bamboos) {
         bamboo->render();
+    }
+    for (auto& bossBamboo : bossBamboos) {  // Renderizar los bambúes del jefe
+        bossBamboo->render();
     }
 }
 
@@ -458,3 +558,4 @@ void Scene::initShaders() {
     vShader.free();
     fShader.free();
 }
+

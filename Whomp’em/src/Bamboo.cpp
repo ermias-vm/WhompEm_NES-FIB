@@ -14,9 +14,10 @@ Bamboo::~Bamboo() {
     }
 }
 
-void Bamboo::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, const glm::vec2& startPos) {
+void Bamboo::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, const glm::vec2& startPos, bool isBossBamboo) {
     texProgram = &shaderProgram;
     position = startPos;
+    this->isBossBamboo = isBossBamboo;
     initialPosition = startPos;
     velocity = glm::vec2(0.f, 16 * 8.f); //8 tile per sec
     active = true;
@@ -49,7 +50,8 @@ void Bamboo::update(int deltaTime) {
     float deltaTimeSec = deltaTime / 1000.f;
     position += velocity * deltaTimeSec;
 
-    if (position.y > 16 * 11) {
+   float groundHeight = isBossBamboo ? 640.f : 256;  // 640 para bambúes del jefe, 256 para bambúes iniciales
+    if (position.y > groundHeight) {
         active = false;
         return;
     }

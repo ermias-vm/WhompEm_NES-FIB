@@ -12,7 +12,7 @@ public:
     Bamboo();
     ~Bamboo();
 
-    void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, const glm::vec2& startPos);
+    void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, const glm::vec2& startPos, bool isBossBamboo);
     void update(int deltaTime);
     void render();
     void reset(); 
@@ -27,6 +27,7 @@ private:
     Sprite* sprite;
     TileMap* map;
     glm::vec2 initialPosition; 
+    bool isBossBamboo;
     ShaderProgram* texProgram;
     bool active;
     Texture spritesheet;
