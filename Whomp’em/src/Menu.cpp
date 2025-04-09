@@ -141,5 +141,5 @@ bool Menu::isShowingInstructions() const {
 }
 
 bool Menu::isShowingCredits() const {
-    return showInstructions;
+    return showCredits;
 }
