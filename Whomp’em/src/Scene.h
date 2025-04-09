@@ -21,7 +21,6 @@ public:
     void init();
     void initPlatforms();
     void initBossBamboos();
-    void initBamboosLaunch();
     void update(int deltaTime);
     void render();
     bool isOffScreen(glm::vec2 pos);
@@ -74,9 +73,9 @@ private:
     float fixedYHorizontal2 = 1440;
     float fixedYHorizontal3 = 480;
     bool bossready = false;
-
+    bool hasLaunchedLine = false;
     const std::vector<float> bambooSpawnXPositions = { 1040.f, 1104.f, 1184.f, 1280.f };
-    const std::vector<float> bambooSpawnLaunchPositions = { 3840.f, 3856, 3872, 3888.f,3904.f,3920.f,3936.f,3952.f,3968.f,3984.f };
+    const std::vector<float> bambooSpawnLaunchPositions = { 3840.f, 3856, 3872, 3888.f,3904.f,3920.f,3936.f,3952.f,3968.f,3984.f,4000.f,4016.f,4032.f,4048.f,4064,4080 };
     bool snakesSpawned = false;
 };
 

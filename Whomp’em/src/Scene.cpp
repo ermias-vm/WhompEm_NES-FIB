@@ -54,7 +54,6 @@ void Scene::init() {
     initPlatforms();
     initBamboos();
     initBossBamboos();
-    //initBamboosLaunch();
 
     projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
     currentTime = 0.0f;
@@ -79,15 +78,6 @@ void Scene::initBamboos() {
     }
 }
 
-void Scene::initBamboosLaunch() {
-    for (float x : bambooSpawnLaunchPositions) {
-        Bamboo* bamboo = new Bamboo();
-        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, 480.f), true);
-        bamboo->setTileMap(map);
-        bambooslaunch.push_back(bamboo);
-
-    }
-}
 
 void Scene::initBossBamboos() {
     // Inicializamos el vector de bambúes del jefe vacío
@@ -141,65 +131,74 @@ void Scene::update(int deltaTime) {
 
     player->update(deltaTime);
     boss->update(deltaTime);
-	cyclope->update(deltaTime);
+    cyclope->update(deltaTime);
 
-    // Hacer que el jefe lance bambúes
+    // Lanzar línea de 10 bambús cuando el boss entra en GROUND_WAIT (una sola vez)
+    if (boss->lounchBamboo() && !hasLaunchedLine) {
+        for (float x : bambooSpawnLaunchPositions) {
+            Bamboo* bamboo = new Bamboo();
+            bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, 480.f), true);
+            bamboo->setTileMap(map);
+            bossBamboos.push_back(bamboo);
+        }
+        hasLaunchedLine = true;
+        boss->resetBambooThrow();
+    }
+    else if (!boss->lounchBamboo()) {
+        hasLaunchedLine = false;
+    }
+
+    // Lanzar un solo bambú cuando el boss está en el aire (cada X tiempo)
     if (boss->shouldThrowBamboo()) {
         Bamboo* bamboo = new Bamboo();
         glm::vec2 bossPos = boss->getPosition();
-        // Ajustar la posición inicial del bambú para que se alinee con el centro del sprite del jefe
-        float bambooX = bossPos.x + 16.f;  // El jefe tiene un ancho de 32 píxeles, así que +16 lo centra
-        float bambooY = bossPos.y + 48.f;  // El jefe tiene una altura de 48 píxeles, así que lo lanzamos desde la parte inferior
+        float bambooX = bossPos.x + 16.f;
+        float bambooY = bossPos.y + 48.f;
         bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(bambooX, bambooY), true);
         bamboo->setTileMap(map);
         bossBamboos.push_back(bamboo);
         std::cout << "Boss threw a bamboo at (" << bambooX << ", " << bambooY << ")" << std::endl;
-        // Reiniciar el temporizador y aumentar el contador
         boss->resetBambooThrow();
     }
 
+    // Spawnear serpientes
     glm::vec2 playerPos = player->getPosition();
     if (!snakesSpawned && playerPos.x >= 2560) {
         Snake* snake1 = new Snake();
         snake1->init(glm::ivec2(0, 0), texProgram, 1, glm::vec2(2480.f, 1616.f));
         snake1->setTileMap(map);
         snakes.push_back(snake1);
-        std::cout << "Spawned snake at 2480, 1616 moving right" << std::endl;
 
         Snake* snake2 = new Snake();
         snake2->init(glm::ivec2(0, 0), texProgram, -1, glm::vec2(2656.f, 1616.f));
         snake2->setTileMap(map);
         snakes.push_back(snake2);
-        std::cout << "Spawned snake at 2656, 1616 moving left" << std::endl;
 
         snakesSpawned = true;
     }
 
+    // Update de serpientes
     for (auto it = snakes.begin(); it != snakes.end();) {
         Snake* snake = *it;
         snake->update(deltaTime);
 
         if (readyToJump(snake) && !snake->isjumping() && !snake->hasJumped()) {
             snake->snakeJump();
-            std::cout << "Snake at " << snake->getPosition().x << " jumped!" << std::endl;
         }
 
         if (CheckEnemyCollission(snake)) {
             player->takeDamage(1);
-            std::cout << "PLAYER: Damaged by snake at " << snake->getPosition().x << std::endl;
         }
 
         if (player->isAttacking() && checkSpearCollisionWithSnake(snake)) {
             delete snake;
             it = snakes.erase(it);
-            std::cout << "SNAKE: Killed by spear attack!" << std::endl;
             continue;
         }
 
         if (snake->shouldDisappear()) {
             delete snake;
             it = snakes.erase(it);
-            std::cout << "Snake removed (disappeared)" << std::endl;
             continue;
         }
 
@@ -210,62 +209,40 @@ void Scene::update(int deltaTime) {
         snakesSpawned = false;
     }
 
-
+    // Update de bambús normales
     for (auto& bamboo : bamboos) {
         bamboo->update(deltaTime);
         if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
             if (!player->isBlocking()) {
                 player->takeDamage(1);
-                std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
             }
-            //bamboo->reset();
-        }
-        else if (!bamboo->isActive()) {
-            bamboo->reset();
         }
     }
 
-
-    // Actualizar los bambúes del jefe
+    // Update de bambús del jefe (incluye los lanzados en el aire y los de la línea)
     for (auto it = bossBamboos.begin(); it != bossBamboos.end();) {
         Bamboo* bamboo = *it;
         bamboo->update(deltaTime);
-        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
-                player->takeDamage(1);
-                std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
-            
+
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && !player->isBlocking()) {
+            player->takeDamage(1);
         }
-        else if (!bamboo->isActive()) {
+
+        if (!bamboo->isActive()) {
             delete bamboo;
             it = bossBamboos.erase(it);
-            std::cout << "Boss bamboo removed" << std::endl;
         }
         else {
             ++it;
         }
     }
-    /*
-    if (boss->lounchBamboo()) {
-        for (auto& bamboo : bambooslaunch) {
-            bamboo->update(deltaTime);
-            if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
-                    player->takeDamage(1);
-                    std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
-                }
-
-            }
-            else if (!bamboo->isActive()) {
-                delete bamboo;
-            }
-        }
-    }
-    */
 
     playerHub->update(deltaTime);
     handleSceneTransitions();
     updateCamera(player->getPosition(), deltaTime);
     playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
 }
+
 
 bool Scene::checkSpearCollisionWithSnake(Snake* snake) {
     if (!snake || !player) return false;

@@ -31,6 +31,9 @@ private:
     ShaderProgram* texProgram;
     bool active;
     Texture spritesheet;
+    float cooldownTimer = 0.f;    // Tiempo restante para reaparecer
+    float cooldownDuration = 1500.f; // 1.5 segundos antes de reaparecer
+
 };
 
 #endif // BAMBOO_H

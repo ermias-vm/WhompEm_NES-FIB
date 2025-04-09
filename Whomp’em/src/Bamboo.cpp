@@ -45,21 +45,39 @@ void Bamboo::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, co
 }
 
 void Bamboo::update(int deltaTime) {
-    if (!active) return;
+    if (!active) {
+        // Si está en cooldown (solo para bambús normales)
+        if (!isBossBamboo) {
+            cooldownTimer -= deltaTime;
+            if (cooldownTimer <= 0.f) {
+                reset();  // Reactivar cuando se cumpla el cooldown
+            }
+        }
+        return;
+    }
 
     float deltaTimeSec = deltaTime / 1000.f;
     position += velocity * deltaTimeSec;
 
-   float groundHeight = isBossBamboo ? 640.f : 256;  // 640 para bambúes del jefe, 256 para bambúes iniciales
+    float groundHeight = isBossBamboo ? 640.f : 256.f;
+
     if (position.y > groundHeight) {
-        active = false;
+        if (isBossBamboo) {
+            active = false;
+        }
+        else {
+            // Empezar cooldown para bambús normales
+            active = false;
+            cooldownTimer = cooldownDuration;
+        }
         return;
     }
 
     sprite->setPosition(position);
 }
+
 void Bamboo::reset() {
-    position = initialPosition; // Reset to initial position (e.g., (1040, 0))
+    position = initialPosition; 
     active = true;
     sprite->setPosition(position);
 }
@@ -90,8 +108,17 @@ bool Bamboo::checkCollisionWithPlayer(const glm::vec2& playerPos, const glm::ive
         position.x < playerPos.x + playerSize.x &&
         position.y + bambooSize.y > playerPos.y &&
         position.y < playerPos.y + playerSize.y) {
-        active = false;
+
+        if (isBossBamboo) {
+            active = false;  // Desaparece del todo
+        }
+        else {
+            active = false;              // Se apaga
+            cooldownTimer = cooldownDuration; // Pero entra en cooldown
+        }
+
         return true;
     }
+
     return false;
 }
