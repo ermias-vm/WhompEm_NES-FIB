@@ -13,11 +13,12 @@ enum TotemAnims {
 
 
 void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
-	godMode = false;
-
+	godMode = is_H_pressed = is_G_pressed = is_B_pressed = false;
     playerLifes = 2;
     playerHP = 12;
-    // CORAZONES
+    bossHP = 24;
+
+    // HP Player
     hubSpriteSheet.loadFromFile("images/sprites/playerHUBframes.png", TEXTURE_PIXEL_FORMAT_RGBA);
     heartSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.1), &hubSpriteSheet, &shaderProgram);
     heartSprite->setNumberAnimations(25);
@@ -32,6 +33,21 @@ void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
         float x = (i % 3 == 1) ? 0.50f : (i % 3 == 2) ? 0.25f : 0.0f;
         float y = ((i - 1) / 3) * 0.1f;
         heartSprite->addKeyframe(i, glm::vec2(x, y));
+    }
+
+	// HP Boss
+    bossHpSpriteSheet.loadFromFile("images/sprites/bossHPframes.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    bossHpSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.04, 1.0), &bossHpSpriteSheet, &shaderProgram);
+    bossHpSprite->setNumberAnimations(25);
+
+    bossHpSprite->setAnimationSpeed(0, ANIM_SPEED);
+	float x = 0.0f;
+
+    for (int i = 0; i <= 24; ++i) {
+        bossHpSprite->setAnimationSpeed(i, ANIM_SPEED);
+        bossHpSprite->setAnimationAcyclic(i);
+        bossHpSprite->addKeyframe(i, glm::vec2(x, 0.0f));
+		x += 0.04f;
     }
 
     // VIDAS
@@ -80,7 +96,7 @@ void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     lifeSprite->changeAnimation(playerLifes);
     totemSprite->changeAnimation(NORMAL_SPEAR);
 	godModeSprite->changeAnimation(0);
-
+	bossHpSprite->changeAnimation(bossHP);
 }
 
 bool PlayerHUB::isPlayerDead() const {
@@ -99,7 +115,7 @@ void PlayerHUB::restoreLivesHp() {
 	playerLifes = 2;
 	heartSprite->changeAnimation(playerHP);
 	lifeSprite->changeAnimation(playerLifes);
-    cout << "PLAYER: Restored Lives and HP" << endl;
+    cout << "PLAYER_HUB: Restored Lives and HP" << endl;
 }
 
 void PlayerHUB::modifyPlayerHP(int amount, bool addHeart) {
@@ -136,6 +152,14 @@ void PlayerHUB::modifyPlayerHP(int amount, bool addHeart) {
     lifeSprite->changeAnimation(playerLifes);
 }
 
+void PlayerHUB::bossTakeDamage(int amount) {
+	bossHP -= amount;
+	if (bossHP <= 0) {
+		bossHP = 0;
+	}
+	bossHpSprite->changeAnimation(bossHP);
+}
+
 void PlayerHUB::setTotemAnimation(bool bUsingTotem) {
     totemSprite->changeAnimation(bUsingTotem);
 }
@@ -147,6 +171,7 @@ void PlayerHUB::update(int deltaTime)
     lifeSprite->update(deltaTime);
     totemSprite->update(deltaTime);
 	godModeSprite->update(deltaTime);
+	bossHpSprite->update(deltaTime);
 }
 
 void PlayerHUB::render() {
@@ -155,6 +180,8 @@ void PlayerHUB::render() {
     lifeSprite->render();
     totemSprite->render();
     if (godMode) godModeSprite->render();
+    // TO DO:  renderitzar nomes a partir de la x on esta el boss
+    bossHpSprite->render();
 }
 void PlayerHUB::checkCheats() {
     // Gestionar la tecla H  para curar completamente al jugador
@@ -179,6 +206,18 @@ void PlayerHUB::checkCheats() {
     else {
         is_G_pressed = false;
     }
+
+    if (Game::instance().getKey(GLFW_KEY_B)) {
+        if (!is_B_pressed) {
+            is_B_pressed = true;
+			bossTakeDamage(1);
+			cout << "PLAYER: Boss HP -1, Total HP : " << bossHP << endl;
+
+        }
+    }
+    else {
+        is_B_pressed = false;
+    }
 }
 
 void PlayerHUB::setPosition(const glm::vec2& pos) {
@@ -187,8 +226,13 @@ void PlayerHUB::setPosition(const glm::vec2& pos) {
     totemSprite->setPosition(glm::vec2(float(pos.x + 8), float(pos.y - 10)));
     lifeSprite->setPosition(glm::vec2(float(pos.x + 28), float(pos.y -10)));
     godModeSprite->setPosition(glm::vec2(float(pos.x + 48), float(pos.y - 10)));
+	bossHpSprite->setPosition(glm::vec2(float(pos.x + 28), float(pos.y + 24)));
 }
 
 void PlayerHUB::setTileMap(TileMap* tileMap) {
     map = tileMap;
+}
+
+bool PlayerHUB::isBossHPDead() const {
+	return bossHP <= 0;
 }

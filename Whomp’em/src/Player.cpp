@@ -372,13 +372,11 @@ void Player::update(int deltaTime) {
             if (!bJumping && !bFalling) {
   
                 if (is_DOWN_pressed) {
-                    if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
-                        changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-						if (usingFireTotem()) {
-							changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_CROUCH_R);
-						}
-						else spearSprite->changeAnimation(SPEAR_ATTACK_CROUCH_R);    
+                    changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
+                    if (usingFireTotem()) {
+                        changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_CROUCH_R);
                     }
+                    else changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
                 }
                 else if ((is_Right_pressed || is_Left_pressed)) {
                     if (playerAnim != (CHARGE_RIGHT + bLookingLeft) ) {

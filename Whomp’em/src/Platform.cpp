@@ -22,7 +22,7 @@ void Platform::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, 
     posPlatform = glm::vec2(tileMapPos.x, startY);
 
     platformSpriteSheet.loadFromFile("images/sprites/plataformFrame.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    platformSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1, 1), &platformSpriteSheet, &shaderProgram);
+    platformSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &platformSpriteSheet, &shaderProgram);
     platformSprite->setNumberAnimations(1);
 
     platformSprite->setAnimationSpeed(0, ANIM_SPEED);

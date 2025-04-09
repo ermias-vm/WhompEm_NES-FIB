@@ -22,16 +22,19 @@ public:
 	void restoreLivesHp();
 	void checkCheats();
 	bool isGodMode() const { return godMode; }
+	void bossTakeDamage(int amount);
+	bool isBossHPDead() const;
 
 private:
-	int playerHP, playerLifes;
-	bool godMode, is_H_pressed, is_G_pressed;
-	glm::ivec2 tileMapDispl, posHearts, posLifes, posTotem;
-	Texture hubSpriteSheet;
+	int playerHP, playerLifes, bossHP;
+	bool godMode, is_H_pressed, is_G_pressed, is_B_pressed;
+	glm::ivec2 tileMapDispl, posHearts, posLifes, posTotem, posBossHP;
+	Texture hubSpriteSheet, bossHpSpriteSheet;
 	Sprite* heartSprite;
 	Sprite* lifeSprite;
 	Sprite* totemSprite;
 	Sprite* godModeSprite;
+	Sprite* bossHpSprite;
 	TileMap* map;
 };
 
