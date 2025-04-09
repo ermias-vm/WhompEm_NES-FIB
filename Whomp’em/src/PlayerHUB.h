@@ -31,6 +31,7 @@ private:
 	Sprite* heartSprite;
 	Sprite* lifeSprite;
 	Sprite* totemSprite;
+	Sprite* godModeSprite;
 	TileMap* map;
 };
 

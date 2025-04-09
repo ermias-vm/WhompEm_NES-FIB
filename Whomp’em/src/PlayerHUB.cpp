@@ -14,6 +14,7 @@ enum TotemAnims {
 
 void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 	godMode = false;
+
     playerLifes = 2;
     playerHP = 12;
     // CORAZONES
@@ -62,11 +63,23 @@ void PlayerHUB::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
     totemSprite->setAnimationAcyclic(FIRE_SPEAR);
     totemSprite->addKeyframe(FIRE_SPEAR, glm::vec2(0.25, 0.9f));
 
+    // GODMODE
+
+    godModeSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.1), &hubSpriteSheet, &shaderProgram);
+    godModeSprite->setNumberAnimations(5);
+
+    godModeSprite->setAnimationSpeed(0, ANIM_SPEED);
+    godModeSprite->setAnimationAcyclic(0);
+    godModeSprite->addKeyframe(0, glm::vec2(0.5, 0.9f));
+
+
+    
     /////////
     tileMapDispl = tileMapPos;
     heartSprite->changeAnimation(playerHP);
     lifeSprite->changeAnimation(playerLifes);
     totemSprite->changeAnimation(NORMAL_SPEAR);
+	godModeSprite->changeAnimation(0);
 
 }
 
@@ -133,6 +146,7 @@ void PlayerHUB::update(int deltaTime)
     heartSprite->update(deltaTime);
     lifeSprite->update(deltaTime);
     totemSprite->update(deltaTime);
+	godModeSprite->update(deltaTime);
 }
 
 void PlayerHUB::render() {
@@ -140,6 +154,7 @@ void PlayerHUB::render() {
     heartSprite->render();
     lifeSprite->render();
     totemSprite->render();
+    if (godMode) godModeSprite->render();
 }
 void PlayerHUB::checkCheats() {
     // Gestionar la tecla H  para curar completamente al jugador
@@ -171,6 +186,7 @@ void PlayerHUB::setPosition(const glm::vec2& pos) {
     heartSprite->setPosition(glm::vec2(float(pos.x + 8), float(pos.y + 24)));
     totemSprite->setPosition(glm::vec2(float(pos.x + 8), float(pos.y - 10)));
     lifeSprite->setPosition(glm::vec2(float(pos.x + 28), float(pos.y -10)));
+    godModeSprite->setPosition(glm::vec2(float(pos.x + 48), float(pos.y - 10)));
 }
 
 void PlayerHUB::setTileMap(TileMap* tileMap) {

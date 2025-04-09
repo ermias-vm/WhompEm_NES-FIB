@@ -22,7 +22,7 @@ public:
     void render();
     bool isOffScreen(glm::vec2 pos);
     bool checkPlatformCollision(Player* player, Platform* platform);
-    bool playerColisionPlatform();
+    bool playerCollisionPlatform();
     bool readyToJump(Snake* snake);
     void handleSceneTransitions();
     glm::vec2 getPlayerOffset(Player* player);

@@ -25,7 +25,8 @@ enum PlayerAnims
 enum PlayerLargeAnims
 {
     SPEAR_ATTACK_RIGHT, SPEAR_ATTACK_LEFT, SPEAR_ATTACK_CROUCH_R, SPEAR_ATTACK_CROUCH_L,
-    SPEAR_PASSIVE_R, SPEAR_PASSIVE_L, SPEAR_PASSIVE_CROUCH_R, SPEAR_PASSIVE_CROUCH_L, NONE, NONE2
+    SPEAR_PASSIVE_R, SPEAR_PASSIVE_L, SPEAR_PASSIVE_CROUCH_R, SPEAR_PASSIVE_CROUCH_L,
+    FIRE_SPEAR_ATTACK_R, FIRE_SPEAR_ATTACK_L, FIRE_SPEAR_ATTACK_CROUCH_R, FIRE_SPEAR_ATTACK_CROUCH_L
 };
 
 
@@ -35,7 +36,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     bJumping = bFalling = b_X_Attacking = bDamaged = bFalling = false;
     bLookingLeft = bCrouching = bUsingTotem = false;
     is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = is_V_pressed = false;
-    is_T_pressed = is_O_pressed = is_P_pressed = is_I_pressed = false;
+    is_T_pressed = is_O_pressed = is_L_pressed = is_I_pressed = false;
     
     playerSpeed = 2.f;
     damageCooldown = 1300; 
@@ -191,17 +192,37 @@ void Player::setAnimations(ShaderProgram& shaderProgram) {
     spearSprite->setAnimationSpeed(SPEAR_PASSIVE_CROUCH_L, SPEAR_ANIMATION_SPEED);
     spearSprite->addKeyframe(SPEAR_PASSIVE_CROUCH_L, glm::vec2(0.0, 0.3f));
 
-    spearSprite->setAnimationSpeed(NONE, SPEAR_ANIMATION_SPEED);  //TODO: MODIFICAR A NO RENDERIZAR
-    spearSprite->addKeyframe(NONE, glm::vec2(0.8, 0.0f));
+    spearSprite->setAnimationSpeed(FIRE_SPEAR_ATTACK_R, SPEAR_ANIMATION_SPEED);
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_R, glm::vec2(0.0, 0.4f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_R, glm::vec2(0.2, 0.4f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_R, glm::vec2(0.4, 0.4f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_R, glm::vec2(0.6, 0.4f));
 
-    spearSprite->setAnimationSpeed(NONE2, SPEAR_ANIMATION_SPEED);  //TODO: MODIFICAR A NO RENDERIZAR
-    spearSprite->addKeyframe(NONE2, glm::vec2(0.8, 0.0f));
+    spearSprite->setAnimationSpeed(FIRE_SPEAR_ATTACK_L, SPEAR_ANIMATION_SPEED);
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_L, glm::vec2(0.0, 0.5f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_L, glm::vec2(0.2, 0.5f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_L, glm::vec2(0.4, 0.5f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_L, glm::vec2(0.6, 0.5f));
+
+    spearSprite->setAnimationSpeed(FIRE_SPEAR_ATTACK_CROUCH_R, SPEAR_ANIMATION_SPEED);
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_R, glm::vec2(0.0, 0.6f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_R, glm::vec2(0.2, 0.6f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_R, glm::vec2(0.4, 0.6f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_R, glm::vec2(0.6, 0.6f));
+
+    spearSprite->setAnimationSpeed(FIRE_SPEAR_ATTACK_CROUCH_L, SPEAR_ANIMATION_SPEED);
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_L, glm::vec2(0.0, 0.7f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_L, glm::vec2(0.2, 0.7f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_L, glm::vec2(0.4, 0.7f));
+    spearSprite->addKeyframe(FIRE_SPEAR_ATTACK_CROUCH_L, glm::vec2(0.6, 0.7f));
+
+
 
     changeAnimToRightLeft(*playerSprite, STAND_RIGHT);  // Animacion inicial
 }
 
-bool Player::colisionPlatform() {
-	return Game::instance().getScene()->playerColisionPlatform();
+bool Player::collisionPlatform() {
+	return Game::instance().getScene()->playerCollisionPlatform();
 }
 
 void Player::changeAnimToRightLeft(Sprite& sprite, int animation) {
@@ -302,15 +323,15 @@ void Player::checkCheats() {
     else {
         is_O_pressed = false;
     }
-    // Gestionar la tecla P para aplicar daño
-    if (Game::instance().getKey(GLFW_KEY_P)) {
-        if (!is_P_pressed) {
-            is_P_pressed = true;
+    // Gestionar la tecla L para aplicar daño
+    if (Game::instance().getKey(GLFW_KEY_L)) {
+        if (!is_L_pressed) {
+            is_L_pressed = true;
             takeDamage(1);
         }
     }
     else {
-        is_P_pressed = false;
+        is_L_pressed = false;
     }
     // Gestionar la tecla I para añadir un coraz�n (si HP >= 12)
     if (Game::instance().getKey(GLFW_KEY_I)) {
@@ -336,6 +357,11 @@ void Player::update(int deltaTime) {
         }
     }
 
+    int posX = bLookingLeft ? posPlayer.x + 7 : posPlayer.x + 25; // Ajuste segun la orientación
+    if (map->collisionDownDoesDamage(glm::ivec2(posX, posPlayer.y), glm::ivec2(0, 32), &posPlayer.y)) {
+        takeDamage(1);
+    }
+
     if (Game::instance().getKey(GLFW_KEY_X)) {
         int playerAnim = playerSprite->animation();
         int spearAnim = spearSprite->animation();
@@ -348,43 +374,64 @@ void Player::update(int deltaTime) {
                 if (is_DOWN_pressed) {
                     if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                         changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-                        changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
+						if (usingFireTotem()) {
+							changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_CROUCH_R);
+						}
+						else spearSprite->changeAnimation(SPEAR_ATTACK_CROUCH_R);    
                     }
                 }
                 else if ((is_Right_pressed || is_Left_pressed)) {
                     if (playerAnim != (CHARGE_RIGHT + bLookingLeft) ) {
                         changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
-                        changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
+                        if (usingFireTotem()) {
+                            changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_R);
+                        }
+                        else  changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
                     }
                 }
                 else {
                     changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
-                    changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
+                    if (usingFireTotem()) {
+                        changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_R);
+                    }
+                    else changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_RIGHT);
                 }
 
             }
             else {
                 changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-                changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
+                if (usingFireTotem()) {
+                    changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_CROUCH_R);
+                }
+                else changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
             }
         }
         else if (!bJumping && !bFalling) { // ANIMACIONES cuando ya se ha atacado y player (EN TIERRA) pero se mantiene X presionada)
             if (is_DOWN_pressed) {
                 if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
+                    if (usingFireTotem()) {
+                        changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_CROUCH_R);
+                    }
+                    else changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
                 }
             }
             else if ((is_Right_pressed || is_Left_pressed)) {
                 if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
-                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
+                    if (usingFireTotem()) {
+                        changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_R);
+                    }
+                    else changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
                 }
             }
             else {
                 if (playerAnim != (HOLD_SPEAR_R + bLookingLeft)) {
                     changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_R);
-                    changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
+                    if (usingFireTotem()) {
+                        changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_R);
+                    }
+                    else changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_R);
                 }
 
             }
@@ -392,7 +439,10 @@ void Player::update(int deltaTime) {
         else {      // ANIMACIONES cuando ya se ha atacado y player (EN AIRE) pero se mantiene X presionada)
             if (playerAnim != (HOLD_SPEAR_CROUCH_R + bLookingLeft)) {
                 changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
-                changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
+                if (usingFireTotem()) {
+                    changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_CROUCH_R);
+                }
+                else changeAnimToRightLeft(*spearSprite, SPEAR_PASSIVE_CROUCH_R);
             }
         }
 
@@ -413,7 +463,7 @@ void Player::update(int deltaTime) {
         if (!is_Z_pressed) {
             cout << "-------------------- Z (Jumping)" << endl;
             is_Z_pressed = true;
-            if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y) || colisionPlatform()) {
+            if (map->collisionMoveDown(posPlayer, glm::ivec2(24, 32), &posPlayer.y) || collisionPlatform()) {
                 bJumping = true;
                 jumpAngle = 0;
                 startY = posPlayer.y;
@@ -520,12 +570,16 @@ void Player::update(int deltaTime) {
         }
     }
 
+
+
+    
+
     if (bJumping) {            // GESTION DEL SALTO
         jumpAngle += JUMP_ANGLE_STEP;
         if (jumpAngle == 180) {     // El salto ha terminado
             bJumping = false;
             posPlayer.y = startY;
-            if (map->collisionMoveDown(posPlayer, glm::ivec2(25, 32), &posPlayer.y) || colisionPlatform()) {
+            if (map->collisionMoveDown(posPlayer, glm::ivec2(25, 32), &posPlayer.y) || collisionPlatform()) {
                 changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
             }
         }
@@ -533,16 +587,15 @@ void Player::update(int deltaTime) {
             posPlayer.y = int(startY - JUMP_HEIGHT * sin(PI * jumpAngle / 180.f));
 
             if (jumpAngle > 90) {   // Bajando
-                if (map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y) || colisionPlatform()) {
+                if (map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y) || collisionPlatform()) {
                     bJumping = false;
                     changeAnimToRightLeft(*playerSprite, STAND_RIGHT);
                 }
             }
         }
     }
-
-    if (!bJumping) {
-        if (!map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y) && !colisionPlatform()) {
+    else {
+        if (!map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, 32), &posPlayer.y) && !collisionPlatform()) {
             bFalling = true;
             posPlayer.y += FALL_STEP;
             int anim = playerSprite->animation();
@@ -577,9 +630,7 @@ void Player::update(int deltaTime) {
         is_T_pressed = false; // Reiniciar el estado cuando se suelta la tecla
     }
 
-    if (map->collisionDownDoesDamage(posPlayer, glm::ivec2(24, 32), &posPlayer.y)) {
-		takeDamage(1);
-    }
+
 	checkCheats();
 
     // Imprimir la posicion del jugador cada 500ms
@@ -684,10 +735,8 @@ void Player::addHeart() {
         cout << "PLAYER: ADD HEART [+" << 3 << "] (" << playerHub->getPlayerHP() << " HP left)" << endl;
 
     }
-    else {
-        cout << "PLAYER: ADD HEART [FAILED] (curretHP < 12) (" << playerHub->getPlayerHP() << " HP left)" << endl;
-    }
 }
+
 bool Player::isGodMode() const {  
    if (playerHub) {  
        return playerHub->isGodMode();  
@@ -702,6 +751,24 @@ bool Player::isPlayerDead() const {
 void Player::setPlayerHUB(PlayerHUB* hub) {
     playerHub = hub;
 }
+
+bool Player::isAttacking() const {
+    // Está agachado (is_DOWN_pressed) y atacando (b_X_Attacking)
+    return b_X_Attacking;
+}
+
+bool Player::Crouching() const {
+    return is_DOWN_pressed;
+}
+
+bool Player::lookingleft() const {
+    return bLookingLeft;
+}
+bool Player::isBlocking() const {
+    int anim = playerSprite->animation();
+	return (anim == COVER_RIGHT || anim == COVER_LEFT);
+}
+
 
 
 ///
@@ -748,8 +815,10 @@ void Player::printAnimName(Sprite* sprite, int animation) {
         case SPEAR_PASSIVE_L:       cout << "SPEAR: Passive Left" << endl; break;
         case SPEAR_PASSIVE_CROUCH_R:   cout << "SPEAR: Low Passive  Right" << endl; break;
         case SPEAR_PASSIVE_CROUCH_L:   cout << "SPEAR: Low Passive  Left" << endl; break;
-        case NONE:                  cout << "None" << endl; break;
-        case NONE2:                 cout << "None2" << endl; break;
+		case FIRE_SPEAR_ATTACK_R: cout << "SPEAR: Fire Attack Right" << endl; break;
+		case FIRE_SPEAR_ATTACK_L: cout << "SPEAR: Fire Attack Left" << endl; break;
+        case FIRE_SPEAR_ATTACK_CROUCH_R: cout << "SPEAR: Fire Attack Crouch Right" << endl; break;
+		case FIRE_SPEAR_ATTACK_CROUCH_L: cout << "SPEAR: Fire Attack Crouch Left" << endl; break;
         default:                    cout << "Unknown Spear Animation (" << animation << ")" << endl; break;
         }
     }
@@ -759,15 +828,3 @@ void Player::printAnimName(Sprite* sprite, int animation) {
 }
 
 
-bool Player::isAttacking() const {
-    // Está agachado (is_DOWN_pressed) y atacando (b_X_Attacking)
-    return b_X_Attacking;
-}
-
-bool Player::Crouching() const {
-    return is_DOWN_pressed;
-}
-
-bool Player::lookingleft() const {
-    return bLookingLeft;
-}

@@ -50,20 +50,21 @@ public:
 	bool isPlayerDead() const;
 	void setFalling(bool falling) { bFalling = falling; }
 
-	bool colisionPlatform();
+	bool collisionPlatform();
 	bool isAttacking() const; // Verifica si está agachado y atacando
 	bool Crouching() const;
 	bool lookingleft() const;
 	void checkCheats();
 	bool isGodMode() const;
 	bool isOnCooldown() const;
-	
+	bool isBlocking() const;
+	bool usingFireTotem() const { return bUsingTotem; }
 
 private:
 	bool bJumping, bFalling, bLookingLeft, bCrouching, bUsingTotem, is_DOWN_pressed;
 	bool bDamaged, b_X_Attacking;
 	bool is_Z_pressed, is_Right_pressed, is_Left_pressed, is_UP_pressed, is_T_pressed;
-	bool is_V_pressed, is_O_pressed, is_P_pressed, is_I_pressed;
+	bool is_V_pressed, is_O_pressed, is_L_pressed, is_I_pressed;
 
 	int jumpAngle, startY, spearDist;
 	int damageCooldown, timeSinceLastDamage;

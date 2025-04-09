@@ -30,6 +30,7 @@ void Scene::init() {
     player = new Player();
     player->init(glm::ivec2(0, 0), texProgram);
     player->setPosition(glm::vec2(INIT_PLAYER_X_TILES*16, INIT_PLAYER_Y_TILES*16));
+    //player->setPosition(glm::vec2(1270, 112));
     player->setTileMap(map);
 
     playerHub = new PlayerHUB();
@@ -134,8 +135,7 @@ void Scene::update(int deltaTime) {
             std::cout << "Snake at " << snake->getPosition().x << " jumped!" << std::endl;
         }
 
-        if (CheckEnemyCollission(snake) && damagecooldown == 0) {
-            damagecooldown = 100;
+        if (CheckEnemyCollission(snake)) {
 			player->takeDamage(1);
             std::cout << "PLAYER: Damaged by snake at " << snake->getPosition().x << std::endl;
         }
@@ -161,14 +161,12 @@ void Scene::update(int deltaTime) {
         snakesSpawned = false;
     }
 
-    if (damagecooldown > 0) --damagecooldown;
 
     for (auto& bamboo : bamboos) {
         bamboo->update(deltaTime);
         if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
-            if (damagecooldown == 0) {
-				player->takeDamage(1);
-                damagecooldown = 100;
+            if (!player->isBlocking()) {
+                player->takeDamage(1);
                 std::cout << "PLAYER: Damaged by bamboo at " << bamboo->getPosition().x << std::endl;
             }
             bamboo->reset();
@@ -226,7 +224,7 @@ bool Scene::readyToJump(Snake* snake) {
     return distance < jumpThreshold && isApproaching;
 }
 
-bool Scene::playerColisionPlatform() {
+bool Scene::playerCollisionPlatform() {
     for (auto& platform : platforms) {
         if (checkPlatformCollision(player, platform)) {
             return true;

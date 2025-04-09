@@ -488,18 +488,18 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
     return false;
 }
 
-bool TileMap::collisionDownDoesDamage(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
-{
+bool TileMap::collisionDownDoesDamage(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const {
     for (const auto& rect : collisionObjects) {
         if (pos.x + size.x > rect.x && pos.x < rect.x + rect.width &&
             pos.y + size.y >= rect.y && pos.y < rect.y + rect.height) {
-            if (*posY - rect.y + size.y <= 4) { 
-                *posY = rect.y - size.y;
-                return  rect.damage;
+            // Verificar si el jugador está cerca del borde superior del objeto
+            if (*posY - rect.y + size.y <= 4) { // Umbral ajustado
+                *posY = rect.y - size.y; // Corregir la posición vertical
+                return rect.damage; // Devolver si el objeto hace daño
             }
         }
     }
-    return false;
+    return false; // No hay colisión dañina
 }
 
 bool TileMap::collisionMoveHoritz(const glm::ivec2& pos, const glm::ivec2& size, bool movingLeft) const {
