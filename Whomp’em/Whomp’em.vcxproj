@@ -64,9 +64,6 @@
     <None Include="images\instructions_button.png" />
     <None Include="images\SNAKE.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Whomp’em1.rc" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

@@ -25,7 +25,7 @@ public:
     void render();
     bool isOffScreen(glm::vec2 pos);
     bool checkPlatformCollision(Player* player, Platform* platform);
-    bool playerColisionPlatform();
+    bool playerCollisionPlatform();
     bool readyToJump(Snake* snake);
     void handleSceneTransitions();
     glm::vec2 getPlayerOffset(Player* player);
@@ -55,7 +55,6 @@ private:
     float currentTime;
     glm::mat4 projection;
     float zoomFactor;
-    int damagecooldown = 0;
     glm::vec2 cameraPos;
     int cameraWidth = 16 * 16;
     int cameraHeight = 16 * 15;

@@ -35,3 +35,8 @@ libs/  # Opcional, si no quieres subir tus librerías externas
 # Archivos del sistema
 .DS_Store  # macOS
 Thumbs.db  # Windows
+
+Whomp’em.rc # Archivo de recursos de Windows
+resource1.h
+resource.h
+RCa11796
