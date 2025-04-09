@@ -51,7 +51,7 @@ public:
 	void setFalling(bool falling) { bFalling = falling; }
 
 	bool collisionPlatform();
-	bool isAttacking() const; // Verifica si está agachado y atacando
+	bool isAttacking() const;
 	bool Crouching() const;
 	bool lookingleft() const;
 	void checkCheats();

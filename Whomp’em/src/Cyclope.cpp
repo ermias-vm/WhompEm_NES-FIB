@@ -17,11 +17,12 @@ enum CyclopeAnims {
 };
 
 void Cyclope::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
+    cyclopeHP = 3;
     tileMapDispl = tileMapPos;
     isJumping = false;
     bLookingLeft = false;
     timeOnGround = 0.0f;
-	jumpWidth = JUMP_WIDTH_DEF;
+    jumpWidth = JUMP_WIDTH_DEF;
     cyclopeSpritesheet.loadFromFile("images/sprites/cyclopeFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     cyclopeSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.25), &cyclopeSpritesheet, &shaderProgram);
     cyclopeSprite->setNumberAnimations(6);
@@ -70,11 +71,11 @@ void Cyclope::update(int deltaTime) {
         }
     }
 
-	else {
-		if (map->collisionMoveRight(posCyclope, glm::ivec2(28, 32))) {
-			posCyclope.x -= 1;
-		}
-	}
+    else {
+        if (map->collisionMoveRight(posCyclope, glm::ivec2(28, 32))) {
+            posCyclope.x -= 1;
+        }
+    }
 
     if (isJumping) {
         jumpTime += dt;
@@ -116,12 +117,12 @@ void Cyclope::update(int deltaTime) {
                     isJumping = true;
                     jumpDirection = (playerPos.x > posCyclope.x) ? 1 : -1;
                     bLookingLeft = (jumpDirection < 0);
-                    if  (distanceX < CLOSE_DISTANCE){
+                    if (distanceX < CLOSE_DISTANCE) {
                         if (playerPos.y != posCyclope.y) jumpWidth = JUMP_WIDTH_DEF - 20;
-						else jumpWidth = distanceX;
-					}
-					else jumpWidth = JUMP_WIDTH_DEF;
-						
+                        else jumpWidth = distanceX;
+                    }
+                    else jumpWidth = JUMP_WIDTH_DEF;
+
                     if (cyclopeSprite->animation() != (JUMP_RIGHT + bLookingLeft)) {
                         changeAnimToRightLeft(JUMP_RIGHT);
                     }
@@ -147,7 +148,7 @@ void Cyclope::update(int deltaTime) {
 }
 
 void Cyclope::render() {
-    cyclopeSprite->render();
+    if (isAlive()) cyclopeSprite->render();
 }
 
 void Cyclope::setPosition(const glm::ivec2& pos) {
@@ -160,5 +161,6 @@ glm::ivec2 Cyclope::getPosition() const {
 }
 
 void Cyclope::setTileMap(TileMap* tileMap) {
+    map = tileMap;
     map = tileMap;
 }

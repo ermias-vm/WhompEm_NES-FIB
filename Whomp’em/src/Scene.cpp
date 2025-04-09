@@ -237,8 +237,8 @@ void Scene::update(int deltaTime) {
     }
 
     player->update(deltaTime);
-    boss->update(deltaTime);
-    cyclope->update(deltaTime);
+    if (!playerHub->isBossHPDead())boss->update(deltaTime);
+    if (cyclope->isAlive()) cyclope->update(deltaTime);
 
     // Actualizar las arañas
     for (auto& spider : spiders) {
@@ -385,6 +385,62 @@ void Scene::update(int deltaTime) {
     updateCamera(player->getPosition(), deltaTime);
     playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
 }
+
+Scene::CollisionType Scene::checkCollisionWithEnemy(const glm::ivec2& playerPos, const glm::ivec2& playerSize,
+    const glm::ivec2& enemyPos, const glm::ivec2& enemySize) {
+    if (playerPos.x + playerSize.x > enemyPos.x &&
+        playerPos.x < enemyPos.x + enemySize.x &&
+        playerPos.y + playerSize.y > enemyPos.y &&
+        playerPos.y < enemyPos.y + enemySize.y) {
+
+        float leftOverlap = (playerPos.x + playerSize.x) - enemyPos.x;
+        float rightOverlap = (enemyPos.x + enemySize.x) - playerPos.x;
+        float topOverlap = (playerPos.y + playerSize.y) - enemyPos.y;
+        float bottomOverlap = (enemyPos.y + enemySize.y) - playerPos.y;
+
+        float minOverlap = std::min(std::min(leftOverlap, rightOverlap), std::min(topOverlap, bottomOverlap));
+
+        if (minOverlap == leftOverlap) return LEFT;
+        else if (minOverlap == rightOverlap) return RIGHT;
+        else if (minOverlap == topOverlap) return TOP;
+        else if (minOverlap == bottomOverlap) return BOTTOM;
+    }
+    return NONE;
+}
+void Scene::collisionsPlayerEnemy() {
+
+    glm::vec2 playerPos = player->getPosition();
+    glm::ivec2 playerSize(25, 32);
+
+    // Boss
+    CollisionType collisionBossPlayer = checkCollisionWithEnemy(playerPos, playerSize, boss->getPosition(), glm::ivec2(32, 48));
+    if (collisionBossPlayer != NONE) player->takeDamage(2);
+
+    // Cyclope
+    CollisionType collisionCyclopePlayer = checkCollisionWithEnemy(playerPos, playerSize, cyclope->getPosition(), glm::ivec2(25, 32));
+    if (collisionCyclopePlayer != NONE) player->takeDamage(1);
+
+}
+
+void Scene::collisionsSpearEnemy() {
+    if (!player->isAttacking()) return;
+
+    glm::vec2 spearPos = player->getPosition();
+    glm::ivec2 spearSize(25, 32);
+    int damage = 1;
+    if (player->usingFireTotem()) {
+        damage = 2;
+    }
+
+    // Boss
+    CollisionType collisionBossPlayer = checkCollisionWithEnemy(spearPos, spearSize, boss->getPosition(), glm::ivec2(32, 48));
+    if (collisionBossPlayer != NONE) playerHub->bossTakeDamage(damage);
+
+    // Cyclope
+    CollisionType collisionCyclopePlayer = checkCollisionWithEnemy(spearPos, spearSize, cyclope->getPosition(), glm::ivec2(25, 32));
+    if (collisionCyclopePlayer != NONE) cyclope->takeDamage(damage);
+}
+
 
 
 bool Scene::checkSpearCollisionWithSnake(Snake* snake) {

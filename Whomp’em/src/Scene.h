@@ -20,6 +20,14 @@ public:
     Scene();
     ~Scene();
 
+    enum CollisionType {
+        NONE = 0,
+        LEFT = 1,
+        RIGHT = 2,
+        TOP = 3,
+        BOTTOM = 4
+    };
+
     void init();
     void initPlatforms();
     void initBossBamboos();
@@ -39,7 +47,10 @@ public:
     glm::vec2 getPlayerPos() const;
     void checkSpiderPlayerInteraction();
     bool checkProyectilCollision(Proyectil* proyectil);
-
+    CollisionType checkCollisionWithEnemy(const glm::ivec2& playerPos, const glm::ivec2& playerSize,
+        const glm::ivec2& enemyPos, const glm::ivec2& enemySize);
+	void collisionsPlayerEnemy();
+	void collisionsSpearEnemy();
 private:
     void initShaders();
     void initBamboos();

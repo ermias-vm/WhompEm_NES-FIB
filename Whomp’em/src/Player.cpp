@@ -37,9 +37,9 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
     bLookingLeft = bCrouching = bUsingTotem = false;
     is_Z_pressed = is_Right_pressed = is_Left_pressed = is_UP_pressed = is_DOWN_pressed = is_V_pressed = false;
     is_T_pressed = is_O_pressed = is_L_pressed = is_I_pressed = false;
-    
+
     playerSpeed = 2.f;
-    damageCooldown = 1300; 
+    damageCooldown = 1300;
     timeSinceLastDamage = 0;
 
     setAnimations(shaderProgram);
@@ -222,7 +222,7 @@ void Player::setAnimations(ShaderProgram& shaderProgram) {
 }
 
 bool Player::collisionPlatform() {
-	return Game::instance().getScene()->playerCollisionPlatform();
+    return Game::instance().getScene()->playerCollisionPlatform();
 }
 
 void Player::changeAnimToRightLeft(Sprite& sprite, int animation) {
@@ -298,7 +298,7 @@ void Player::righLeftKeyReleased() {
     }
 }
 
-bool Player::isOnCooldown() const { return timeSinceLastDamage > 0;}
+bool Player::isOnCooldown() const { return timeSinceLastDamage > 0; }
 
 void Player::checkCheats() {
 
@@ -362,6 +362,7 @@ void Player::update(int deltaTime) {
         takeDamage(1);
     }
 
+
     if (Game::instance().getKey(GLFW_KEY_X)) {
         int playerAnim = playerSprite->animation();
         int spearAnim = spearSprite->animation();
@@ -370,7 +371,7 @@ void Player::update(int deltaTime) {
 
             b_X_Attacking = true;
             if (!bJumping && !bFalling) {
-  
+
                 if (is_DOWN_pressed) {
                     changeAnimToRightLeft(*playerSprite, HOLD_SPEAR_CROUCH_R);
                     if (usingFireTotem()) {
@@ -379,7 +380,7 @@ void Player::update(int deltaTime) {
                     else changeAnimToRightLeft(*spearSprite, SPEAR_ATTACK_CROUCH_R);
                 }
                 else if ((is_Right_pressed || is_Left_pressed)) {
-                    if (playerAnim != (CHARGE_RIGHT + bLookingLeft) ) {
+                    if (playerAnim != (CHARGE_RIGHT + bLookingLeft)) {
                         changeAnimToRightLeft(*playerSprite, CHARGE_RIGHT);
                         if (usingFireTotem()) {
                             changeAnimToRightLeft(*spearSprite, FIRE_SPEAR_ATTACK_R);
@@ -570,7 +571,7 @@ void Player::update(int deltaTime) {
 
 
 
-    
+
 
     if (bJumping) {            // GESTION DEL SALTO
         jumpAngle += JUMP_ANGLE_STEP;
@@ -629,7 +630,7 @@ void Player::update(int deltaTime) {
     }
 
 
-	checkCheats();
+    checkCheats();
 
     // Imprimir la posicion del jugador cada 500ms
     static int timeSinceLastPrint = 0;
@@ -735,11 +736,11 @@ void Player::addHeart() {
     }
 }
 
-bool Player::isGodMode() const {  
-   if (playerHub) {  
-       return playerHub->isGodMode();  
-   }  
-   return false;  
+bool Player::isGodMode() const {
+    if (playerHub) {
+        return playerHub->isGodMode();
+    }
+    return false;
 }
 
 bool Player::isPlayerDead() const {
@@ -751,7 +752,6 @@ void Player::setPlayerHUB(PlayerHUB* hub) {
 }
 
 bool Player::isAttacking() const {
-    // Está agachado (is_DOWN_pressed) y atacando (b_X_Attacking)
     return b_X_Attacking;
 }
 
@@ -765,7 +765,7 @@ bool Player::lookingleft() const {
 
 bool Player::isBlocking() const {
     int anim = playerSprite->animation();
-	return (anim == COVER_RIGHT || anim == COVER_LEFT);
+    return (anim == COVER_RIGHT || anim == COVER_LEFT);
 }
 
 ///
@@ -812,10 +812,10 @@ void Player::printAnimName(Sprite* sprite, int animation) {
         case SPEAR_PASSIVE_L:       cout << "SPEAR: Passive Left" << endl; break;
         case SPEAR_PASSIVE_CROUCH_R:   cout << "SPEAR: Low Passive  Right" << endl; break;
         case SPEAR_PASSIVE_CROUCH_L:   cout << "SPEAR: Low Passive  Left" << endl; break;
-		case FIRE_SPEAR_ATTACK_R: cout << "SPEAR: Fire Attack Right" << endl; break;
-		case FIRE_SPEAR_ATTACK_L: cout << "SPEAR: Fire Attack Left" << endl; break;
+        case FIRE_SPEAR_ATTACK_R: cout << "SPEAR: Fire Attack Right" << endl; break;
+        case FIRE_SPEAR_ATTACK_L: cout << "SPEAR: Fire Attack Left" << endl; break;
         case FIRE_SPEAR_ATTACK_CROUCH_R: cout << "SPEAR: Fire Attack Crouch Right" << endl; break;
-		case FIRE_SPEAR_ATTACK_CROUCH_L: cout << "SPEAR: Fire Attack Crouch Left" << endl; break;
+        case FIRE_SPEAR_ATTACK_CROUCH_L: cout << "SPEAR: Fire Attack Crouch Left" << endl; break;
         default:                    cout << "Unknown Spear Animation (" << animation << ")" << endl; break;
         }
     }

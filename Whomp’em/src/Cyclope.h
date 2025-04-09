@@ -12,6 +12,9 @@ public:
     void setPosition(const glm::ivec2& pos);
     void setTileMap(TileMap* tileMap);
     glm::ivec2 getPosition() const;
+    bool isAlive() const { return cyclopeHP > 0; }
+    void takeDamage(int damage) { cyclopeHP -= damage; }
+
 
 private:
     void changeAnimToRightLeft(int animation);
@@ -28,7 +31,7 @@ private:
     glm::ivec2 jumpStartPos;
     int jumpDirection;
     float timeOnGround;
-    int jumpWidth;
+    int jumpWidth, cyclopeHP;
 };
 
 #endif // CYCLOPE_H
