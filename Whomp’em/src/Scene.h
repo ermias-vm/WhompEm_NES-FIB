@@ -12,6 +12,8 @@
 #include "Platform.h"
 #include "Boss.h"
 #include "Cyclope.h"
+#include "Spider.h"
+#include "Proyectil.h"
 
 class Scene {
 public:
@@ -35,10 +37,14 @@ public:
     bool CheckEnemyCollission(Snake* snake);
     bool checkSpearCollisionWithSnake(Snake* snake);
     glm::vec2 getPlayerPos() const;
+    void checkSpiderPlayerInteraction();
+    bool checkProyectilCollision(Proyectil* proyectil);
 
 private:
     void initShaders();
     void initBamboos();
+    void initSpiders();
+    void initProyectiles();
 
 private:
     TileMap* map;
@@ -54,12 +60,15 @@ private:
     std::vector<Bamboo*> bamboos;
     std::vector<Bamboo*> bambooslaunch;
     std::vector<Bamboo*> bossBamboos;
+    std::vector<Spider*> spiders;
+    std::vector<Proyectil*> proyectiles;
 
     ShaderProgram texProgram;
     float currentTime;
     glm::mat4 projection;
     float zoomFactor;
     glm::vec2 cameraPos;
+    int damagecooldown = 0;
     int cameraWidth = 16 * 16;
     int cameraHeight = 16 * 15;
     float cameraVx = 0.0f;

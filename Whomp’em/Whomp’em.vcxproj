@@ -19,9 +19,11 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PlayerHUB.cpp" />
+    <ClCompile Include="src\Proyectil.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Snake.cpp" />
+    <ClCompile Include="src\Spider.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
@@ -38,10 +40,12 @@
     <ClInclude Include="src\Platform.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerHUB.h" />
+    <ClInclude Include="src\Proyectil.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\Snake.h" />
+    <ClInclude Include="src\Spider.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TileMap.h" />

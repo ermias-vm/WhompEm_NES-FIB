@@ -19,6 +19,7 @@ Scene::~Scene() {
     for (auto& bamboo : bamboos) delete bamboo;
     for (auto& snake : snakes) delete snake;
     for (auto& bossBamboo : bossBamboos) delete bossBamboo;
+    for (auto& spider : spiders) delete spider;
 }
 
 void Scene::init() {
@@ -54,6 +55,8 @@ void Scene::init() {
     initPlatforms();
     initBamboos();
     initBossBamboos();
+    initSpiders();
+    initProyectiles();
 
     projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
     currentTime = 0.0f;
@@ -83,7 +86,96 @@ void Scene::initBossBamboos() {
     // Inicializamos el vector de bambúes del jefe vacío
     bossBamboos.clear();
 }
+void Scene::initProyectiles() {
+    proyectiles.clear();
+}
 
+void Scene::initSpiders() {
+    // Crear algunas arañas en posiciones específicas
+    // Por ejemplo, una araña en X=3888 (cerca del jefe) y otra en X=4048
+    Spider* spider1 = new Spider();
+    spider1->init(glm::ivec2(0, 0), texProgram, 2144.f, 400.f);  // Posición inicial: X=3888, Y=560
+    spider1->setTileMap(map);
+    spiders.push_back(spider1);
+
+    Spider* spider2 = new Spider();
+    spider2->init(glm::ivec2(0, 0), texProgram, 2224.f, 432.f);  // Posición inicial: X=4048, Y=560
+    spider2->setTileMap(map);
+    spiders.push_back(spider2);
+}
+
+void Scene::checkSpiderPlayerInteraction() {
+    glm::vec2 playerPos = player->getPosition();
+    const float Y_TOLERANCE = 16.f;
+    const float MAX_VERTICAL_DISTANCE = 64.f;  // 4 tiles = 64 píxeles
+
+    for (auto& spider : spiders) {
+        glm::vec2 spiderPos = spider->getPosition();
+        Spider::SpiderState spiderState = spider->getState();
+
+        bool shotFired = false;
+
+        // Disparo horizontal: misma Y
+        if (std::abs(spiderPos.y - playerPos.y) <= Y_TOLERANCE) {
+            spider->setStop(true);
+            if (!spider->hasShot()) {
+                // Crear un proyectil horizontal
+                Proyectil* proyectil = new Proyectil();
+                bool playerToLeft = spider->isPlayerToLeft(playerPos.x);
+                Proyectil::ProyectilDirection direction = playerToLeft ? Proyectil::LEFT : Proyectil::RIGHT;
+                glm::vec2 proyectilPos = spiderPos;
+                proyectilPos.x += 8.f;
+                proyectilPos.y += 8.f;
+                proyectil->init(glm::ivec2(0, 0), texProgram, proyectilPos, direction);
+                proyectil->setTileMap(map);
+                proyectiles.push_back(proyectil);
+                spider->setShot(true);
+                shotFired = true;
+                std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (playerToLeft ? "left" : "right") << std::endl;
+            }
+
+            if (spiderState == Spider::MOVING_DOWN) {
+                if (playerPos.x < spiderPos.x) {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_LEFT_DOWN);
+                }
+                else {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_RIGHT_DOWN);
+                }
+            }
+            else if (spiderState == Spider::MOVING_UP) {
+                if (playerPos.x < spiderPos.x) {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_LEFT_UP);
+                }
+                else {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_RIGHT_UP);
+                }
+            }
+        }
+        // Disparo vertical: misma X, dentro de 4 tiles de altura
+        else if (spider->isPlayerInVerticalRange(playerPos.x, playerPos.y, MAX_VERTICAL_DISTANCE)) {
+            spider->setStop(true);
+            if (!spider->hasShot()) {
+                // Crear un proyectil vertical
+                Proyectil* proyectil = new Proyectil();
+                Proyectil::ProyectilDirection direction = (spiderState == Spider::MOVING_UP) ? Proyectil::UP : Proyectil::DOWN;
+                glm::vec2 proyectilPos = spiderPos;
+                proyectilPos.x += 8.f;
+                proyectilPos.y += 8.f;
+                proyectil->init(glm::ivec2(0, 0), texProgram, proyectilPos, direction);
+                proyectil->setTileMap(map);
+                proyectiles.push_back(proyectil);
+                spider->setShot(true);
+                shotFired = true;
+                std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (direction == Proyectil::UP ? "up" : "down") << std::endl;
+            }
+        }
+
+        if (!shotFired) {
+            spider->setStop(false);
+            spider->setShot(false);
+        }
+    }
+}
 void Scene::initPlatforms() {
     Platform* platform1 = new Platform();
     platform1->init(glm::ivec2(0, 0), texProgram, 3172.0f, 780.0f, 20.0f, 1.0f, true);
@@ -116,6 +208,21 @@ void Scene::initPlatforms() {
     platforms.push_back(platform6);
 }
 
+bool Scene::checkProyectilCollision(Proyectil* proyectil) {
+    glm::vec2 playerPos = player->getPosition();
+    glm::ivec2 playerSize(25, 32);  // Tamaño del jugador
+    glm::vec2 proyectilPos = proyectil->getPosition();
+    glm::ivec2 proyectilSize(16, 16);  // Tamaño del proyectil
+
+    if (playerPos.x + playerSize.x > proyectilPos.x &&
+        playerPos.x < proyectilPos.x + proyectilSize.x &&
+        playerPos.y + playerSize.y > proyectilPos.y &&
+        playerPos.y < proyectilPos.y + proyectilSize.y) {
+        return true;
+    }
+    return false;
+}
+
 void Scene::update(int deltaTime) {
     currentTime += deltaTime;
 
@@ -132,6 +239,14 @@ void Scene::update(int deltaTime) {
     player->update(deltaTime);
     boss->update(deltaTime);
     cyclope->update(deltaTime);
+
+    // Actualizar las arañas
+    for (auto& spider : spiders) {
+        spider->update(deltaTime);
+    }
+
+    // Verificar interacción entre arañas y jugador
+    checkSpiderPlayerInteraction();
 
     // Lanzar línea de 10 bambús cuando el boss entra en GROUND_WAIT (una sola vez)
     if (boss->lounchBamboo() && !hasLaunchedLine) {
@@ -186,7 +301,8 @@ void Scene::update(int deltaTime) {
             snake->snakeJump();
         }
 
-        if (CheckEnemyCollission(snake)) {
+        if (CheckEnemyCollission(snake) && damagecooldown == 0) {
+            damagecooldown = 100;
             player->takeDamage(1);
         }
 
@@ -212,11 +328,37 @@ void Scene::update(int deltaTime) {
     // Update de bambús normales
     for (auto& bamboo : bamboos) {
         bamboo->update(deltaTime);
-        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && damagecooldown  == 0) {
             if (!player->isBlocking()) {
+                damagecooldown = 100;
                 player->takeDamage(1);
             }
         }
+    }
+    // Actualizar los proyectiles
+    for (auto it = proyectiles.begin(); it != proyectiles.end();) {
+        Proyectil* proyectil = *it;
+        proyectil->update(deltaTime);
+
+        // Verificar colisión con el jugador
+        if (checkProyectilCollision(proyectil) && damagecooldown == 0) {
+            damagecooldown = 100;
+            player->takeDamage(1);
+            std::cout << "PLAYER: Damaged by proyectil at " << proyectil->getPosition().x << std::endl;
+            delete proyectil;
+            it = proyectiles.erase(it);
+            continue;
+        }
+
+        // Eliminar el proyectil si ha alcanzado su distancia máxima
+        if (proyectil->hasReachedMaxDistance()) {
+            delete proyectil;
+            it = proyectiles.erase(it);
+            std::cout << "Proyectil removed (reached max distance)" << std::endl;
+            continue;
+        }
+
+        ++it;
     }
 
     // Update de bambús del jefe (incluye los lanzados en el aire y los de la línea)
@@ -224,7 +366,8 @@ void Scene::update(int deltaTime) {
         Bamboo* bamboo = *it;
         bamboo->update(deltaTime);
 
-        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && !player->isBlocking()) {
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && !player->isBlocking() && damagecooldown == 0) {
+            damagecooldown = 100;
             player->takeDamage(1);
         }
 
@@ -236,7 +379,7 @@ void Scene::update(int deltaTime) {
             ++it;
         }
     }
-
+    if (damagecooldown <= 0) --damagecooldown;
     playerHub->update(deltaTime);
     handleSceneTransitions();
     updateCamera(player->getPosition(), deltaTime);
@@ -486,6 +629,12 @@ void Scene::render() {
     if (part5)boss->render();
     for (auto& snake : snakes) {
         snake->render();
+    }
+    for (auto& spider : spiders) { 
+        spider->render();
+    }
+    for (auto& proyectil : proyectiles) {  // Renderizar los proyectiles
+        proyectil->render();
     }
 
     if (part3) {
