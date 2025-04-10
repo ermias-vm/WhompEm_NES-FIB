@@ -79,7 +79,6 @@ private:
     glm::mat4 projection;
     float zoomFactor;
     glm::vec2 cameraPos;
-    int damagecooldown = 0;
     int cameraWidth = 16 * 16;
     int cameraHeight = 16 * 15;
     float cameraVx = 0.0f;

@@ -53,7 +53,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 void Player::setAnimations(ShaderProgram& shaderProgram) {
     // ANIMACIONES PLAYER //
 
-    playerSpritesheet.loadFromFile("images/sprites/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    playerSpritesheet.loadFromFile("./images/sprites/playerFrames.png", TEXTURE_PIXEL_FORMAT_RGBA);
     //(pixels frame, %espaci� ocupado(ancho,alto), playerSpritesheet, shaderProgram)
     playerSprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.05), &playerSpritesheet, &shaderProgram);
     playerSprite->setNumberAnimations(30);

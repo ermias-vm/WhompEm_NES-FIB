@@ -303,8 +303,7 @@ void Scene::update(int deltaTime) {
             snake->snakeJump();
         }
 
-        if (CheckEnemyCollission(snake) && damagecooldown == 0) {
-            damagecooldown = 100;
+        if (CheckEnemyCollission(snake) ) {
             player->takeDamage(1);
         }
 
@@ -330,9 +329,8 @@ void Scene::update(int deltaTime) {
     // Update de bambús normales
     for (auto& bamboo : bamboos) {
         bamboo->update(deltaTime);
-        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && damagecooldown  == 0) {
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
             if (!player->isBlocking()) {
-                damagecooldown = 100;
                 player->takeDamage(1);
             }
         }
@@ -343,8 +341,7 @@ void Scene::update(int deltaTime) {
         proyectil->update(deltaTime);
 
         // Verificar colisión con el jugador
-        if (checkProyectilCollision(proyectil) && damagecooldown == 0) {
-            damagecooldown = 100;
+        if (checkProyectilCollision(proyectil)) {
             player->takeDamage(1);
             std::cout << "PLAYER: Damaged by proyectil at " << proyectil->getPosition().x << std::endl;
             delete proyectil;
@@ -368,8 +365,7 @@ void Scene::update(int deltaTime) {
         Bamboo* bamboo = *it;
         bamboo->update(deltaTime);
 
-        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && !player->isBlocking() && damagecooldown == 0) {
-            damagecooldown = 100;
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32)) && !player->isBlocking()) {
             player->takeDamage(1);
         }
 
@@ -381,7 +377,6 @@ void Scene::update(int deltaTime) {
             ++it;
         }
     }
-    if (damagecooldown <= 0) --damagecooldown;
     playerHub->update(deltaTime);
     handleSceneTransitions();
     updateCamera(player->getPosition(), deltaTime);
