@@ -42,15 +42,21 @@ public:
     void setcameraPos(const glm::vec2& offset);
     void updateCamera(glm::vec2& posjugador, int deltaTime);
     glm::vec2 getCameraPos() const { return cameraPos; }
-    bool CheckEnemyCollission(Snake* snake);
     bool checkSpearCollisionWithSnake(Snake* snake);
     glm::vec2 getPlayerPos() const;
     void checkSpiderPlayerInteraction();
     bool checkProyectilCollision(Proyectil* proyectil);
-    CollisionType checkCollisionWithEnemy(const glm::ivec2& playerPos, const glm::ivec2& playerSize,
-        const glm::ivec2& enemyPos, const glm::ivec2& enemySize);
-	void collisionsPlayerEnemy();
+    CollisionType checkCollisionWithEnemy(const glm::ivec2& enemyPos, const glm::ivec2& enemySize);
+
 	void collisionsSpearEnemy();
+	void checkAllCollisions(int deltaTime);
+	void platformMgmt(int deltaTime);
+    void cyclopeMgmt(int deltaTime);
+    void bossMgmt(int deltaTime);
+    void snakeMgmt(int deltaTime);
+	void spiderMgmt(int deltaTime);
+    void updateSprites(int deltaTime);
+
 private:
     void initShaders();
     void initBamboos();

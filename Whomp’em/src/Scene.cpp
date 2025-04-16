@@ -103,183 +103,31 @@ void Scene::initSpiders() {
     spiders.push_back(spider2);
 }
 
-void Scene::checkSpiderPlayerInteraction() {
-    glm::vec2 playerPos = player->getPosition();
-    const float Y_TOLERANCE = 16.f;
-    const float MAX_VERTICAL_DISTANCE = 64.f;  // 4 tiles = 64 píxeles
 
-    for (auto& spider : spiders) {
-        glm::vec2 spiderPos = spider->getPosition();
-        Spider::SpiderState spiderState = spider->getState();
-
-        bool canShoot = false;  // Indica si el jugador está en una posición que activa un disparo
-
-        // Disparo horizontal: misma Y
-        if (std::abs(spiderPos.y - playerPos.y) <= Y_TOLERANCE) {
-            spider->setStop(true);
-            canShoot = true;
-            if (!spider->hasShot()) {
-                // Crear un proyectil horizontal
-                Proyectil* proyectil = new Proyectil();
-                bool playerToLeft = spider->isPlayerToLeft(playerPos.x);
-                Proyectil::ProyectilDirection direction = playerToLeft ? Proyectil::LEFT : Proyectil::RIGHT;
-                glm::vec2 proyectilPos = spiderPos;
-                proyectilPos.x += 8.f;
-                proyectilPos.y += 8.f;
-                proyectil->init(glm::ivec2(0, 0), texProgram, proyectilPos, direction);
-                proyectil->setTileMap(map);
-                proyectiles.push_back(proyectil);
-                spider->setShot(true);
-                std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (playerToLeft ? "left" : "right") << std::endl;
-            }
-
-            if (spiderState == Spider::MOVING_DOWN) {
-                if (playerPos.x < spiderPos.x) {
-                    spider->spiderSprite->changeAnimation(Spider::STOP_LEFT_DOWN);
-                }
-                else {
-                    spider->spiderSprite->changeAnimation(Spider::STOP_RIGHT_DOWN);
-                }
-            }
-            else if (spiderState == Spider::MOVING_UP) {
-                if (playerPos.x < spiderPos.x) {
-                    spider->spiderSprite->changeAnimation(Spider::STOP_LEFT_UP);
-                }
-                else {
-                    spider->spiderSprite->changeAnimation(Spider::STOP_RIGHT_UP);
-                }
-            }
-        }
-        // Disparo vertical: misma X, dentro de 4 tiles de altura
-        else if (spider->isPlayerInVerticalRange(playerPos.x, playerPos.y, MAX_VERTICAL_DISTANCE)) {
-            spider->setStop(true);
-            canShoot = true;
-            if (!spider->hasShot()) {
-                // Crear un proyectil vertical
-                Proyectil* proyectil = new Proyectil();
-                Proyectil::ProyectilDirection direction = (spiderState == Spider::MOVING_UP) ? Proyectil::UP : Proyectil::DOWN;
-                glm::vec2 proyectilPos = spiderPos;
-                proyectilPos.x += 8.f;
-                proyectilPos.y += 8.f;
-                proyectil->init(glm::ivec2(0, 0), texProgram, proyectilPos, direction);
-                proyectil->setTileMap(map);
-                proyectiles.push_back(proyectil);
-                spider->setShot(true);
-                std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (direction == Proyectil::UP ? "up" : "down") << std::endl;
-            }
-        }
-
-        // Si el jugador no está en una posición que active un disparo, reiniciar el estado
-        if (!canShoot) {
-            spider->setStop(false);
-            spider->setShot(false);
-        }
-    }
-}
-void Scene::initPlatforms() {
-    Platform* platform1 = new Platform();
-    platform1->init(glm::ivec2(0, 0), texProgram, 3172.0f, 780.0f, 20.0f, 1.0f, true);
-    platform1->setTileMap(map);
-    platforms.push_back(platform1);
-
-    Platform* platform2 = new Platform();
-    platform2->init(glm::ivec2(0, 0), texProgram, 3140.0f, 745.0f, 25.0f, 1.0f, false);
-    platform2->setTileMap(map);
-    platforms.push_back(platform2);
-
-    Platform* platform3 = new Platform();
-    platform3->init(glm::ivec2(0, 0), texProgram, 3228.0f, 705.0f, 25.0f, 1.0f, true);
-    platform3->setTileMap(map);
-    platforms.push_back(platform3);
-
-    Platform* platform4 = new Platform();
-    platform4->init(glm::ivec2(0, 0), texProgram, 3165.0f, 655.0f, 20.0f, 1.0f, true);
-    platform4->setTileMap(map);
-    platforms.push_back(platform4);
-
-    Platform* platform5 = new Platform();
-    platform5->init(glm::ivec2(0, 0), texProgram, 3140.0f, 615.0f, 25.0f, 1.0f, false);
-    platform5->setTileMap(map);
-    platforms.push_back(platform5);
-
-    Platform* platform6 = new Platform();
-    platform6->init(glm::ivec2(0, 0), texProgram, 3200.0f, 580.0f, 15.0f, 1.0f, true);
-    platform6->setTileMap(map);
-    platforms.push_back(platform6);
-}
-
-bool Scene::checkProyectilCollision(Proyectil* proyectil) {
-    glm::vec2 playerPos = player->getPosition();
-    glm::ivec2 playerSize(25, 32);  // Tamaño del jugador
-    glm::vec2 proyectilPos = proyectil->getPosition();
-    glm::ivec2 proyectilSize(16, 16);  // Tamaño del proyectil
-
-    if (playerPos.x + playerSize.x > proyectilPos.x &&
-        playerPos.x < proyectilPos.x + proyectilSize.x &&
-        playerPos.y + playerSize.y > proyectilPos.y &&
-        playerPos.y < proyectilPos.y + proyectilSize.y) {
-        return true;
-    }
-    return false;
-}
-
-void Scene::update(int deltaTime) {
-    currentTime += deltaTime;
-    void collisionsPlayerEnemy();
-    void collisionsSpearEnemy();
-
-    for (auto& platform : platforms) {
-        platform->update(deltaTime);
-        bool onPlatform = checkPlatformCollision(player, platform);
-        if (onPlatform) {
-            float deltaY = platform->getDeltaY();
-            glm::vec2 playerPos = player->getPosition();
-            player->setPosition(glm::vec2(playerPos.x, playerPos.y + deltaY));
-        }
-    }
-
-    player->update(deltaTime);
+void Scene::updateSprites(int deltaTime) {
     if (!playerHub->isBossHPDead())boss->update(deltaTime);
     if (cyclope->isAlive()) cyclope->update(deltaTime);
-
+   
     // Actualizar las arañas
     for (auto& spider : spiders) {
         spider->update(deltaTime);
     }
+    player->update(deltaTime);
 
-    // Verificar interacción entre arañas y jugador
-    checkSpiderPlayerInteraction();
-
-    // Lanzar línea de 10 bambús cuando el boss entra en GROUND_WAIT (una sola vez)
-    if (boss->lounchBamboo() && !hasLaunchedLine) {
-        for (float x : bambooSpawnLaunchPositions) {
-            Bamboo* bamboo = new Bamboo();
-            bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, 480.f), true);
-            bamboo->setTileMap(map);
-            bossBamboos.push_back(bamboo);
+    // Update de bambús normales
+    for (auto& bamboo : bamboos) {
+        bamboo->update(deltaTime);
+        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
+            if (!player->isBlocking()) {
+                player->takeDamage(1);
+            }
         }
-        hasLaunchedLine = true;
-        boss->resetBambooThrow();
-    }
-    else if (!boss->lounchBamboo()) {
-        hasLaunchedLine = false;
     }
 
-    // Lanzar un solo bambú cuando el boss está en el aire (cada X tiempo)
-    if (boss->shouldThrowBamboo()) {
-        Bamboo* bamboo = new Bamboo();
-        glm::vec2 bossPos = boss->getPosition();
-        float bambooX = bossPos.x + 16.f;
-        float bambooY = bossPos.y + 48.f;
-        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(bambooX, bambooY), true);
-        bamboo->setTileMap(map);
-        bossBamboos.push_back(bamboo);
-        std::cout << "Boss threw a bamboo at (" << bambooX << ", " << bambooY << ")" << std::endl;
-        boss->resetBambooThrow();
-    }
 
     // Spawnear serpientes
     glm::vec2 playerPos = player->getPosition();
+
     if (!snakesSpawned && playerPos.x >= 2560) {
         Snake* snake1 = new Snake();
         snake1->init(glm::ivec2(0, 0), texProgram, 1, glm::vec2(2480.f, 1616.f));
@@ -303,10 +151,6 @@ void Scene::update(int deltaTime) {
             snake->snakeJump();
         }
 
-        if (CheckEnemyCollission(snake) ) {
-            player->takeDamage(1);
-        }
-
         if (player->isAttacking() && checkSpearCollisionWithSnake(snake)) {
             delete snake;
             it = snakes.erase(it);
@@ -326,15 +170,7 @@ void Scene::update(int deltaTime) {
         snakesSpawned = false;
     }
 
-    // Update de bambús normales
-    for (auto& bamboo : bamboos) {
-        bamboo->update(deltaTime);
-        if (bamboo->checkCollisionWithPlayer(player->getPosition(), glm::ivec2(25, 32))) {
-            if (!player->isBlocking()) {
-                player->takeDamage(1);
-            }
-        }
-    }
+
     // Actualizar los proyectiles
     for (auto it = proyectiles.begin(); it != proyectiles.end();) {
         Proyectil* proyectil = *it;
@@ -383,41 +219,111 @@ void Scene::update(int deltaTime) {
     playerHub->setPosition(glm::vec2(cameraPos.x, cameraPos.y));
 }
 
-Scene::CollisionType Scene::checkCollisionWithEnemy(const glm::ivec2& playerPos, const glm::ivec2& playerSize,
-    const glm::ivec2& enemyPos, const glm::ivec2& enemySize) {
-    if (playerPos.x + playerSize.x > enemyPos.x &&
-        playerPos.x < enemyPos.x + enemySize.x &&
-        playerPos.y + playerSize.y > enemyPos.y &&
-        playerPos.y < enemyPos.y + enemySize.y) {
+void Scene::update(int deltaTime) {
+    currentTime += deltaTime;
+	checkAllCollisions(deltaTime);
+    updateSprites(deltaTime);
 
-        float leftOverlap = (playerPos.x + playerSize.x) - enemyPos.x;
-        float rightOverlap = (enemyPos.x + enemySize.x) - playerPos.x;
-        float topOverlap = (playerPos.y + playerSize.y) - enemyPos.y;
-        float bottomOverlap = (enemyPos.y + enemySize.y) - playerPos.y;
+    checkSpiderPlayerInteraction();
 
-        float minOverlap = std::min(std::min(leftOverlap, rightOverlap), std::min(topOverlap, bottomOverlap));
-
-        if (minOverlap == leftOverlap) return LEFT;
-        else if (minOverlap == rightOverlap) return RIGHT;
-        else if (minOverlap == topOverlap) return TOP;
-        else if (minOverlap == bottomOverlap) return BOTTOM;
+    // Lanzar línea de 10 bambús cuando el boss entra en GROUND_WAIT (una sola vez)
+    if (boss->lounchBamboo() && !hasLaunchedLine) {
+        for (float x : bambooSpawnLaunchPositions) {
+            Bamboo* bamboo = new Bamboo();
+            bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(x, 480.f), true);
+            bamboo->setTileMap(map);
+            bossBamboos.push_back(bamboo);
+        }
+        hasLaunchedLine = true;
+        boss->resetBambooThrow();
     }
-    return NONE;
-}
-void Scene::collisionsPlayerEnemy() {
+    else if (!boss->lounchBamboo()) {
+        hasLaunchedLine = false;
+    }
 
+    // Lanzar un solo bambú cuando el boss está en el aire (cada X tiempo)
+    if (boss->shouldThrowBamboo()) {
+        Bamboo* bamboo = new Bamboo();
+        glm::vec2 bossPos = boss->getPosition();
+        float bambooX = bossPos.x + 16.f;
+        float bambooY = bossPos.y + 48.f;
+        bamboo->init(glm::ivec2(0, 0), texProgram, glm::vec2(bambooX, bambooY), true);
+        bamboo->setTileMap(map);
+        bossBamboos.push_back(bamboo);
+        std::cout << "Boss threw a bamboo at (" << bambooX << ", " << bambooY << ")" << std::endl;
+        boss->resetBambooThrow();
+    }
+
+}
+
+void Scene::checkAllCollisions(int deltaTime) {
+	platformMgmt(deltaTime);
+	cyclopeMgmt(deltaTime);
+	//bossMgmt(deltaTime);
+	//snakeMgmt(deltaTime);
+	//spiderMgmt(deltaTime);
+}
+
+
+bool Scene::checkProyectilCollision(Proyectil* proyectil) {
     glm::vec2 playerPos = player->getPosition();
-    glm::ivec2 playerSize(25, 32);
+    glm::ivec2 playerSize(25, 32);  // Tamaño del jugador
+    glm::vec2 proyectilPos = proyectil->getPosition();
+    glm::ivec2 proyectilSize(16, 16);  // Tamaño del proyectil
 
-    // Boss
-    CollisionType collisionBossPlayer = checkCollisionWithEnemy(playerPos, playerSize, boss->getPosition(), glm::ivec2(32, 48));
-    if (collisionBossPlayer != NONE) player->takeDamage(2);
-
-    // Cyclope
-    CollisionType collisionCyclopePlayer = checkCollisionWithEnemy(playerPos, playerSize, cyclope->getPosition(), glm::ivec2(25, 32));
-    if (collisionCyclopePlayer != NONE) player->takeDamage(1);
-
+    if (playerPos.x + playerSize.x > proyectilPos.x &&
+        playerPos.x < proyectilPos.x + proyectilSize.x &&
+        playerPos.y + playerSize.y > proyectilPos.y &&
+        playerPos.y < proyectilPos.y + proyectilSize.y) {
+        return true;
+    }
+    return false;
 }
+
+Scene::CollisionType Scene::checkCollisionWithEnemy(const glm::ivec2& enemyPos, const glm::ivec2& enemySize) {
+    glm::vec2 playerPos = player->getPosition();
+    glm::ivec2 playerSize(24, 32); // Tamaño del jugador (puede ajustarse según necesidad)
+
+    // Calcular los puntos medios de ambos sprites (posición + 16, ya que el sprite es 32x32)
+    glm::vec2 enemyCenter(enemyPos.x + 16, enemyPos.y + 16);
+    glm::vec2 playerCenter(playerPos.x + 16, playerPos.y + 16);
+
+    // Calcular las mitades de los tamaños efectivos
+    float enemyHalfWidth = enemySize.x / 2.0f;
+    float enemyHalfHeight = enemySize.y / 2.0f;
+    float playerHalfWidth = playerSize.x / 2.0f;
+    float playerHalfHeight = playerSize.y / 2.0f;
+
+    // Verificar colisión usando las distancias entre los puntos medios
+    float dx = std::abs(enemyCenter.x - playerCenter.x);
+    float dy = std::abs(enemyCenter.y - playerCenter.y);
+
+    // Si las distancias son menores que la suma de las mitades de los tamaños, hay colisión
+    if (dx < (enemyHalfWidth + playerHalfWidth) && dy < (enemyHalfHeight + playerHalfHeight)) {
+        // Determinar la dirección de la colisión según la diferencia relativa
+        float xDiff = enemyCenter.x - playerCenter.x;
+        float yDiff = enemyCenter.y - playerCenter.y;
+
+        // Calcular cuánto se solapan en cada eje
+        float xOverlap = (enemyHalfWidth + playerHalfWidth) - dx;
+        float yOverlap = (enemyHalfHeight + playerHalfHeight) - dy;
+
+        // La dirección de colisión es la del eje con menor solapamiento
+        if (xOverlap < yOverlap) {
+            // Colisión horizontal
+            return (xDiff > 0) ? LEFT : RIGHT; // Si el enemigo está a la derecha del jugador, colisión por la izquierda
+        }
+        else {
+            // Colisión vertical
+            return (yDiff > 0) ? TOP : BOTTOM; // Si el enemigo está debajo del jugador, colisión por arriba
+        }
+    }
+
+    return NONE;
+   
+}
+
+
 
 void Scene::collisionsSpearEnemy() {
     if (!player->isAttacking()) return;
@@ -429,16 +335,8 @@ void Scene::collisionsSpearEnemy() {
         damage = 2;
     }
 
-    // Boss
-    CollisionType collisionBossPlayer = checkCollisionWithEnemy(spearPos, spearSize, boss->getPosition(), glm::ivec2(32, 48));
-    if (collisionBossPlayer != NONE) playerHub->bossTakeDamage(damage);
 
-    // Cyclope
-    CollisionType collisionCyclopePlayer = checkCollisionWithEnemy(spearPos, spearSize, cyclope->getPosition(), glm::ivec2(25, 32));
-    if (collisionCyclopePlayer != NONE) cyclope->takeDamage(damage);
 }
-
-
 
 bool Scene::checkSpearCollisionWithSnake(Snake* snake) {
     if (!snake || !player) return false;
@@ -471,26 +369,6 @@ bool Scene::checkSpearCollisionWithSnake(Snake* snake) {
     return false;
 }
 
-bool Scene::readyToJump(Snake* snake) {
-    glm::vec2 playerPos = player->getPosition();
-    glm::vec2 snakePos = snake->getPosition();
-    float distance = glm::length(playerPos - snakePos);
-    int snakeDirection = snake->getMovementDirection();
-    const float jumpThreshold = 16.0f * 3;
-    bool isApproaching = (snakeDirection == 1 && snakePos.x < playerPos.x) ||
-        (snakeDirection == -1 && snakePos.x > playerPos.x);
-    return distance < jumpThreshold && isApproaching;
-}
-
-bool Scene::playerCollisionPlatform() {
-    for (auto& platform : platforms) {
-        if (checkPlatformCollision(player, platform)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool Scene::checkPlatformCollision(Player* player, Platform* platform) {
     glm::vec2 playerPos = player->getPosition();
     glm::ivec2 playerSize(25, 32);
@@ -508,6 +386,78 @@ bool Scene::checkPlatformCollision(Player* player, Platform* platform) {
         }
     }
     return false;
+}
+
+bool Scene::playerCollisionPlatform() {
+    for (auto& platform : platforms) {
+        if (checkPlatformCollision(player, platform)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void Scene::platformMgmt(int deltaTime) {
+    for (auto& platform : platforms) {
+        platform->update(deltaTime);
+        bool onPlatform = checkPlatformCollision(player, platform);
+        if (onPlatform) {
+            float deltaY = platform->getDeltaY();
+            glm::vec2 playerPos = player->getPosition();
+            player->setPosition(glm::vec2(playerPos.x, playerPos.y + deltaY));
+        }
+    }
+}
+void Scene::cyclopeMgmt(int deltaTime) {
+	if (cyclope->isAlive()) {
+		if (checkCollisionWithEnemy(cyclope->getPosition(), glm::ivec2(20, 32)) != NONE) {
+			player->takeDamage(1);
+		}
+	}
+}
+
+bool Scene::readyToJump(Snake* snake) {
+    glm::vec2 playerPos = player->getPosition();
+    glm::vec2 snakePos = snake->getPosition();
+    float distance = glm::length(playerPos - snakePos);
+    int snakeDirection = snake->getMovementDirection();
+    const float jumpThreshold = 16.0f * 3;
+    bool isApproaching = (snakeDirection == 1 && snakePos.x < playerPos.x) ||
+        (snakeDirection == -1 && snakePos.x > playerPos.x);
+    return distance < jumpThreshold && isApproaching;
+}
+
+void Scene::initPlatforms() {
+    Platform* platform1 = new Platform();
+    platform1->init(glm::ivec2(0, 0), texProgram, 3172.0f, 780.0f, 20.0f, 1.0f, true);
+    platform1->setTileMap(map);
+    platforms.push_back(platform1);
+
+    Platform* platform2 = new Platform();
+    platform2->init(glm::ivec2(0, 0), texProgram, 3140.0f, 745.0f, 25.0f, 1.0f, false);
+    platform2->setTileMap(map);
+    platforms.push_back(platform2);
+
+    Platform* platform3 = new Platform();
+    platform3->init(glm::ivec2(0, 0), texProgram, 3228.0f, 705.0f, 25.0f, 1.0f, true);
+    platform3->setTileMap(map);
+    platforms.push_back(platform3);
+
+    Platform* platform4 = new Platform();
+    platform4->init(glm::ivec2(0, 0), texProgram, 3165.0f, 655.0f, 20.0f, 1.0f, true);
+    platform4->setTileMap(map);
+    platforms.push_back(platform4);
+
+    Platform* platform5 = new Platform();
+    platform5->init(glm::ivec2(0, 0), texProgram, 3140.0f, 615.0f, 25.0f, 1.0f, false);
+    platform5->setTileMap(map);
+    platforms.push_back(platform5);
+
+    Platform* platform6 = new Platform();
+    platform6->init(glm::ivec2(0, 0), texProgram, 3200.0f, 580.0f, 15.0f, 1.0f, true);
+    platform6->setTileMap(map);
+    platforms.push_back(platform6);
 }
 
 void Scene::handleSceneTransitions() {
@@ -702,21 +652,82 @@ void Scene::render() {
     }
 }
 
-bool Scene::CheckEnemyCollission(Snake* snake) {
-    glm::vec2 playerPos = player->getPosition();
-    glm::ivec2 playerSize(25, 32);
-    glm::vec2 snakeformPos = snake->getPosition();
-    glm::ivec2 snakeformSize(16, 16);
 
-    snakeformPos.y += 16;
-    if (playerPos.x + playerSize.x > snakeformPos.x &&
-        playerPos.x < snakeformPos.x + snakeformSize.x &&
-        playerPos.y + playerSize.y >= snakeformPos.y &&
-        playerPos.y < snakeformPos.y + snakeformSize.y) {
-        return true;
+
+void Scene::checkSpiderPlayerInteraction() {
+    glm::vec2 playerPos = player->getPosition();
+    const float Y_TOLERANCE = 16.f;
+    const float MAX_VERTICAL_DISTANCE = 64.f;  // 4 tiles = 64 píxeles
+
+    for (auto& spider : spiders) {
+        glm::vec2 spiderPos = spider->getPosition();
+        Spider::SpiderState spiderState = spider->getState();
+
+        bool canShoot = false;  // Indica si el jugador está en una posición que activa un disparo
+
+        // Disparo horizontal: misma Y
+        if (std::abs(spiderPos.y - playerPos.y) <= Y_TOLERANCE) {
+            spider->setStop(true);
+            canShoot = true;
+            if (!spider->hasShot()) {
+                // Crear un proyectil horizontal
+                Proyectil* proyectil = new Proyectil();
+                bool playerToLeft = spider->isPlayerToLeft(playerPos.x);
+                Proyectil::ProyectilDirection direction = playerToLeft ? Proyectil::LEFT : Proyectil::RIGHT;
+                glm::vec2 proyectilPos = spiderPos;
+                proyectilPos.x += 8.f;
+                proyectilPos.y += 8.f;
+                proyectil->init(glm::ivec2(0, 0), texProgram, proyectilPos, direction);
+                proyectil->setTileMap(map);
+                proyectiles.push_back(proyectil);
+                spider->setShot(true);
+                std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (playerToLeft ? "left" : "right") << std::endl;
+            }
+
+            if (spiderState == Spider::MOVING_DOWN) {
+                if (playerPos.x < spiderPos.x) {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_LEFT_DOWN);
+                }
+                else {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_RIGHT_DOWN);
+                }
+            }
+            else if (spiderState == Spider::MOVING_UP) {
+                if (playerPos.x < spiderPos.x) {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_LEFT_UP);
+                }
+                else {
+                    spider->spiderSprite->changeAnimation(Spider::STOP_RIGHT_UP);
+                }
+            }
+        }
+        // Disparo vertical: misma X, dentro de 4 tiles de altura
+        else if (spider->isPlayerInVerticalRange(playerPos.x, playerPos.y, MAX_VERTICAL_DISTANCE)) {
+            spider->setStop(true);
+            canShoot = true;
+            if (!spider->hasShot()) {
+                // Crear un proyectil vertical
+                Proyectil* proyectil = new Proyectil();
+                Proyectil::ProyectilDirection direction = (spiderState == Spider::MOVING_UP) ? Proyectil::UP : Proyectil::DOWN;
+                glm::vec2 proyectilPos = spiderPos;
+                proyectilPos.x += 4.f;
+                proyectilPos.y += 4.f;
+                proyectil->init(glm::ivec2(0, 0), texProgram, proyectilPos, direction);
+                proyectil->setTileMap(map);
+                proyectiles.push_back(proyectil);
+                spider->setShot(true);
+                std::cout << "Spider at X=" << spiderPos.x << " shot a proyectil " << (direction == Proyectil::UP ? "up" : "down") << std::endl;
+            }
+        }
+
+        // Si el jugador no está en una posición que active un disparo, reiniciar el estado
+        if (!canShoot) {
+            spider->setStop(false);
+            spider->setShot(false);
+        }
     }
-    return false;
 }
+
 
 void Scene::initShaders() {
     Shader vShader, fShader;

@@ -60,7 +60,6 @@ void Cyclope::changeAnimToRightLeft(int animation) {
     }
     cyclopeSprite->changeAnimation(animation);
 }
-
 void Cyclope::update(int deltaTime) {
     cyclopeSprite->update(deltaTime);
     float dt = deltaTime / 1000.0f;
@@ -70,7 +69,6 @@ void Cyclope::update(int deltaTime) {
             posCyclope.x += 1;
         }
     }
-
     else {
         if (map->collisionMoveRight(posCyclope, glm::ivec2(28, 32))) {
             posCyclope.x -= 1;
@@ -90,7 +88,8 @@ void Cyclope::update(int deltaTime) {
             posCyclope.x -= 1;
         }
 
-        if (jumpTime >= JUMP_DURATION || map->collisionMoveDown(posCyclope, glm::ivec2(32, 32), &posCyclope.y)) {
+        bool isDescending = jumpTime >= JUMP_DURATION / 2.0f;
+        if (jumpTime >= JUMP_DURATION || (isDescending && map->collisionMoveDown(posCyclope, glm::ivec2(32, 32), &posCyclope.y))) {
             isJumping = false;
             timeOnGround = 0.0f;
             if (cyclopeSprite->animation() != (STAND_RIGHT + bLookingLeft)) {
@@ -104,7 +103,7 @@ void Cyclope::update(int deltaTime) {
         }
     }
     else {
-        if (map->collisionMoveDown(posCyclope, glm::ivec2(32, 32), &posCyclope.y)) {
+        if (map->collisionMoveDown(posCyclope, glm::ivec2(20, 32), &posCyclope.y)) {
             timeOnGround += dt;
             if (timeOnGround >= GROUND_DELAY) {
                 glm::vec2 playerPosFloat = Game::instance().getScene()->getPlayerPos();
@@ -121,7 +120,9 @@ void Cyclope::update(int deltaTime) {
                         if (playerPos.y != posCyclope.y) jumpWidth = JUMP_WIDTH_DEF - 20;
                         else jumpWidth = distanceX;
                     }
-                    else jumpWidth = JUMP_WIDTH_DEF;
+                    else {
+                        jumpWidth = JUMP_WIDTH_DEF;
+                    }
 
                     if (cyclopeSprite->animation() != (JUMP_RIGHT + bLookingLeft)) {
                         changeAnimToRightLeft(JUMP_RIGHT);
@@ -146,7 +147,6 @@ void Cyclope::update(int deltaTime) {
         float(tileMapDispl.y + posCyclope.y)
     ));
 }
-
 void Cyclope::render() {
     if (isAlive()) cyclopeSprite->render();
 }
