@@ -1,5 +1,5 @@
-# Whomp’em NES - FIB
-Proyecto de recreación de Whomp’em para NES, desarrollado en C++ con OpenGL.
+# Whomp’em NES BETA - FIB 
+Proyecto de recreación de Whomp’em para NES, desarrollado en C++ con OpenGL, aún en fase beta.
 
 ## Estructura
 - `Whomp'em/`: Contiene el código fuente y archivos del proyecto.
